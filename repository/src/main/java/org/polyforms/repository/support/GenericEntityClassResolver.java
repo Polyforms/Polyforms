@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.polyforms.repository.spi.EntityClassResolver;
+import org.polyforms.repository.spi.RepositoryMatcher;
 import org.springframework.core.GenericTypeResolver;
 
 /**
@@ -12,7 +13,7 @@ import org.springframework.core.GenericTypeResolver;
  * @author Kuisong Tong
  * @since 1.0
  */
-public class GenericEntityClassResolver implements EntityClassResolver {
+public class GenericEntityClassResolver implements EntityClassResolver, RepositoryMatcher {
     private final Map<Class<?>, Class<?>> resolvedEntityClassCache = new HashMap<Class<?>, Class<?>>();
     private final Class<?> genericInterface;
 
@@ -33,5 +34,12 @@ public class GenericEntityClassResolver implements EntityClassResolver {
             resolvedEntityClassCache.put(repositoryClass, entityClass);
         }
         return resolvedEntityClassCache.get(repositoryClass);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean matches(final Class<?> candidate) {
+        return genericInterface.isAssignableFrom(candidate);
     }
 }
