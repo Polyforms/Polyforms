@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>org.polyforms</groupId>
+	<artifactId>polyforms</artifactId>
+	<packaging>pom</packaging>
+	<version>1.0.0-M4-SNAPSHOT</version>
+
+	<name>Polyforms Framework</name>
+	<description><![CDATA[A framework focusing on simplifying the business layer development base on <a href="http://domaindrivendesign.org/">Domain Driven Design</a> methodology.]]></description>
+	<url>http://www.polyforms.org</url>
+	<inceptionYear>2010</inceptionYear>
+	<organization>
+		<name>Polyforms Framework</name>
+		<url>http://www.polyforms.org</url>
+	</organization>
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<id>kuisong.tong</id>
+			<name>Kuisong Tong</name>
+			<email>kuisong.tong@polyforms.org</email>
+			<url>http://tony.polyforms.org</url>
+			<organization>Polyforms Framework</organization>
+			<organizationUrl>http://www.polyforms.org</organizationUrl>
+			<timezone>8</timezone>
+			<roles>
+				<role>Founder</role>
+				<role>Architect</role>
+			</roles>
+		</developer>
+	</developers>
+
+	<issueManagement>
+		<system>GitHub</system>
+		<url>https://github.com/Polyforms/Polyforms/issues/</url>
+	</issueManagement>
+	<scm>
+		<connection>https://github.com/Polyforms/Polyforms</connection>
+		<developerConnection>scm:git:git://github.com/Polyforms/Polyforms.git</developerConnection>
+		<url>scm:git:ssh://git@github.com/Polyforms/Polyforms.git</url>
+	</scm>
+	<ciManagement>
+		<system>Jenkins</system>
+		<url>http://ci.polyforms.org/job/Polyforms/</url>
+	</ciManagement>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<encoding>utf-8</encoding>
+					<source>1.5</source>
+					<target>1.5</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<configuration>
+					<encoding>utf-8</encoding>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<descriptors>
+						<descriptor>src/main/assembly/bin.xml</descriptor>
+						<descriptor>src/main/assembly/src.xml</descriptor>
+					</descriptors>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>findbugs-maven-plugin</artifactId>
+				<configuration>
+					<excludeFilterFile>${basedir}/setting/findbugs-exclude.xml</excludeFilterFile>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<configuration>
+					<suppressionsLocation>${basedir}/setting/checkstyle-surpressions.xml</suppressionsLocation>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>com.atlassian.maven.plugins</groupId>
+				<artifactId>maven-clover2-plugin</artifactId>
+				<configuration>
+					<statementContexts>
+						<neverGetHere>throw new IllegalStateException\("Should never get
+							here"\);</neverGetHere>
+					</statementContexts>
+					<contextFilters>neverGetHere</contextFilters>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<distributionManagement>
+		<repository>
+			<id>repo</id>
+			<url>https://github.com/Polyforms/Repository/raw/master/releases</url>
+		</repository>
+		<snapshotRepository>
+			<id>snapshot-repo</id>
+			<url>https://github.com/Polyforms/Repository/raw/master/snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+	<modules>
+		<module>di</module>
+		<module>repository</module>
+		<module>event</module>
+		<module>delegation</module>
+	</modules>
+
+	<dependencyManagement>
+		<dependencies>
+			<!-- Utility -->
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>${slf4j.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>javax.inject</groupId>
+				<artifactId>javax.inject</artifactId>
+				<version>${inject.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>aopalliance</groupId>
+				<artifactId>aopalliance</artifactId>
+				<version>${aopalliance.version}</version>
+			</dependency>
+
+			<!-- Spring -->
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-core</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-context</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
+
+			<!-- Test -->
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>${junit.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.easymock</groupId>
+				<artifactId>easymock</artifactId>
+				<version>${easymock.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-simple</artifactId>
+				<version>${slf4j.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-test</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<properties>
+		<aopalliance.version>1.0</aopalliance.version>
+		<inject.version>1</inject.version>
+		<junit.version>4.8.2</junit.version>
+		<easymock.version>3.0</easymock.version>
+		<spring.version>3.0.5.RELEASE</spring.version>
+		<slf4j.version>1.6.1</slf4j.version>
+	</properties>
+</project>

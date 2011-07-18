@@ -1,0 +1,4 @@
+# Tooling related information for the polyforms namespace
+http\://www.polyforms.org/schema@name=polyforms Namespace
+http\://www.polyforms.org/schema@prefix=polyforms
+http\://www.polyforms.org/schema@icon=org/polyforms/di/spring/schema/polyforms.gif

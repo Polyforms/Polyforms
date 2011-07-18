@@ -1,0 +1,3 @@
+http\://www.polyforms.org/schema/polyforms-1.0.xsd=org/polyforms/di/spring/schema/polyforms-1.0.xsd
+
+http\://www.polyforms.org/schema/polyforms.xsd=org/polyforms/di/spring/schema/polyforms-1.0.xsd
