@@ -24,7 +24,7 @@ public interface EntityHelper {
      * @return Identity class of the entity
      * @throws IllegalArgumentException if it is not an class of entity
      */
-    Class<?> getIdentifierClass(Class<?> entityClass) throws IllegalArgumentException;
+    Class<?> getIdentifierClass(Class<?> entityClass);
 
     /**
      * Get name of identifier.
@@ -34,7 +34,7 @@ public interface EntityHelper {
      * @return Identity name of the entity
      * @throws IllegalArgumentException if it is not an class of entity
      */
-    String getIdentifierName(Class<?> entityClass) throws IllegalArgumentException;
+    String getIdentifierName(Class<?> entityClass);
 
     /**
      * Get identifier of entity instance.
@@ -44,5 +44,5 @@ public interface EntityHelper {
      * @return Identity value of the entity instance
      * @throws IllegalArgumentException if it is not an instance of entity
      */
-    Object getIdentifierValue(Object entity) throws IllegalArgumentException;
+    Object getIdentifierValue(Object entity);
 }

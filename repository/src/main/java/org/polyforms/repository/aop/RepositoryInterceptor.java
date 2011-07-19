@@ -34,7 +34,7 @@ public final class RepositoryInterceptor implements MethodInterceptor {
     /**
      * {@inheritDoc}
      */
-    public Object invoke(final MethodInvocation invocation) throws Throwable {
+    public Object invoke(final MethodInvocation invocation) {
         final Method method = invocation.getMethod();
         final Executor executor = getExecutorWithCache(method);
         return executor.execute(invocation.getThis(), method, invocation.getArguments());

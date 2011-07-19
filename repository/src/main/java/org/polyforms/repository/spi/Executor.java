@@ -14,7 +14,7 @@ public interface Executor {
      * 
      * It is used for situation that no matched executor has found for specific method.
      */
-    public Executor UNSUPPORTED = new Executor() {
+    Executor UNSUPPORTED = new Executor() {
         /**
          * {@inheritDoc}
          */

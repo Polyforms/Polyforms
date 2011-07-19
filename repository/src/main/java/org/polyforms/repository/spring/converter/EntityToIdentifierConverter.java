@@ -30,6 +30,6 @@ public final class EntityToIdentifierConverter extends EntityConverter {
      * {@inheritDoc}
      */
     public Object convert(final Object source, final TypeDescriptor sourceType, final TypeDescriptor targetType) {
-        return entityHelper.getIdentifierValue(source);
+        return getEntityHelper().getIdentifierValue(source);
     }
 }

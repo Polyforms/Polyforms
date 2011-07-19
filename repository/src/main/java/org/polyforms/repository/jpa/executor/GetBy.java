@@ -28,7 +28,7 @@ public final class GetBy extends QueryExecutor {
      * @throws NonUniqueResultException if more than one entities matching searching criteria
      */
     @Override
-    protected Object getResult(final Query query) throws NonUniqueResultException {
+    protected Object getResult(final Query query) {
         try {
             return query.getSingleResult();
         } catch (final NoResultException e) {

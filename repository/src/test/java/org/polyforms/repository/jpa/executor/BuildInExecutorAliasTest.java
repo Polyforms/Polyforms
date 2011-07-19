@@ -32,4 +32,9 @@ public class BuildInExecutorAliasTest {
         Assert.assertTrue(alias.contains("delete"));
         Assert.assertTrue(alias.contains("remove"));
     }
+
+    @Test
+    public void notExistAlias() {
+        Assert.assertTrue(executorAlias.alias("notExist").isEmpty());
+    }
 }

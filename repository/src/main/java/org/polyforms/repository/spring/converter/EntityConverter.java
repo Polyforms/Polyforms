@@ -13,7 +13,7 @@ import org.springframework.core.convert.converter.ConditionalGenericConverter;
  * @since 1.0
  */
 abstract class EntityConverter implements ConditionalGenericConverter {
-    protected final EntityHelper entityHelper;
+    private final EntityHelper entityHelper;
 
     protected EntityConverter(final EntityHelper entityHelper) {
         this.entityHelper = entityHelper;
@@ -28,5 +28,9 @@ abstract class EntityConverter implements ConditionalGenericConverter {
 
     protected boolean canBeConverted(final Class<?> entityClass, final Class<?> identifierClass) {
         return entityHelper.isEntity(entityClass) && entityHelper.getIdentifierClass(entityClass) == identifierClass;
+    }
+
+    protected EntityHelper getEntityHelper() {
+        return entityHelper;
     }
 }

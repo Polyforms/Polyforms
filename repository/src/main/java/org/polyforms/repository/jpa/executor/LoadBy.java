@@ -29,7 +29,7 @@ public final class LoadBy extends QueryExecutor {
      * @throws NonUniqueResultException if more than one entities matching searching criteria
      */
     @Override
-    protected Object getResult(final Query query) throws NoResultException, NonUniqueResultException {
+    protected Object getResult(final Query query) {
         return query.getSingleResult();
     }
 }
