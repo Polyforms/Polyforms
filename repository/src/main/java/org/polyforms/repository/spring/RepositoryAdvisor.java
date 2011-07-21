@@ -18,8 +18,9 @@ import org.springframework.stereotype.Component;
  * @since 1.0
  */
 @Component
-@SuppressWarnings("serial")
 public final class RepositoryAdvisor extends DefaultPointcutAdvisor {
+    private static final long serialVersionUID = 618599462955606986L;
+
     /**
      * Create an instance with {@link RepositoryInterceptor}.
      */
