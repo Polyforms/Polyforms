@@ -3,7 +3,6 @@ package org.polyforms.repository.jpa.executor;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.NoResultException;
-import javax.persistence.NonUniqueResultException;
 import javax.persistence.Query;
 
 import org.polyforms.repository.jpa.QueryBuilder;
@@ -25,7 +24,7 @@ public final class GetBy extends QueryExecutor {
     /**
      * {@inheritDoc}
      * 
-     * @throws NonUniqueResultException if more than one entities matching searching criteria
+     * @throws javax.persistence.NonUniqueResultException if more than one entities matching searching criteria
      */
     @Override
     protected Object getResult(final Query query) {

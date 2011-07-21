@@ -2,8 +2,6 @@ package org.polyforms.repository.jpa.executor;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.persistence.NoResultException;
-import javax.persistence.NonUniqueResultException;
 import javax.persistence.Query;
 
 import org.polyforms.repository.jpa.QueryBuilder;
@@ -25,8 +23,8 @@ public final class LoadBy extends QueryExecutor {
     /**
      * {@inheritDoc}
      * 
-     * @throws NoResultException if there is no result
-     * @throws NonUniqueResultException if more than one entities matching searching criteria
+     * @throws javax.persistence.NoResultException if there is no result
+     * @throws javax.persistence.NonUniqueResultException if more than one entities matching searching criteria
      */
     @Override
     protected Object getResult(final Query query) {
