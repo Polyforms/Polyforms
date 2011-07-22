@@ -11,15 +11,18 @@ import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.polyforms.repository.spi.Executor;
 import org.polyforms.repository.spi.ExecutorFinder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * Interceptor implementing methods in Repository.
+ * {@link MethodInterceptor} implementation for methods in Repository.
  * 
  * @author Kuisong Tong
  * @since 1.0
  */
 @Named
 public final class RepositoryInterceptor implements MethodInterceptor {
+    private static final Logger LOGGER = LoggerFactory.getLogger(RepositoryInterceptor.class);
     private final Map<Method, Executor> matchedExecutors = new HashMap<Method, Executor>();
     private final ExecutorFinder executorFinder;
 
@@ -36,17 +39,19 @@ public final class RepositoryInterceptor implements MethodInterceptor {
      */
     public Object invoke(final MethodInvocation invocation) {
         final Method method = invocation.getMethod();
-        final Executor executor = getExecutorWithCache(method);
+        final Executor executor = findExecutorWithCache(method);
         return executor.execute(invocation.getThis(), method, invocation.getArguments());
     }
 
-    private Executor getExecutorWithCache(final Method method) {
-        if (matchedExecutors.containsKey(method)) {
-            return matchedExecutors.get(method);
+    private Executor findExecutorWithCache(final Method method) {
+        if (!matchedExecutors.containsKey(method)) {
+            LOGGER.trace("Cache missed when finding executor for method {}.", method);
+            final Executor executor = executorFinder.findExecutor(method);
+            matchedExecutors.put(method, executor);
         }
 
-        final Executor executor = executorFinder.getExecutor(method);
-        matchedExecutors.put(method, executor);
+        Executor executor = matchedExecutors.get(method);
+        LOGGER.debug("Found executor {} for method {}.", executor, method);
         return executor;
     }
 }

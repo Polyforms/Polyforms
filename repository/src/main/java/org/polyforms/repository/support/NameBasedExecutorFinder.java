@@ -13,6 +13,8 @@ import javax.inject.Named;
 import org.polyforms.repository.spi.Executor;
 import org.polyforms.repository.spi.ExecutorAlias;
 import org.polyforms.repository.spi.ExecutorFinder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 /**
@@ -23,10 +25,11 @@ import org.springframework.util.StringUtils;
  */
 @Named
 public final class NameBasedExecutorFinder implements ExecutorFinder {
+    private static final Logger LOGGER = LoggerFactory.getLogger(NameBasedExecutorFinder.class);
     private static final String WILDCARD_SUFFIX = "By";
     private final Map<String, Executor> executors = new HashMap<String, Executor>();
     private final Map<String, Executor> wildcardExecutor = new HashMap<String, Executor>();
-    private final Map<String, Executor> matchedExecutorCache = new HashMap<String, Executor>();
+    private final Map<String, Set<String>> aliasCache = new HashMap<String, Set<String>>();
     private final Set<ExecutorAlias> executorAliases;
 
     /**
@@ -37,10 +40,13 @@ public final class NameBasedExecutorFinder implements ExecutorFinder {
         this.executorAliases = executorAliases;
 
         for (final Executor executor : executors) {
-            final String name = StringUtils.uncapitalize(executor.getClass().getSimpleName());
+            String executorName = executor.getClass().getSimpleName();
+            final String name = StringUtils.uncapitalize(executorName);
             if (name.endsWith(WILDCARD_SUFFIX)) {
+                LOGGER.info("Add wildcard executor {}.", executorName);
                 mapExecutor(wildcardExecutor, name.substring(0, name.length() - WILDCARD_SUFFIX.length()), executor);
             } else {
+                LOGGER.info("Add executor {}.", executorName);
                 mapExecutor(this.executors, name, executor);
             }
         }
@@ -49,38 +55,38 @@ public final class NameBasedExecutorFinder implements ExecutorFinder {
     private void mapExecutor(final Map<String, Executor> executors, final String name, final Executor executor) {
         executors.put(name, executor);
         for (final String alias : getAlias(name)) {
+            LOGGER.debug("Add alias {} for executor {}.", alias, name);
             executors.put(alias, executor);
         }
     }
 
     private Set<String> getAlias(final String name) {
-        final Set<String> alias = new HashSet<String>();
-        for (final ExecutorAlias executorAlias : executorAliases) {
-            alias.addAll(executorAlias.alias(name));
+        if (!aliasCache.containsKey(name)) {
+            final Set<String> alias = new HashSet<String>();
+            for (final ExecutorAlias executorAlias : executorAliases) {
+                alias.addAll(executorAlias.alias(name));
+            }
+            aliasCache.put(name, alias);
         }
 
-        return alias;
+        return aliasCache.get(name);
     }
 
     /**
      * {@inheritDoc}
      */
-    public Executor getExecutor(final Method method) {
+    public Executor findExecutor(final Method method) {
         final String methodName = method.getName();
 
         if (executors.containsKey(methodName)) {
-            return executors.get(methodName);
+            Executor executor = executors.get(methodName);
+            LOGGER.trace("Found executor {} for method {}.", executor, method);
+            return executor;
         }
 
-        return getWildcardExecutorWithCache(methodName);
-    }
-
-    private Executor getWildcardExecutorWithCache(final String methodName) {
-        if (!matchedExecutorCache.containsKey(methodName)) {
-            matchedExecutorCache.put(methodName, getWildcardExecutor(methodName));
-        }
-
-        return matchedExecutorCache.get(methodName);
+        Executor executor = getWildcardExecutor(methodName);
+        LOGGER.debug("Found executor {} for method {}.", executor, method);
+        return executor;
     }
 
     private Executor getWildcardExecutor(final String methodName) {

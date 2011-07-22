@@ -26,18 +26,18 @@ public interface ReadOnlyRepository<T, PK> extends Repository<T> {
     T get(PK identifier);
 
     /**
-     * Load all instances of specified entity class.
-     * 
-     * @return a list of all instances or empty list if no instance for specified entity class
-     */
-    List<T> findAll();
-
-    /**
-     * Load entities by specified identifiers.
+     * Find entities by specified identifiers.
      * 
      * @param identifiers a list of identifier of entity instances
      * 
      * @return a list of found entity instances or empty list if no instance matching
      */
     List<T> find(PK... identifiers);
+
+    /**
+     * Load all instances of specified entity class.
+     * 
+     * @return a list of all instances or empty list if no instance for specified entity class
+     */
+    List<T> findAll();
 }

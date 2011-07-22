@@ -14,6 +14,12 @@ import org.polyforms.repository.jpa.EntityHelper;
 import org.polyforms.repository.spi.EntityClassResolver;
 import org.polyforms.repository.spi.Executor;
 
+/**
+ * Implementation of find method which finds entities by identifiers.
+ * 
+ * @author Kuisong Tong
+ * @since 1.0
+ */
 @Named
 public class Find implements Executor {
     private static final String PARAMETER_NAME = "identifiers";
@@ -23,6 +29,9 @@ public class Find implements Executor {
     private final EntityHelper entityHelper;
     private final EntityClassResolver entityClassResolver;
 
+    /**
+     * Create an instance with {@link EntityHelper} and {@link EntityClassResolver}.
+     */
     @Inject
     public Find(final EntityHelper entityHelper, final EntityClassResolver entityClassResolver) {
         this.entityHelper = entityHelper;

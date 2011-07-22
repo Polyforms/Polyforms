@@ -15,16 +15,17 @@ import org.polyforms.repository.jpa.QueryParameterBinder;
  */
 @Named
 public final class LoadBy extends QueryExecutor {
+    /**
+     * Create an instance with {@link QueryBuilder} and {@link QueryParameterBinder}.
+     */
     @Inject
     public LoadBy(final QueryBuilder queryBuilder, final QueryParameterBinder queryParameterBinder) {
         super(queryBuilder, queryParameterBinder);
     }
 
     /**
-     * {@inheritDoc}
-     * 
-     * @throws javax.persistence.NoResultException if there is no result
-     * @throws javax.persistence.NonUniqueResultException if more than one entities matching searching criteria
+     * @throws NoResultException if there is no result
+     * @throws NonUniqueResultException if more than one entities matching searching criteria
      */
     @Override
     protected Object getResult(final Query query) {

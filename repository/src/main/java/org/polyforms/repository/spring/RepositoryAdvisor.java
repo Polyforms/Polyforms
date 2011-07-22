@@ -5,6 +5,8 @@ import java.lang.reflect.Modifier;
 
 import org.polyforms.repository.aop.RepositoryInterceptor;
 import org.polyforms.repository.spi.RepositoryMatcher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.aop.support.DefaultPointcutAdvisor;
 import org.springframework.aop.support.StaticMethodMatcherPointcut;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public final class RepositoryAdvisor extends DefaultPointcutAdvisor {
+    private static final Logger LOGGER = LoggerFactory.getLogger(RepositoryAdvisor.class);
     private static final long serialVersionUID = 618599462955606986L;
 
     /**
@@ -43,6 +46,7 @@ public final class RepositoryAdvisor extends DefaultPointcutAdvisor {
         public boolean matches(final Method method, final Class<?> targetClass) {
             final Method specificMethod = getMostSpecificMethod(method, targetClass);
             if (!Modifier.isAbstract(specificMethod.getModifiers())) {
+                LOGGER.trace("Skip concret method {}.", specificMethod);
                 return false;
             }
 
