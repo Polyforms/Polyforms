@@ -17,7 +17,8 @@ public class PolyformsNamespaceHandlerTest {
 
         final Map<String, BeanDefinitionParser> parsers = (Map<String, BeanDefinitionParser>) ReflectionTestUtils
                 .getField(handler, "parsers");
-        Assert.assertEquals(1, parsers.size());
+        Assert.assertEquals(2, parsers.size());
         Assert.assertTrue(parsers.get("component-scan") instanceof PolyformsComponentScanBeanDefinitionParser);
+        Assert.assertTrue(parsers.get("beansOf") instanceof BeansOfBeanDefinitionParser);
     }
 }

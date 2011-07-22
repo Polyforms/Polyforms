@@ -41,7 +41,7 @@ public final class EntityClassPrefixingQueryNameResolver implements QueryNameRes
             final Class<?> entityClass = entityClassResolver.resolve(method.getDeclaringClass());
             queryNameCache.put(method, entityClass.getSimpleName() + "." + method.getName());
         }
-        String queryName = queryNameCache.get(method);
+        final String queryName = queryNameCache.get(method);
         LOGGER.debug("Name of query for {} is {}", method, queryName);
         return queryName;
     }

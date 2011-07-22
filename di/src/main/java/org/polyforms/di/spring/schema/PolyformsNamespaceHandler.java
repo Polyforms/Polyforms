@@ -14,5 +14,6 @@ public final class PolyformsNamespaceHandler extends NamespaceHandlerSupport {
      */
     public void init() {
         registerBeanDefinitionParser("component-scan", new PolyformsComponentScanBeanDefinitionParser());
+        registerBeanDefinitionParser("beansOf", new BeansOfBeanDefinitionParser());
     }
 }

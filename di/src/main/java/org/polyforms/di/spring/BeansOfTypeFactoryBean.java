@@ -3,10 +3,9 @@ package org.polyforms.di.spring;
 import java.util.Collection;
 import java.util.Collections;
 
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.ListableBeanFactory;
+import org.springframework.beans.factory.config.AbstractFactoryBean;
 
 /**
  * {@link FactoryBean} which lists all beans of specific type in {@link ListableBeanFactory}.
@@ -14,9 +13,7 @@ import org.springframework.beans.factory.ListableBeanFactory;
  * @author Kuisong Tong
  * @since 1.0
  */
-public final class BeansOfTypeFactoryBean<T> implements FactoryBean<Collection<T>>, BeanFactoryAware {
-    private ListableBeanFactory beanFactory;
-
+public final class BeansOfTypeFactoryBean<T> extends AbstractFactoryBean<Collection<T>> {
     private final Class<T> beanClass;
 
     private Collection<T> beans;
@@ -28,17 +25,15 @@ public final class BeansOfTypeFactoryBean<T> implements FactoryBean<Collection<T
         this.beanClass = beanClass;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     @SuppressWarnings("unchecked")
-    public Collection<T> getObject() {
+    protected Collection<T> createInstance() throws Exception {
         if (beanClass == null) {
             return Collections.EMPTY_LIST;
         }
 
         if (beans == null) {
-            beans = beanFactory.getBeansOfType(beanClass).values();
+            beans = ((ListableBeanFactory) getBeanFactory()).getBeansOfType(beanClass).values();
         }
         return beans;
     }
@@ -46,21 +41,8 @@ public final class BeansOfTypeFactoryBean<T> implements FactoryBean<Collection<T
     /**
      * {@inheritDoc}
      */
+    @Override
     public Class<?> getObjectType() {
         return Collection.class;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public boolean isSingleton() {
-        return true;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void setBeanFactory(final BeanFactory beanFactory) {
-        this.beanFactory = (ListableBeanFactory) beanFactory;
     }
 }

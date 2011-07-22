@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <xsd:schema xmlns="http://www.polyforms.org/schema"
-	xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
-	xmlns:tool="http://www.springframework.org/schema/tool"
-	xmlns:context="http://www.springframework.org/schema/context"
-	targetNamespace="http://www.polyforms.org/schema" 
-	elementFormDefault="qualified"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:tool="http://www.springframework.org/schema/tool" xmlns:context="http://www.springframework.org/schema/context"
+	targetNamespace="http://www.polyforms.org/schema" elementFormDefault="qualified"
 	attributeFormDefault="unqualified">
 
+	<xsd:import namespace="http://www.springframework.org/schema/beans"
+		schemaLocation="http://www.springframework.org/schema/beans/spring-beans-3.0.xsd" />
 	<xsd:import namespace="http://www.springframework.org/schema/tool"
 		schemaLocation="http://www.springframework.org/schema/tool/spring-tool-3.0.xsd" />
 	<xsd:import namespace="http://www.springframework.org/schema/context"
@@ -20,6 +20,28 @@
 	Defines the polyforms extension for Spring's configuration namespaces.
 		]]></xsd:documentation>
 	</xsd:annotation>
+
+	<xsd:element name="beansOf">
+		<xsd:annotation>
+			<xsd:documentation
+				source="java:org.springframework.beans.factory.config.BeanDefinition"><![CDATA[
+	Get all beans of specific type in bean factory.
+			]]></xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="beans:identifiedType">
+					<xsd:attribute name="class" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation source="java:java.lang.Class"><![CDATA[
+	The fully qualified name of the beans' class.
+				]]></xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
 
 	<xsd:element name="component-scan">
 		<xsd:annotation>

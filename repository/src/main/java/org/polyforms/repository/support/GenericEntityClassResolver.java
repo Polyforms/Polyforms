@@ -41,7 +41,7 @@ public class GenericEntityClassResolver implements EntityClassResolver, Reposito
             patchForOpenJpa(repositoryClass, entityClass);
             resolvedEntityClassCache.put(repositoryClass, entityClass);
         }
-        Class<?> entityClass = resolvedEntityClassCache.get(repositoryClass);
+        final Class<?> entityClass = resolvedEntityClassCache.get(repositoryClass);
         LOGGER.debug("Resolved entity class {} for {}.", entityClass, repositoryClass);
         return entityClass;
     }
@@ -57,7 +57,7 @@ public class GenericEntityClassResolver implements EntityClassResolver, Reposito
      * {@inheritDoc}
      */
     public boolean matches(final Class<?> candidate) {
-        boolean isRepository = genericInterface.isAssignableFrom(candidate);
+        final boolean isRepository = genericInterface.isAssignableFrom(candidate);
         LOGGER.debug("{} is a repository.", candidate, isRepository ? "" : "not ");
         return isRepository;
     }

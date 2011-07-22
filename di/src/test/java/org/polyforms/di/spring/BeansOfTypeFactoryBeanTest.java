@@ -8,7 +8,6 @@ import org.easymock.EasyMock;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.ListableBeanFactory;
 
 public class BeansOfTypeFactoryBeanTest {
@@ -20,18 +19,20 @@ public class BeansOfTypeFactoryBeanTest {
     }
 
     @Test
-    public void getObject() {
-        Map<String, Object> beanMap = new HashMap<String, Object>();
-        Object bean = new Object();
+    public void getObject() throws Exception {
+        final Map<String, Object> beanMap = new HashMap<String, Object>();
+        final Object bean = new Object();
         beanMap.put("bean", bean);
 
-        ListableBeanFactory beanFactory = EasyMock.createMock(ListableBeanFactory.class);
-        factoryBean.setBeanFactory(beanFactory);
+        final ListableBeanFactory beanFactory = EasyMock.createMock(ListableBeanFactory.class);
         beanFactory.getBeansOfType(Object.class);
         EasyMock.expectLastCall().andReturn(beanMap);
         EasyMock.replay(beanFactory);
 
-        Collection<Object> beans = factoryBean.getObject();
+        factoryBean.setBeanFactory(beanFactory);
+        factoryBean.afterPropertiesSet();
+
+        final Collection<Object> beans = factoryBean.getObject();
         Assert.assertEquals(1, beans.size());
         Assert.assertSame(bean, beans.iterator().next());
         // Just for testing cache
@@ -45,13 +46,9 @@ public class BeansOfTypeFactoryBeanTest {
     }
 
     @Test
-    public void isSingleton() {
-        Assert.assertTrue(factoryBean.isSingleton());
-    }
-
-    @Test
     public void getObjectForNull() throws Exception {
-        FactoryBean<Collection<Object>> factoryBean = new BeansOfTypeFactoryBean<Object>(null);
+        final BeansOfTypeFactoryBean<Object> factoryBean = new BeansOfTypeFactoryBean<Object>(null);
+        factoryBean.afterPropertiesSet();
         Assert.assertTrue(((Collection<?>) factoryBean.getObject()).isEmpty());
     }
 }

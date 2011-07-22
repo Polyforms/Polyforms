@@ -50,7 +50,7 @@ public final class RepositoryInterceptor implements MethodInterceptor {
             matchedExecutors.put(method, executor);
         }
 
-        Executor executor = matchedExecutors.get(method);
+        final Executor executor = matchedExecutors.get(method);
         LOGGER.debug("Found executor {} for method {}.", executor, method);
         return executor;
     }
