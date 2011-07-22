@@ -8,6 +8,13 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 
+/**
+ * Parser for the &lt;polyforms:beansOf/&gt; element.
+ * 
+ * 
+ * @author Kuisong Tong
+ * @since 1.0
+ */
 public class BeansOfBeanDefinitionParser extends AbstractSingleBeanDefinitionParser {
     @Override
     protected Class<?> getBeanClass(final Element element) {

@@ -2,6 +2,7 @@ package org.polyforms.di.spring;
 
 import org.easymock.EasyMock;
 import org.junit.Test;
+import org.polyforms.di.spring.util.BeanFactoryVisitor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.test.util.ReflectionTestUtils;
 

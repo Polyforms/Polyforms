@@ -3,12 +3,12 @@ package org.polyforms.di.spring;
 import java.util.Collection;
 import java.util.Collections;
 
-import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.config.AbstractFactoryBean;
 
 /**
- * {@link FactoryBean} which lists all beans of specific type in {@link ListableBeanFactory}.
+ * {@link org.springframework.beans.factory.FactoryBean} which lists all beans of specific type in
+ * {@link ListableBeanFactory}.
  * 
  * @author Kuisong Tong
  * @since 1.0
@@ -27,7 +27,7 @@ public final class BeansOfTypeFactoryBean<T> extends AbstractFactoryBean<Collect
 
     @Override
     @SuppressWarnings("unchecked")
-    protected Collection<T> createInstance() throws Exception {
+    protected Collection<T> createInstance() {
         if (beanClass == null) {
             return Collections.EMPTY_LIST;
         }

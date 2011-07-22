@@ -8,6 +8,12 @@ import javax.persistence.PersistenceContext;
 
 import org.polyforms.repository.spi.Executor;
 
+/**
+ * Implementation of remove method which remove entities.
+ * 
+ * @author Kuisong Tong
+ * @since 1.0
+ */
 @Named
 public final class Remove implements Executor {
     @PersistenceContext

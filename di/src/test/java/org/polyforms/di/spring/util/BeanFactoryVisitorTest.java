@@ -3,8 +3,8 @@ package org.polyforms.di.spring.util;
 import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
-import org.polyforms.di.spring.BeanFactoryVisitor;
-import org.polyforms.di.spring.BeanFactoryVisitor.BeanClassVisitor;
+import org.polyforms.di.spring.util.BeanFactoryVisitor.BeanClassVisitor;
+import org.polyforms.di.spring.util.support.DefaultBeanFactoryVisitor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 

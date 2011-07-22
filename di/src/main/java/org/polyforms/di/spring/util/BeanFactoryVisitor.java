@@ -1,4 +1,4 @@
-package org.polyforms.di.spring;
+package org.polyforms.di.spring.util;
 
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
@@ -21,7 +21,7 @@ public interface BeanFactoryVisitor {
     /**
      * Visitor of bean definition in bean factory.
      */
-    public interface BeanClassVisitor {
+    interface BeanClassVisitor {
         /**
          * Visit single bean definition with class of it.
          * 

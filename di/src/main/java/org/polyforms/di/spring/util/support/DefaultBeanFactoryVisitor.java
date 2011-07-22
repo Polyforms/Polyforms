@@ -1,6 +1,6 @@
-package org.polyforms.di.spring.util;
+package org.polyforms.di.spring.util.support;
 
-import org.polyforms.di.spring.BeanFactoryVisitor;
+import org.polyforms.di.spring.util.BeanFactoryVisitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;

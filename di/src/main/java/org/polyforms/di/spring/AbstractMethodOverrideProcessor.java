@@ -3,8 +3,9 @@ package org.polyforms.di.spring;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
-import org.polyforms.di.spring.BeanFactoryVisitor.BeanClassVisitor;
-import org.polyforms.di.spring.util.DefaultBeanFactoryVisitor;
+import org.polyforms.di.spring.util.BeanFactoryVisitor;
+import org.polyforms.di.spring.util.BeanFactoryVisitor.BeanClassVisitor;
+import org.polyforms.di.spring.util.support.DefaultBeanFactoryVisitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;

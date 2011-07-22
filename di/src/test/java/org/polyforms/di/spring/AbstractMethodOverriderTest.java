@@ -4,7 +4,7 @@ import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
 import org.polyforms.di.spring.AbstractMethodOverrider.UnsupportedMethodReplacer;
-import org.polyforms.di.spring.BeanFactoryVisitor.BeanClassVisitor;
+import org.polyforms.di.spring.util.BeanFactoryVisitor.BeanClassVisitor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.MethodOverride;

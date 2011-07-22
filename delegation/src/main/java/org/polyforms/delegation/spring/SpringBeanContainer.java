@@ -3,7 +3,6 @@ package org.polyforms.delegation.spring;
 import org.polyforms.delegation.support.BeanContainer;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +17,7 @@ public final class SpringBeanContainer implements BeanContainer {
     private final BeanFactory beanFactory;
 
     /**
-     * Create an instance with Spring {@link ListableBeanFactory}
+     * Create an instance with Spring {@link BeanFactory}
      */
     @Autowired
     public SpringBeanContainer(final BeanFactory beanFactory) {
