@@ -8,9 +8,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-@ContextConfiguration("ComponentScannerTest-context.xml")
+@ContextConfiguration
 @RunWith(SpringJUnit4ClassRunner.class)
-public final class NoOperationAdvisorTest {
+public final class NoOperationAdvisorIT {
     @Autowired
     private NoOperationService noopService;
 
