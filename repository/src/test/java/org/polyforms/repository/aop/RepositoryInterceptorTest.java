@@ -32,7 +32,7 @@ public class RepositoryInterceptorTest {
 
         invocation.getMethod();
         EasyMock.expectLastCall().andReturn(method).times(2);
-        executorFinder.getExecutor(method);
+        executorFinder.findExecutor(method);
         EasyMock.expectLastCall().andReturn(executor);
         invocation.getThis();
         EasyMock.expectLastCall().andReturn(target).times(2);

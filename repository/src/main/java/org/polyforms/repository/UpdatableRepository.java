@@ -1,8 +1,8 @@
 package org.polyforms.repository;
 
 /**
- * A updatable {@link Repository} which has some convenient methods to update entity instance of entity class specified
- * in generic type parameter.
+ * A updatable {@link Repository} which has some convenient methods to update entity instance(s) of entity class
+ * specified in generic type parameter.
  * 
  * @param <T> type of entity
  * 
@@ -11,7 +11,7 @@ package org.polyforms.repository;
  */
 public interface UpdatableRepository<T> extends Repository<T> {
     /**
-     * Add entity instances into repository.
+     * Save entity instances into repository.
      * 
      * @param entities which are to be added into repository
      */
