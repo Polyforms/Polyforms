@@ -1,7 +1,7 @@
 package org.polyforms.repository;
 
 /**
- * The marker interface which implements @see <a href="http://martinfowler.com/eaaCatalog/repository.html">Repository
+ * The marker interface which implements <a href="http://martinfowler.com/eaaCatalog/repository.html">Repository
  * Pattern</a>.
  * 
  * @param <T> type of entity

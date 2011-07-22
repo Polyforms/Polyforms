@@ -35,29 +35,27 @@ public class NameBasedExecutorFinderTest {
     }
 
     @Test
-    public void getExecutor() throws NoSuchMethodException {
+    public void findExecutor() throws NoSuchMethodException {
         final Method method = Repository.class.getMethod("get", new Class<?>[0]);
-        Assert.assertSame(get, executorFinder.getExecutor(method));
+        Assert.assertSame(get, executorFinder.findExecutor(method));
     }
 
     @Test
-    public void getExecutorWithAlias() throws NoSuchMethodException {
+    public void findExecutorWithAlias() throws NoSuchMethodException {
         final Method method = Repository.class.getMethod("load", new Class<?>[0]);
-        Assert.assertSame(get, executorFinder.getExecutor(method));
+        Assert.assertSame(get, executorFinder.findExecutor(method));
     }
 
     @Test
     public void getWildcardExecutor() throws NoSuchMethodException {
         final Method method = Repository.class.getMethod("getByName", new Class<?>[0]);
-        Assert.assertSame(getBy, executorFinder.getExecutor(method));
-        // Just for testing cache.
-        Assert.assertSame(getBy, executorFinder.getExecutor(method));
+        Assert.assertSame(getBy, executorFinder.findExecutor(method));
     }
 
     @Test
     public void unsupportedByExecutor() throws NoSuchMethodException {
         final Method method = String.class.getMethod("toString", new Class<?>[0]);
-        Assert.assertSame(Executor.UNSUPPORTED, executorFinder.getExecutor(method));
+        Assert.assertSame(Executor.UNSUPPORTED, executorFinder.findExecutor(method));
     }
 
     private static class Get implements Executor {

@@ -26,7 +26,6 @@ public final class Jpa2EntityHelper implements EntityHelper {
     @SuppressWarnings("rawtypes")
     private final Map<Class<? extends Member>, ValueGetter> valueGetters = new HashMap<Class<? extends Member>, ValueGetter>();
     private final Map<Class<?>, SingularAttribute<?, ?>> idAttibuteCache = new HashMap<Class<?>, SingularAttribute<?, ?>>();
-
     @PersistenceContext
     private EntityManager entityManager;
 

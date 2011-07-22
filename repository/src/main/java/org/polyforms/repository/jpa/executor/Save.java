@@ -8,6 +8,12 @@ import javax.persistence.PersistenceContext;
 
 import org.polyforms.repository.spi.Executor;
 
+/**
+ * Implementation of save method which persist entity.
+ * 
+ * @author Kuisong Tong
+ * @since 1.0
+ */
 @Named
 public final class Save implements Executor {
     @PersistenceContext

@@ -16,5 +16,5 @@ public interface ExecutorFinder {
      * 
      * @return matched executor or {@link Executor#UNSUPPORTED} if not found
      */
-    Executor getExecutor(Method method);
+    Executor findExecutor(Method method);
 }

@@ -14,6 +14,9 @@ import org.springframework.core.convert.TypeDescriptor;
  */
 @Named
 public final class EntityToIdentifierConverter extends EntityConverter {
+    /**
+     * Create an instance with {@link EntityHelper}.
+     */
     @Inject
     public EntityToIdentifierConverter(final EntityHelper entityHelper) {
         super(entityHelper);
