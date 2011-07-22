@@ -1,4 +1,4 @@
-package org.polyforms.delegation.integration;
+package org.polyforms.di.spring.integration;
 
 import java.util.Collection;
 
