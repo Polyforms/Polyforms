@@ -13,7 +13,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @ContextConfiguration
 @RunWith(SpringJUnit4ClassRunner.class)
-public class BeanListFactoryBeanIT {
+public class BeansOfTypeFactoryBeanIT {
     @Autowired
     private FactoryBean<Collection<GenericConverter>> factoryBean;
 

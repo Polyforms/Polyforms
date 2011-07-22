@@ -1,6 +1,7 @@
 package org.polyforms.di.spring;
 
 import java.util.Collection;
+import java.util.Collections;
 
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -13,7 +14,7 @@ import org.springframework.beans.factory.ListableBeanFactory;
  * @author Kuisong Tong
  * @since 1.0
  */
-public final class BeanListFactoryBean<T> implements FactoryBean<Collection<T>>, BeanFactoryAware {
+public final class BeansOfTypeFactoryBean<T> implements FactoryBean<Collection<T>>, BeanFactoryAware {
     private ListableBeanFactory beanFactory;
 
     private final Class<T> beanClass;
@@ -23,14 +24,19 @@ public final class BeanListFactoryBean<T> implements FactoryBean<Collection<T>>,
     /**
      * Create an instance with specific bean type.
      */
-    public BeanListFactoryBean(final Class<T> beanClass) {
+    public BeansOfTypeFactoryBean(final Class<T> beanClass) {
         this.beanClass = beanClass;
     }
 
     /**
      * {@inheritDoc}
      */
+    @SuppressWarnings("unchecked")
     public Collection<T> getObject() {
+        if (beanClass == null) {
+            return Collections.EMPTY_LIST;
+        }
+
         if (beans == null) {
             beans = beanFactory.getBeansOfType(beanClass).values();
         }
