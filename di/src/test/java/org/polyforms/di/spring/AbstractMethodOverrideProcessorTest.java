@@ -1,62 +1,21 @@
 package org.polyforms.di.spring;
 
-import org.junit.Assert;
+import org.easymock.EasyMock;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.test.util.ReflectionTestUtils;
 
-@ContextConfiguration
-@RunWith(SpringJUnit4ClassRunner.class)
-public final class AbstractMethodOverrideProcessorTest {
-    @Autowired
-    private MockInterface mockInterface;
-
-    @Autowired
-    private MockObject mockObject;
-
-    @Autowired
-    private MockAbstractObject mockAbstractObject;
-
+public class AbstractMethodOverrideProcessorTest {
     @Test
-    public void instantiateInterface() {
-        Assert.assertNotNull(mockInterface);
-    }
+    public void postProcessBeanFactory() {
+        final BeanFactoryVisitor beanFactoryVisitor = EasyMock.createMock(BeanFactoryVisitor.class);
+        final ConfigurableListableBeanFactory beanFactory = EasyMock.createMock(ConfigurableListableBeanFactory.class);
+        beanFactoryVisitor.visit(EasyMock.same(beanFactory), EasyMock.isA(AbstractMethodOverrider.class));
+        EasyMock.replay(beanFactoryVisitor);
 
-    @Test
-    public void instantiateAbstractClass() {
-        Assert.assertNotNull(mockAbstractObject);
-    }
-
-    @Test
-    public void instantiateNormalClass() {
-        Assert.assertNotNull(mockObject);
-    }
-
-    @Test
-    public void preDefinedMethodInjection() {
-        Assert.assertNotNull(mockAbstractObject.lookup());
-    }
-
-    @Test(expected = UnsupportedOperationException.class)
-    public void invokeUninterceptedMethod() {
-        mockInterface.echo("");
-    }
-
-    public static abstract class MockAbstractObject {
-        public abstract String echo(String string);
-
-        public abstract Object lookup();
-    }
-
-    public static interface MockInterface {
-        String echo(String string);
-    }
-
-    public static final class MockObject {
-        public String echo(final String string) {
-            return string;
-        }
+        final AbstractMethodOverrideProcessor abstractMethodOverrideProcessor = new AbstractMethodOverrideProcessor();
+        ReflectionTestUtils.setField(abstractMethodOverrideProcessor, "beanFactoryVisitor", beanFactoryVisitor);
+        abstractMethodOverrideProcessor.postProcessBeanFactory(beanFactory);
+        EasyMock.verify(beanFactoryVisitor);
     }
 }

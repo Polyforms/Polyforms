@@ -6,7 +6,7 @@
 		http://www.polyforms.org/schema
 		http://www.polyforms.org/schema/polyforms.xsd">
 		
-	<bean class="org.polyforms.di.spring.BeanListFactoryBean">
+	<bean class="org.polyforms.delegation.spring.BeanListFactoryBean">
 		<constructor-arg
 			value="org.springframework.core.convert.converter.GenericConverter" />
 	</bean>

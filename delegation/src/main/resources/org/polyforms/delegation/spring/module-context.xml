@@ -11,7 +11,7 @@
 	<bean id="conversionService"
 		class="org.springframework.context.support.ConversionServiceFactoryBean">
 		<property name="converters">
-			<bean class="org.polyforms.di.spring.BeanListFactoryBean">
+			<bean class="org.polyforms.delegation.spring.BeanListFactoryBean">
 				<constructor-arg value="org.springframework.core.convert.converter.GenericConverter" />
 			</bean>
 		</property>

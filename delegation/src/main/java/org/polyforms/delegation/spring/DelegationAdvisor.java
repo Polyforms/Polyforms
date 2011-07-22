@@ -13,8 +13,9 @@ import org.polyforms.delegation.aop.DelegationInterceptor;
 import org.polyforms.delegation.builder.DelegationBuilder;
 import org.polyforms.delegation.builder.DelegationRegistry;
 import org.polyforms.delegation.builder.DelegationRegistry.Delegation;
-import org.polyforms.di.spring.util.BeanFactoryVisitor;
-import org.polyforms.di.spring.util.BeanFactoryVisitor.BeanClassVisitor;
+import org.polyforms.di.spring.BeanFactoryVisitor;
+import org.polyforms.di.spring.BeanFactoryVisitor.BeanClassVisitor;
+import org.polyforms.di.spring.util.DefaultBeanFactoryVisitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.support.DefaultPointcutAdvisor;
@@ -38,7 +39,7 @@ import org.springframework.util.StringUtils;
  */
 @Component
 public final class DelegationAdvisor extends DefaultPointcutAdvisor {
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -8805686347009910065L;
 
     /**
      * Create an default instance with {@link DelegationService}.
@@ -116,6 +117,7 @@ final class DelegationProcessor implements BeanDefinitionRegistryPostProcessor {
 
     private static final class AnnotatedDelegationBuilder extends DelegationBuilder {
         private final ConfigurableListableBeanFactory beanFactory;
+        private final BeanFactoryVisitor beanFactoryVisitor = new DefaultBeanFactoryVisitor();
 
         private AnnotatedDelegationBuilder(final ConfigurableListableBeanFactory beanFactory) {
             this.beanFactory = beanFactory;
@@ -123,16 +125,12 @@ final class DelegationProcessor implements BeanDefinitionRegistryPostProcessor {
 
         @Override
         protected void registerDelegations() {
-            BeanFactoryVisitor.visit(beanFactory, new BeanClassVisitor() {
+            beanFactoryVisitor.visit(beanFactory, new BeanClassVisitor() {
                 /**
                  * {@inheritDoc}
                  */
                 public void visit(final String beanName, final AbstractBeanDefinition beanDefinition,
                         final Class<?> clazz) {
-                    if (clazz == null) {
-                        return;
-                    }
-
                     for (final Method method : clazz.getMethods()) {
                         registerDelegatedBy(beanName, method);
                         registerDelegatTo(method);

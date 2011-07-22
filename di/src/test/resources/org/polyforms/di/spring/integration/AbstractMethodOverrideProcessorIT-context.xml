@@ -7,14 +7,14 @@
 	<bean class="org.polyforms.di.spring.AbstractMethodOverrideProcessor" />
 
 	<bean id="prototypeObject" scope="prototype" class="java.lang.Object" />
-	<bean id="mockAbstractObject" class="org.polyforms.di.spring.AbstractMethodOverrideProcessorTest$MockAbstractObject">
+	<bean id="mockAbstractObject" class="org.polyforms.di.spring.integration.AbstractMethodOverrideProcessorIT$MockAbstractObject">
 		<lookup-method name="lookup" bean="prototypeObject" />
 	</bean>
-	<bean class="org.polyforms.di.spring.AbstractMethodOverrideProcessorTest$MockInterface" />
-	<bean class="org.polyforms.di.spring.AbstractMethodOverrideProcessorTest$MockObject" />
+	<bean class="org.polyforms.di.spring.integration.AbstractMethodOverrideProcessorIT$MockInterface" />
+	<bean class="org.polyforms.di.spring.integration.AbstractMethodOverrideProcessorIT$MockObject" />
 
 	<!-- for coverage testing -->
 	<bean id="abstractBean" abstract="true"
-		class="org.polyforms.di.spring.AbstractMethodOverrideProcessorTest$MockAbstractObject" />		
+		class="org.polyforms.di.spring.integration.AbstractMethodOverrideProcessorIT$MockAbstractObject" />		
 	<bean parent="abstractBean"/>
 </beans>

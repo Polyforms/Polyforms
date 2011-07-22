@@ -1,9 +1,6 @@
 package org.polyforms.di.spring.schema;
 
 import org.polyforms.di.spring.AbstractMethodOverrideProcessor;
-import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
-import org.springframework.beans.factory.support.BeanDefinitionRegistry;
-import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.beans.factory.xml.XmlReaderContext;
 import org.springframework.context.annotation.ClassPathBeanDefinitionScanner;
 import org.springframework.context.annotation.ComponentScanBeanDefinitionParser;
@@ -25,25 +22,5 @@ public final class PolyformsComponentScanBeanDefinitionParser extends ComponentS
     protected ClassPathBeanDefinitionScanner createScanner(final XmlReaderContext readerContext,
             final boolean useDefaultFilters) {
         return new PolyformsClassPathBeanDefinitionScanner(readerContext.getRegistry(), useDefaultFilters);
-    }
-
-    private static final class PolyformsClassPathBeanDefinitionScanner extends ClassPathBeanDefinitionScanner {
-        private PolyformsClassPathBeanDefinitionScanner(final BeanDefinitionRegistry registry,
-                final boolean useDefaultFilters) {
-            super(registry, useDefaultFilters);
-            registerNullBeanIfNecessary(registry);
-        }
-
-        @Override
-        protected boolean isCandidateComponent(final AnnotatedBeanDefinition beanDefinition) {
-            return beanDefinition.getMetadata().isIndependent();
-        }
-
-        private void registerNullBeanIfNecessary(final BeanDefinitionRegistry registry) {
-            final String beanName = "abstractMethodOverrideProcessor";
-            if (!registry.containsBeanDefinition(beanName)) {
-                registry.registerBeanDefinition(beanName, new RootBeanDefinition(AbstractMethodOverrideProcessor.class));
-            }
-        }
     }
 }

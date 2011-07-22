@@ -11,13 +11,13 @@ public class RepositoryConfigurationTest {
 
     @Test
     public void entityClassResolver() {
-        EntityClassResolver entityClassResolver = configuration.entityClassResolver();
+        final EntityClassResolver entityClassResolver = configuration.entityClassResolver();
         Assert.assertSame(Object.class, entityClassResolver.resolve(MockRepository.class));
     }
 
     @Test
     public void repositoryMatcher() {
-        RepositoryMatcher repositoryMatcher = configuration.repositoryMatcher();
+        final RepositoryMatcher repositoryMatcher = configuration.repositoryMatcher();
         Assert.assertTrue(repositoryMatcher.matches(MockRepository.class));
     }
 

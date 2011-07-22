@@ -3,8 +3,8 @@ package org.polyforms.di.spring;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
-import org.polyforms.di.spring.util.BeanFactoryVisitor;
-import org.polyforms.di.spring.util.BeanFactoryVisitor.BeanClassVisitor;
+import org.polyforms.di.spring.BeanFactoryVisitor.BeanClassVisitor;
+import org.polyforms.di.spring.util.DefaultBeanFactoryVisitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
@@ -31,30 +31,38 @@ import org.springframework.beans.factory.support.ReplaceOverride;
  * @since 1.0
  */
 public final class AbstractMethodOverrideProcessor implements BeanFactoryPostProcessor {
-    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractMethodOverrideProcessor.class);
-    private static final String UNSUPPORTED_METHOD_REPLACER_NAME = "__UNSUPPORTED_METHOD_REPLACER";
+    private final BeanFactoryVisitor beanFactoryVisitor = new DefaultBeanFactoryVisitor();
 
     /**
      * {@inheritDoc}
      */
     public void postProcessBeanFactory(final ConfigurableListableBeanFactory beanFactory) {
-        BeanFactoryVisitor.visit(beanFactory, new BeanClassVisitor() {
-            /**
-             * {@inheritDoc}
-             */
-            public void visit(final String beanName, final AbstractBeanDefinition beanDefinition, final Class<?> clazz) {
-                if (clazz != null && Modifier.isAbstract(clazz.getModifiers())) {
-                    registerMethodReplacerIfNecessary(beanFactory);
-                    addMethodOverrides(beanDefinition, clazz);
-                }
-            }
-        });
+        beanFactoryVisitor.visit(beanFactory, new AbstractMethodOverrider(beanFactory));
+    }
+}
+
+final class AbstractMethodOverrider implements BeanClassVisitor {
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractMethodOverrider.class);
+    private static final String UNSUPPORTED_METHOD_REPLACER_NAME = "__UNSUPPORTED_METHOD_REPLACER";
+    private final ConfigurableListableBeanFactory beanFactory;
+
+    protected AbstractMethodOverrider(final ConfigurableListableBeanFactory beanFactory) {
+        this.beanFactory = beanFactory;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void visit(final String beanName, final AbstractBeanDefinition beanDefinition, final Class<?> clazz) {
+        if (Modifier.isAbstract(clazz.getModifiers())) {
+            registerMethodReplacerIfNecessary(beanFactory);
+            addMethodOverrides(beanDefinition, clazz);
+        }
     }
 
     private synchronized void registerMethodReplacerIfNecessary(final ConfigurableListableBeanFactory beanFactory) {
-        if (!beanFactory.containsBean(AbstractMethodOverrideProcessor.UNSUPPORTED_METHOD_REPLACER_NAME)) {
-            beanFactory.registerSingleton(AbstractMethodOverrideProcessor.UNSUPPORTED_METHOD_REPLACER_NAME,
-                    new UnsupportedMethodReplacer());
+        if (!beanFactory.containsBean(UNSUPPORTED_METHOD_REPLACER_NAME)) {
+            beanFactory.registerSingleton(UNSUPPORTED_METHOD_REPLACER_NAME, new UnsupportedMethodReplacer());
         }
     }
 
@@ -62,24 +70,13 @@ public final class AbstractMethodOverrideProcessor implements BeanFactoryPostPro
         final MethodOverrides methodOverrides = beanDefinition.getMethodOverrides();
         for (final Method method : clazz.getMethods()) {
             if (Modifier.isAbstract(method.getModifiers()) && methodOverrides.getOverride(method) == null) {
-                traceOverride(clazz, method);
-                methodOverrides.addOverride(new ReplaceOverride(method.getName(),
-                        AbstractMethodOverrideProcessor.UNSUPPORTED_METHOD_REPLACER_NAME));
+                LOGGER.info("Add override for {}.", method);
+                methodOverrides.addOverride(new ReplaceOverride(method.getName(), UNSUPPORTED_METHOD_REPLACER_NAME));
             }
         }
     }
 
-    private void traceOverride(final Class<?> clazz, final Method method) {
-        if (clazz.isInterface()) {
-            AbstractMethodOverrideProcessor.LOGGER.trace("Add override for method {} in interface {}.",
-                    method.getName(), clazz.getName());
-        } else {
-            AbstractMethodOverrideProcessor.LOGGER.trace("Add override for method {} in abstract class {}.",
-                    method.getName(), clazz.getName());
-        }
-    }
-
-    private static final class UnsupportedMethodReplacer implements MethodReplacer {
+    protected static final class UnsupportedMethodReplacer implements MethodReplacer {
         /**
          * {@inheritDoc}
          */

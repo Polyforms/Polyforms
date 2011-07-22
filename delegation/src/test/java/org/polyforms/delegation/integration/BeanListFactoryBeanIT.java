@@ -1,4 +1,4 @@
-package org.polyforms.di.spring;
+package org.polyforms.delegation.integration;
 
 import java.util.Collection;
 
@@ -13,7 +13,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @ContextConfiguration
 @RunWith(SpringJUnit4ClassRunner.class)
-public class BeanListFactoryBeanTest {
+public class BeanListFactoryBeanIT {
     @Autowired
     private FactoryBean<Collection<GenericConverter>> factoryBean;
 
