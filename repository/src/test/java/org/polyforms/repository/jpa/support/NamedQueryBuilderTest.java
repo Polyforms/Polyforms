@@ -43,4 +43,19 @@ public class NamedQueryBuilderTest {
         Assert.assertSame(query, queryBuilder.build(method));
         EasyMock.verify(queryNameResolver, entityManager);
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void cannotBuild() {
+        final Method method = null;
+        final String queryName = "Mock.getByName";
+
+        queryNameResolver.getQueryName(method);
+        EasyMock.expectLastCall().andReturn(queryName);
+        entityManager.createNamedQuery(queryName);
+        EasyMock.expectLastCall().andThrow(new IllegalArgumentException());
+        EasyMock.replay(queryNameResolver, entityManager);
+
+        queryBuilder.build(method);
+        EasyMock.verify(queryNameResolver, entityManager);
+    }
 }

@@ -28,7 +28,6 @@ public class GenericEntityClassResolver implements EntityClassResolver, Reposito
      * @param genericInterface implemented by Repository.
      */
     public GenericEntityClassResolver(final Class<?> genericInterface) {
-        LOGGER.trace("Create GenericEntityClassResolver for classed implementing {}", genericInterface);
         this.genericInterface = genericInterface;
     }
 
@@ -36,7 +35,6 @@ public class GenericEntityClassResolver implements EntityClassResolver, Reposito
      * {@inheritDoc}
      */
     public Class<?> resolve(final Class<?> repositoryClass) {
-        LOGGER.trace("Resolve entity class for {}.", repositoryClass);
         if (!resolvedEntityClassCache.containsKey(repositoryClass)) {
             LOGGER.trace("Cache missed when resolving entity class for {}.", repositoryClass);
             final Class<?> entityClass = GenericTypeResolver.resolveTypeArgument(repositoryClass, genericInterface);

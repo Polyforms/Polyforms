@@ -19,6 +19,9 @@ public final class IdentifierToEntityConverter extends EntityConverter {
     @PersistenceContext
     private EntityManager entityManager;
 
+    /**
+     * Create an instance with {@link EntityHelper}.
+     */
     @Inject
     public IdentifierToEntityConverter(final EntityHelper entityHelper) {
         super(entityHelper);

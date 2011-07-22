@@ -15,14 +15,14 @@ import org.polyforms.repository.jpa.QueryParameterBinder;
  */
 @Named
 public final class UpdateBy extends QueryExecutor {
+    /**
+     * Create an instance with {@link QueryBuilder} and {@link QueryParameterBinder}.
+     */
     @Inject
     public UpdateBy(final QueryBuilder queryBuilder, final QueryParameterBinder queryParameterBinder) {
         super(queryBuilder, queryParameterBinder);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected Object getResult(final Query query) {
         return query.executeUpdate();

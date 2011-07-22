@@ -43,10 +43,10 @@ public final class NameBasedExecutorFinder implements ExecutorFinder {
             String executorName = executor.getClass().getSimpleName();
             final String name = StringUtils.uncapitalize(executorName);
             if (name.endsWith(WILDCARD_SUFFIX)) {
-                LOGGER.debug("Add wildcard executor {}.", executorName);
+                LOGGER.info("Add wildcard executor {}.", executorName);
                 mapExecutor(wildcardExecutor, name.substring(0, name.length() - WILDCARD_SUFFIX.length()), executor);
             } else {
-                LOGGER.debug("Add executor {}.", executorName);
+                LOGGER.info("Add executor {}.", executorName);
                 mapExecutor(this.executors, name, executor);
             }
         }
@@ -76,7 +76,6 @@ public final class NameBasedExecutorFinder implements ExecutorFinder {
      * {@inheritDoc}
      */
     public Executor findExecutor(final Method method) {
-        LOGGER.trace("Find executor for method {}.", method);
         final String methodName = method.getName();
 
         if (executors.containsKey(methodName)) {
