@@ -8,7 +8,6 @@ import javax.inject.Named;
 import org.polyforms.delegation.DelegationService;
 import org.polyforms.delegation.builder.DelegationRegistry;
 import org.polyforms.delegation.builder.DelegationRegistry.Delegation;
-import org.polyforms.di.container.BeanContainer;
 import org.springframework.core.convert.ConversionService;
 
 /**

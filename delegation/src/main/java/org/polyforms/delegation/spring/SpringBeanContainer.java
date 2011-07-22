@@ -1,10 +1,8 @@
-package org.polyforms.di.spring;
+package org.polyforms.delegation.spring;
 
-import java.util.Collection;
-
-import org.polyforms.di.container.BeanContainer;
-import org.polyforms.di.container.BeanNotFoundException;
+import org.polyforms.delegation.support.BeanContainer;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -17,13 +15,13 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public final class SpringBeanContainer implements BeanContainer {
-    private final ListableBeanFactory beanFactory;
+    private final BeanFactory beanFactory;
 
     /**
      * Create an instance with Spring {@link ListableBeanFactory}
      */
     @Autowired
-    public SpringBeanContainer(final ListableBeanFactory beanFactory) {
+    public SpringBeanContainer(final BeanFactory beanFactory) {
         this.beanFactory = beanFactory;
     }
 
@@ -43,28 +41,13 @@ public final class SpringBeanContainer implements BeanContainer {
      * {@inheritDoc}
      */
     public <T> T getBean(final Class<T> type) {
-        try {
-            return beanFactory.getBean(type);
-        } catch (final BeansException e) {
-            throw new BeanNotFoundException(e);
-        }
+        return beanFactory.getBean(type);
     }
 
     /**
      * {@inheritDoc}
      */
     public <T> T getBean(final String name, final Class<T> type) {
-        try {
-            return beanFactory.getBean(name, type);
-        } catch (final BeansException e) {
-            throw new BeanNotFoundException(e);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public <T> Collection<T> getBeans(final Class<T> type) {
-        return beanFactory.getBeansOfType(type).values();
+        return beanFactory.getBean(name, type);
     }
 }

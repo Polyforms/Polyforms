@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.polyforms.delegation.builder.DelegationRegistry.Delegation;
-import org.polyforms.di.container.BeanContainer;
 import org.springframework.core.convert.ConversionService;
 
 /**

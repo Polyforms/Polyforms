@@ -1,6 +1,4 @@
-package org.polyforms.di.container;
-
-import java.util.Collection;
+package org.polyforms.delegation.support;
 
 /**
  * The interface for accessing beans in a Ioc container.
@@ -44,12 +42,4 @@ public interface BeanContainer {
      * @throws BeanNotFoundException if specific bean cannot be found
      */
     <T> T getBean(String name, Class<T> type);
-
-    /**
-     * Return the bean instances that match the given object type (including subclasses).
-     * 
-     * @param type of the class or interface to match, or <code>null</code> for all concrete beans
-     * @return a Collection with the matching beans
-     */
-    <T> Collection<T> getBeans(Class<T> type);
 }
