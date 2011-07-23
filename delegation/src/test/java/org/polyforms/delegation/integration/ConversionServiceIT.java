@@ -13,9 +13,9 @@ import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-@ContextConfiguration("ComponentScannerTest-context.xml")
+@ContextConfiguration("ComponentScannerIT-context.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
-public final class ConversionServiceTest {
+public final class ConversionServiceIT {
     @Autowired
     private ConversionService conversionService;
 

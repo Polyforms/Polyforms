@@ -18,9 +18,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-@ContextConfiguration("ComponentScannerTest-context.xml")
+@ContextConfiguration("ComponentScannerIT-context.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
-public class DelegationServiceTest {
+public class DelegationServiceIT {
     @Autowired
     private DelegationService delegationService;
 
