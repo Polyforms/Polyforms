@@ -35,8 +35,6 @@ public class BeansOfTypeFactoryBeanTest {
         final Collection<Object> beans = factoryBean.getObject();
         Assert.assertEquals(1, beans.size());
         Assert.assertSame(bean, beans.iterator().next());
-        // Just for testing cache
-        factoryBean.getObject();
         EasyMock.verify(beanFactory);
     }
 

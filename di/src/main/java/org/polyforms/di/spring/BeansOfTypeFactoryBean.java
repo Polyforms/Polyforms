@@ -16,8 +16,6 @@ import org.springframework.beans.factory.config.AbstractFactoryBean;
 public final class BeansOfTypeFactoryBean<T> extends AbstractFactoryBean<Collection<T>> {
     private final Class<T> beanClass;
 
-    private Collection<T> beans;
-
     /**
      * Create an instance with specific bean type.
      */
@@ -31,11 +29,7 @@ public final class BeansOfTypeFactoryBean<T> extends AbstractFactoryBean<Collect
         if (beanClass == null) {
             return Collections.EMPTY_LIST;
         }
-
-        if (beans == null) {
-            beans = ((ListableBeanFactory) getBeanFactory()).getBeansOfType(beanClass).values();
-        }
-        return beans;
+        return ((ListableBeanFactory) getBeanFactory()).getBeansOfType(beanClass).values();
     }
 
     /**
