@@ -159,7 +159,7 @@ public class DelegationServiceIT {
         public void registerDelegations() {
             delegate(AbstractDelegator.class).to(Delegatee.class);
             delegate(Delegator.class, "length", String.class).to(String.class);
-            delegate(Delegator.class).to(Delegatee.class).withName("delegationServiceTest.Delegatee");
+            delegate(Delegator.class).to(Delegatee.class).withName("delegationServiceIT.Delegatee");
             delegate(Delegator.class, "name").to(String.class, "toString");
             delegate(Delegator.class, "name").to(String.class, "length");
             delegate(Delegator.class, "getCountry").to(Locale.class);
