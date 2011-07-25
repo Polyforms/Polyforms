@@ -7,8 +7,13 @@
 		http://www.polyforms.org/schema
 		http://www.polyforms.org/schema/polyforms.xsd">
 
-	<bean id="dozerMapper" class="org.dozer.spring.DozerBeanMapperFactoryBean">
-		<property name="mappingFiles" value="classpath*:/*mapping.xml" />
+	<bean id="modelMapper" class="org.polyforms.delegation.spring.converter.ModelMapperFactoryBean">
+		<property name="fieldMatching" value="true"/>
+		<property name="fieldAccessLevel" value="PRIVATE" />
+		<property name="converters">
+			<polyforms:beansOf
+				class="org.modelmapper.spi.ConditionalConverter" />
+		</property>
 	</bean>
 
 	<bean id="conversionService"

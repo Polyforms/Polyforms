@@ -123,32 +123,16 @@ public final class ConversionServiceIT {
             return id;
         }
 
-        public void setId(final Integer id) {
-            this.id = id;
-        }
-
         public String getName() {
             return name;
-        }
-
-        public void setName(final String name) {
-            this.name = name;
         }
 
         public ElementType getType() {
             return type;
         }
 
-        public void setType(final ElementType type) {
-            this.type = type;
-        }
-
         public List<String> getChildren() {
             return children;
-        }
-
-        public void setChildren(final List<String> children) {
-            this.children = children;
         }
     }
 }

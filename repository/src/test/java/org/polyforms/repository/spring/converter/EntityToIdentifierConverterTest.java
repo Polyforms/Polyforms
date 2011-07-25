@@ -32,6 +32,11 @@ public class EntityToIdentifierConverterTest {
     }
 
     @Test
+    public void convertNull() {
+        Assert.assertNull(converter.convert(null, null, null));
+    }
+
+    @Test
     public void matches() {
         entityHelper.isEntity(Object.class);
         EasyMock.expectLastCall().andReturn(true);

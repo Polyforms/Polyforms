@@ -13,12 +13,12 @@ import org.polyforms.delegation.DelegationService;
 public class DelegationInterceptorTest {
     @Test
     public void invoke() throws Throwable {
-        Object target = new Object();
-        Method method = String.class.getMethod("toString", new Class<?>[0]);
-        Object[] arguments = new Object[0];
+        final Object target = new Object();
+        final Method method = String.class.getMethod("toString", new Class<?>[0]);
+        final Object[] arguments = new Object[0];
 
-        DelegationService delegationService = EasyMock.createMock(DelegationService.class);
-        MethodInvocation methodInvocation = EasyMock.createMock(MethodInvocation.class);
+        final DelegationService delegationService = EasyMock.createMock(DelegationService.class);
+        final MethodInvocation methodInvocation = EasyMock.createMock(MethodInvocation.class);
         methodInvocation.getThis();
         EasyMock.expectLastCall().andReturn(target);
         methodInvocation.getMethod();
@@ -29,7 +29,7 @@ public class DelegationInterceptorTest {
         EasyMock.expectLastCall().andReturn(target);
         EasyMock.replay(delegationService, methodInvocation);
 
-        MethodInterceptor interceptor = new DelegationInterceptor(delegationService);
+        final MethodInterceptor interceptor = new DelegationInterceptor(delegationService);
         Assert.assertSame(target, interceptor.invoke(methodInvocation));
         EasyMock.verify(delegationService, methodInvocation);
     }

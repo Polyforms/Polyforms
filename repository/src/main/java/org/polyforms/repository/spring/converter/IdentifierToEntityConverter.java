@@ -38,6 +38,9 @@ public final class IdentifierToEntityConverter extends EntityConverter {
      * {@inheritDoc}
      */
     public Object convert(final Object source, final TypeDescriptor sourceType, final TypeDescriptor targetType) {
+        if (source == null) {
+            return null;
+        }
         return entityManager.find(targetType.getType(), source);
     }
 }
