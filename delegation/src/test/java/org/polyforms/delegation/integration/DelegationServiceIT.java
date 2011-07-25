@@ -88,9 +88,8 @@ public class DelegationServiceIT {
         delegator.name();
     }
 
-    @Test(expected = IllegalArgumentException.class)
     public void cannotDelegateNullMethod() {
-        delegationService.canDelegate(null);
+        Assert.assertFalse(delegationService.canDelegate(null));
     }
 
     @Test(expected = DelegationNotFoundException.class)

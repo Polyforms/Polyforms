@@ -1,4 +1,4 @@
-package org.polyforms.delegation.support;
+package org.polyforms.di;
 
 /**
  * The interface for accessing beans in a Ioc container.

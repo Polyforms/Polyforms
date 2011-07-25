@@ -4,11 +4,11 @@ import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
 import org.polyforms.di.spring.util.BeanFactoryVisitor.BeanClassVisitor;
-import org.polyforms.di.spring.util.support.DefaultBeanFactoryVisitor;
+import org.polyforms.di.spring.util.support.GenericBeanFactoryVisitor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 
-public class BeanFactoryVisitorTest {
+public class GenericBeanFactoryVisitorTest {
     private ConfigurableListableBeanFactory beanFactory;
     private BeanClassVisitor beanClassVisitor;
     private AbstractBeanDefinition beanDefinition;
@@ -21,7 +21,7 @@ public class BeanFactoryVisitorTest {
         beanClassVisitor = EasyMock.createMock(BeanClassVisitor.class);
         beanDefinition = EasyMock.createMock(AbstractBeanDefinition.class);
         parentBeanDefinition = EasyMock.createMock(AbstractBeanDefinition.class);
-        beanFactoryVisitor = new DefaultBeanFactoryVisitor();
+        beanFactoryVisitor = new GenericBeanFactoryVisitor();
     }
 
     @Test

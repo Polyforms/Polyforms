@@ -1,6 +1,7 @@
 package org.polyforms.delegation.support;
 
 import org.polyforms.delegation.builder.DelegationRegistry.Delegation;
+import org.polyforms.delegation.spi.DelegationExecutor;
 import org.springframework.core.convert.ConversionService;
 
 /**

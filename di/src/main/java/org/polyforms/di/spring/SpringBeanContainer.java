@@ -1,6 +1,6 @@
-package org.polyforms.delegation.spring;
+package org.polyforms.di.spring;
 
-import org.polyforms.delegation.support.BeanContainer;
+import org.polyforms.di.BeanContainer;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;

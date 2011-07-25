@@ -1,10 +1,11 @@
-package org.polyforms.delegation.spring;
+package org.polyforms.di.spring;
 
 import org.easymock.EasyMock;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.polyforms.delegation.support.BeanContainer;
+import org.polyforms.di.BeanContainer;
+import org.polyforms.di.spring.SpringBeanContainer;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 

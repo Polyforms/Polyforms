@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.polyforms.delegation.builder.DelegationRegistry.Delegation;
+import org.polyforms.delegation.spi.DelegationExecutor;
 import org.polyforms.delegation.util.DefaultValue;
 import org.springframework.core.GenericTypeResolver;
 import org.springframework.core.MethodParameter;

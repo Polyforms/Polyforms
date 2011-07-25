@@ -1,4 +1,4 @@
-package org.polyforms.delegation.support;
+package org.polyforms.delegation.spi;
 
 import org.polyforms.delegation.builder.DelegationRegistry.Delegation;
 
@@ -8,7 +8,7 @@ import org.polyforms.delegation.builder.DelegationRegistry.Delegation;
  * @author Kuisong Tong
  * @since 1.0
  */
-interface DelegationExecutor {
+public interface DelegationExecutor {
     /**
      * Execute a {@link Delegation} with specific arguments.
      * 

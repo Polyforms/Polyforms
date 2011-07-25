@@ -9,5 +9,5 @@
 	<import resource="classpath:org/polyforms/delegation/spring/module-context.xml" />
 
 	<bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" />
-	<polyforms:component-scan base-package="org.polyforms.delegation" />
+	<polyforms:component-scan base-package="org.polyforms.di org.polyforms.delegation" />
 </beans>

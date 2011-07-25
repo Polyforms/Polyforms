@@ -5,7 +5,7 @@ import java.lang.reflect.Modifier;
 
 import org.polyforms.di.spring.util.BeanFactoryVisitor;
 import org.polyforms.di.spring.util.BeanFactoryVisitor.BeanClassVisitor;
-import org.polyforms.di.spring.util.support.DefaultBeanFactoryVisitor;
+import org.polyforms.di.spring.util.support.GenericBeanFactoryVisitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
@@ -32,7 +32,7 @@ import org.springframework.beans.factory.support.ReplaceOverride;
  * @since 1.0
  */
 public final class AbstractMethodOverrideProcessor implements BeanFactoryPostProcessor {
-    private final BeanFactoryVisitor beanFactoryVisitor = new DefaultBeanFactoryVisitor();
+    private final BeanFactoryVisitor beanFactoryVisitor = new GenericBeanFactoryVisitor();
 
     /**
      * {@inheritDoc}

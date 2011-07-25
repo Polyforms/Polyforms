@@ -13,8 +13,8 @@ import org.springframework.util.ClassUtils;
  * @author Kuisong Tong
  * @since 1.0
  */
-public final class DefaultBeanFactoryVisitor implements BeanFactoryVisitor {
-    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultBeanFactoryVisitor.class);
+public final class GenericBeanFactoryVisitor implements BeanFactoryVisitor {
+    private static final Logger LOGGER = LoggerFactory.getLogger(GenericBeanFactoryVisitor.class);
 
     /**
      * {@inheritDoc}
