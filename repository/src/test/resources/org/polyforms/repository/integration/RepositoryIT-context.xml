@@ -10,6 +10,8 @@
 		http://www.polyforms.org/schema
 		http://www.polyforms.org/schema/polyforms.xsd">
 		
+	<import resource="classpath:org/polyforms/repository/spring/module-context.xml" />
+
 	<polyforms:component-scan base-package="org.polyforms.repository" />
 	<bean
 		class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" />
