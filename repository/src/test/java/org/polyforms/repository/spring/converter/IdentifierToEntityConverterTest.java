@@ -2,7 +2,7 @@ package org.polyforms.repository.spring.converter;
 
 import javax.persistence.EntityManager;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.easymock.EasyMock;
 import org.junit.Before;

@@ -1,7 +1,6 @@
 package org.polyforms.delegation.util;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 public final class DefaultValueTest {
@@ -47,12 +46,12 @@ public final class DefaultValueTest {
 
     @Test
     public void returnFloat() {
-        Assert.assertEquals(0F, DefaultValue.get(float.class));
+        Assert.assertEquals(0F, DefaultValue.get(float.class).floatValue(), 0);
     }
 
     @Test
     public void returnDouble() {
-        Assert.assertEquals(0D, DefaultValue.get(double.class));
+        Assert.assertEquals(0D, DefaultValue.get(double.class).doubleValue(), 0);
     }
 
     @Test

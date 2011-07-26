@@ -2,7 +2,7 @@ package org.polyforms.repository.jpa.support;
 
 import java.lang.reflect.Method;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.easymock.EasyMock;
 import org.junit.Before;

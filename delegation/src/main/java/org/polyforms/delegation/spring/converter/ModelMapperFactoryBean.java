@@ -55,6 +55,13 @@ public class ModelMapperFactoryBean implements FactoryBean<ModelMapper> {
     }
 
     /**
+     * @see org.modelmapper.config.Configuration#ignoreAmbiguity(boolean)
+     */
+    public void setIgnoreAmbiguity(final boolean ignoreAmbiguity) {
+        modelMapper.getConfiguration().ignoreAmbiguity(ignoreAmbiguity);
+    }
+
+    /**
      * @see org.modelmapper.config.Configuration#setFieldAccessLevel(AccessLevel)
      */
     public void setFieldAccessLevel(final AccessLevel accessLevel) {
@@ -128,9 +135,7 @@ public class ModelMapperFactoryBean implements FactoryBean<ModelMapper> {
 
         final List<ConditionalConverter<?, ?>> buildinConverters = new ArrayList<ConditionalConverter<?, ?>>(
                 (List<ConditionalConverter<?, ?>>) ReflectionUtils.getField(field, converterStore));
-        for (final ConditionalConverter<?, ?> converter : converters) {
-            buildinConverters.add(converter);
-        }
+        buildinConverters.addAll(converters);
         ReflectionUtils.setField(field, converterStore, buildinConverters);
     }
 
