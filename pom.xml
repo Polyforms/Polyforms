@@ -94,8 +94,9 @@
 				<artifactId>maven-clover2-plugin</artifactId>
 				<configuration>
 					<statementContexts>
-						<neverGetHere>throw new IllegalStateException\("Should never get
-							here"\);</neverGetHere>
+						<neverGetHere>
+							throw new IllegalStateException\("Should never get here"\);
+						</neverGetHere>
 					</statementContexts>
 					<contextFilters>neverGetHere</contextFilters>
 				</configuration>

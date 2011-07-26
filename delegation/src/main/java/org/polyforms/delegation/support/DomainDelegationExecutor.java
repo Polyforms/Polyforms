@@ -1,11 +1,10 @@
 package org.polyforms.delegation.support;
 
 import org.polyforms.delegation.builder.DelegationRegistry.Delegation;
-import org.polyforms.delegation.spi.DelegationExecutor;
 import org.springframework.core.convert.ConversionService;
 
 /**
- * The {@link DelegationExecutor} which delegate a method to first argument of it.
+ * The {@link org.polyforms.delegation.spi.DelegationExecutor} which delegate a method to first argument of it.
  * 
  * @author Kuisong Tong
  * @since 1.0

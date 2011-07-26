@@ -4,14 +4,13 @@ import java.lang.reflect.Method;
 
 import org.polyforms.delegation.DelegationService;
 import org.polyforms.delegation.aop.DelegationInterceptor;
-import org.polyforms.delegation.builder.DelegationRegistry.Delegation;
 import org.springframework.aop.support.DefaultPointcutAdvisor;
 import org.springframework.aop.support.StaticMethodMatcherPointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * {@link org.springframework.aop.Advisor} for methods which have a linked {@link Delegation}.
+ * {@link org.springframework.aop.Advisor} for methods which have a linked Delegation.
  * 
  * @author Kuisong Tong
  * @since 1.0

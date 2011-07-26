@@ -1,12 +1,11 @@
 package org.polyforms.delegation.support;
 
 import org.polyforms.delegation.builder.DelegationRegistry.Delegation;
-import org.polyforms.delegation.spi.DelegationExecutor;
 import org.polyforms.di.BeanContainer;
 import org.springframework.core.convert.ConversionService;
 
 /**
- * The {@link DelegationExecutor} which delegate a method to a bean in Ioc container.
+ * The {@link org.polyforms.delegation.spi.DelegationExecutor} which delegate a method to a bean in Ioc container.
  * 
  * @author Kuisong Tong
  * @since 1.0

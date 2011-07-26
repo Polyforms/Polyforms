@@ -25,6 +25,9 @@ final class DelegationExecutorFactory implements DelegationExecutorFinder {
     private final DelegationExecutor beanExecutor;
     private final DelegationExecutor domainExecutor;
 
+    /**
+     * Create an instance with {@link ConversionService} and {@link BeanContainer}.
+     */
     @Inject
     public DelegationExecutorFactory(final ConversionService conversionService, final BeanContainer beanContainer) {
         this.beanContainer = beanContainer;
@@ -32,6 +35,9 @@ final class DelegationExecutorFactory implements DelegationExecutorFinder {
         domainExecutor = new DomainDelegationExecutor(conversionService);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public DelegationExecutor getDelegationExecutor(final Delegation delegation) {
         if (!delegationExecutorMapping.containsKey(delegation)) {
             delegationExecutorMapping.put(delegation, isBeanDelegation(delegation) ? beanExecutor : domainExecutor);

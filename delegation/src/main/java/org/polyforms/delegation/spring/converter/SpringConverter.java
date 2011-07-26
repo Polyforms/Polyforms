@@ -1,5 +1,6 @@
 package org.polyforms.delegation.spring.converter;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import javax.inject.Provider;
@@ -52,12 +53,21 @@ public class SpringConverter implements ConditionalConverter<Object, Object> {
                 new Class<?>[] { TypeDescriptor.class, TypeDescriptor.class });
         ReflectionUtils.makeAccessible(method);
 
+        final GenericConverter converter = getConverter(sourceType, destinationType);
+        return converter != null && !(converter instanceof ModelMapperConverter);
+    }
+
+    private GenericConverter getConverter(final Class<?> sourceType, final Class<?> destinationType) {
+        final Method method = ReflectionUtils.findMethod(GenericConversionService.class, "getConverter",
+                new Class<?>[] { TypeDescriptor.class, TypeDescriptor.class });
+        ReflectionUtils.makeAccessible(method);
         try {
-            final GenericConverter converter = (GenericConverter) method.invoke(conversionServiceProvider.get(),
+            return (GenericConverter) method.invoke(conversionServiceProvider.get(),
                     new Object[] { TypeDescriptor.valueOf(sourceType), TypeDescriptor.valueOf(destinationType) });
-            return !(converter instanceof ModelMapperConverter);
-        } catch (final Exception e) {
-            return false;
+        } catch (final InvocationTargetException e) {
+            return null;
+        } catch (final IllegalAccessException e) {
+            throw new IllegalStateException("Should never get here");
         }
     }
 
