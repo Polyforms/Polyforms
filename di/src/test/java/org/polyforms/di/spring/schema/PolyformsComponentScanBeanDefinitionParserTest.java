@@ -1,6 +1,6 @@
 package org.polyforms.di.spring.schema;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.easymock.EasyMock;
 import org.junit.Test;

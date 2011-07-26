@@ -1,7 +1,5 @@
 package org.polyforms.delegation.spi;
 
-import java.util.concurrent.Executor;
-
 import org.polyforms.delegation.builder.DelegationRegistry.Delegation;
 
 /**
@@ -11,20 +9,6 @@ import org.polyforms.delegation.builder.DelegationRegistry.Delegation;
  * @since 1.0
  */
 public interface DelegationExecutor {
-    /**
-     * {@link Executor} implementation which throws {@link UnsupportedOperationException}.
-     * 
-     * It is used for situation that no matched executor has found for specific method.
-     */
-    DelegationExecutor UNSUPPORTED = new DelegationExecutor() {
-        /**
-         * {@inheritDoc}
-         */
-        public Object execute(final Object target, final Delegation delegation, final Object[] arguments) {
-            throw new UnsupportedOperationException(delegation + " is unsupported.");
-        }
-    };
-
     /**
      * Execute a {@link Delegation} with specific arguments.
      * 

@@ -3,7 +3,7 @@ package org.polyforms.di.spring.converter;
 import java.lang.annotation.ElementType;
 import java.util.Set;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.junit.Test;
 import org.springframework.core.convert.TypeDescriptor;

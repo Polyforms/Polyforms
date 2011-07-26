@@ -2,7 +2,7 @@ package org.polyforms.delegation.aop;
 
 import java.lang.reflect.Method;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;

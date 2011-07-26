@@ -5,7 +5,7 @@ import java.lang.reflect.Method;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.easymock.EasyMock;
 import org.junit.Before;

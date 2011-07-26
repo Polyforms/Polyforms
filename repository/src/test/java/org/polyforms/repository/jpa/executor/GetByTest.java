@@ -3,7 +3,7 @@ package org.polyforms.repository.jpa.executor;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.easymock.EasyMock;
 import org.junit.Before;

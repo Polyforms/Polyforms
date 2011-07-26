@@ -6,7 +6,7 @@ import java.util.List;
 
 import javax.persistence.Query;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.easymock.EasyMock;
 import org.junit.Before;

@@ -1,6 +1,6 @@
 package org.polyforms.repository.spring;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 import net.sf.cglib.proxy.Callback;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;

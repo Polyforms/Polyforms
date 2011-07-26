@@ -14,7 +14,7 @@ public interface DelegationExecutorFinder {
      * 
      * @param delegation to be executed by {@link DelegationExecutor}
      * 
-     * @return matched executor or {@link DelegationExecutor#UNSUPPORTED} if not found
+     * @return matched executor
      */
     DelegationExecutor getDelegationExecutor(Delegation delegation);
 }
