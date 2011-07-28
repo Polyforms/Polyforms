@@ -2,11 +2,10 @@ package org.polyforms.delegation.aop;
 
 import java.lang.reflect.Method;
 
-import org.junit.Assert;
-
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.easymock.EasyMock;
+import org.junit.Assert;
 import org.junit.Test;
 import org.polyforms.delegation.DelegationService;
 

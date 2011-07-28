@@ -8,7 +8,6 @@ import javax.inject.Named;
 import org.polyforms.delegation.DelegationService;
 import org.polyforms.delegation.builder.DelegationRegistry;
 import org.polyforms.delegation.builder.DelegationRegistry.Delegation;
-import org.polyforms.delegation.spi.DelegationExecutorFinder;
 
 /**
  * Generic implementation of {@link DelegationService}.
@@ -18,16 +17,16 @@ import org.polyforms.delegation.spi.DelegationExecutorFinder;
  */
 @Named
 public final class GenericDelegationService implements DelegationService {
-    private final DelegationExecutorFinder executorFinder;
+    private final DelegationExecutor delegationExecutor;
     private final DelegationRegistry delegationRegistry;
 
     /**
      * Create an instance with {@link DelegationExecutorFinder} and {@link DelegationRegistry}.
      */
     @Inject
-    public GenericDelegationService(final DelegationExecutorFinder executorFinder,
+    public GenericDelegationService(final DelegationExecutor delegationExecutor,
             final DelegationRegistry delegationRegistry) {
-        this.executorFinder = executorFinder;
+        this.delegationExecutor = delegationExecutor;
         this.delegationRegistry = delegationRegistry;
     }
 
@@ -47,6 +46,6 @@ public final class GenericDelegationService implements DelegationService {
      */
     public Object delegate(final Object target, final Method delegator, final Object... arguments) throws Throwable {
         final Delegation delegationPair = delegationRegistry.get(delegator);
-        return executorFinder.getDelegationExecutor(delegationPair).execute(target, delegationPair, arguments);
+        return delegationExecutor.execute(delegationPair, target.getClass(), arguments);
     }
 }

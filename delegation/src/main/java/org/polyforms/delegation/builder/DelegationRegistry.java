@@ -24,9 +24,6 @@ public interface DelegationRegistry {
      * 
      * @param method the delegator method
      * @return delegation of specific method
-     * 
-     * @throws org.polyforms.delegation.annotation.DelegationNotFoundException if the delegation of specific method does
-     *             not exist
      */
     Delegation get(final Method method);
 

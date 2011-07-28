@@ -1,4 +1,4 @@
-package org.polyforms.delegation.support;
+package org.polyforms.delegation.builder;
 
 import java.lang.reflect.Method;
 import java.util.Collection;
@@ -9,8 +9,6 @@ import java.util.Map;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-import org.polyforms.delegation.DelegationNotFoundException;
-import org.polyforms.delegation.builder.DelegationRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,9 +40,6 @@ public final class GenericDelegationRegistry implements DelegationRegistry {
      * {@inheritDoc}
      */
     public Delegation get(final Method method) {
-        if (!contains(method)) {
-            throw new DelegationNotFoundException(method);
-        }
         return delegators.get(method);
     }
 

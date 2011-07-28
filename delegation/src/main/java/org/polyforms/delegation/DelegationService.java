@@ -41,7 +41,6 @@ public interface DelegationService {
      * @param arguments arguments for delegation
      * @return the return value of execution of delegation
      * 
-     * @throws DelegationNotFoundException if no delegation for specific method
      * @throws Throwable if invocation of delegatee method throw an exception
      */
     Object delegate(Object target, Method delegator, Object... arguments) throws Throwable;

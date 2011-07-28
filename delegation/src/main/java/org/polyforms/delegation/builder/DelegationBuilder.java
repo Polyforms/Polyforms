@@ -13,45 +13,30 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Abstract builder to bind delegator and delegatee methods as a {@link Delegation}.
- * 
- * Sub class should override method {@link #registerDelegations()} and register delegations by {@link #delegate(Method)}
- * method {@link #to(Method)}.
+ * Builder to bind delegator and delegatee methods as a {@link Delegation}.
  * 
  * {@link #delegate(Class)} method {@link #to(Class)} is a shortcut to register all abstract methods in delegator class
- * to delegatee class.
+ * to delegatee class. For Example:
  * 
  * <code> 
- * public static class TestDelegationBuilder extends DelegationBuilder
- *     public void registerDelegations() { 
- *         delegate(Delegator.class, "length").to(String.class);
- *         delegate(Delegator.class).to(Delegatee.class); 
- *         delegate(Delegator.class, "name").to(String.class, "toString"); 
- *         delegate(Delegator.class, "name").to(String.class, "length"); 
- *     } 
- * } 
+ *     delegate(Delegator.class, "length").to(String.class);
+ *     delegate(Delegator.class).to(Delegatee.class); 
+ *     delegate(Delegator.class, "name").to(String.class, "toString"); 
+ *     delegate(Delegator.class, "name").to(String.class, "length"); 
  * </code>
  * 
  * @author Kuisong Tong
  * @since 1.0
  */
-public abstract class DelegationBuilder {
-    private DelegationRegistry delegationRegistry;
+public final class DelegationBuilder {
+    private final DelegationRegistry delegationRegistry;
 
     /**
-     * Register delegations into specific {@link DelegationRegistry}.
-     * 
-     * @param delegationRegistry the registry of delegations
+     * Create an instance with {@link DelegationRegistry}.
      */
-    public final void registerDelegations(final DelegationRegistry delegationRegistry) {
+    public DelegationBuilder(final DelegationRegistry delegationRegistry) {
         this.delegationRegistry = delegationRegistry;
-        registerDelegations();
     }
-
-    /**
-     * A place holder for sub class to register delegations with {@link #delegate}.
-     */
-    protected abstract void registerDelegations();
 
     /**
      * Delegate all abstract methods in class.
@@ -59,7 +44,7 @@ public abstract class DelegationBuilder {
      * @param delegator the delegator class
      * @return delegation builder of class
      */
-    protected final ClassDelegatorBuilder delegate(final Class<?> delegator) {
+    public final ClassDelegatorBuilder delegate(final Class<?> delegator) {
         return new ClassDelegatorBuilder(delegator);
     }
 
@@ -69,7 +54,7 @@ public abstract class DelegationBuilder {
      * @param delegator the delegator method
      * @return delegation builder of method
      */
-    protected final MethodDelegatorBuilder delegate(final Method delegator) {
+    public final MethodDelegatorBuilder delegate(final Method delegator) {
         return new MethodDelegatorBuilder(delegator);
     }
 
@@ -81,7 +66,7 @@ public abstract class DelegationBuilder {
      * @param parameterTypes parameter types of method
      * @return delegation builder of method
      */
-    protected final MethodDelegatorBuilder delegate(final Class<?> clazz, final String methodName,
+    public final MethodDelegatorBuilder delegate(final Class<?> clazz, final String methodName,
             final Class<?>... parameterTypes) {
         return delegate(findMethod(clazz, methodName, parameterTypes));
     }
@@ -98,7 +83,7 @@ public abstract class DelegationBuilder {
      * Delegation builder of class which registers delegations for all abstract methods in specific class.
      * 
      */
-    protected final class ClassDelegatorBuilder extends AbstractDelegationBuilder<Class<?>> {
+    public final class ClassDelegatorBuilder extends AbstractDelegationBuilder<Class<?>> {
         private ClassDelegatorBuilder(final Class<?> delegator) {
             super(delegator);
             abstractClassOnly(delegator);
@@ -119,12 +104,12 @@ public abstract class DelegationBuilder {
          */
         @Override
         protected void register(final Class<?> delegator, final Class<?> delegatee) {
-            traceRegistration(delegator, delegatee);
+            logRegistration(delegator, delegatee);
             for (final Method method : delegator.getMethods()) {
                 if (Modifier.isAbstract(method.getModifiers()) && !delegationRegistry.contains(method)) {
                     try {
                         final Method targetMethod = MethodUtils.findMostSpecificMethod(delegatee, method.getName());
-                        traceRegistration(delegator, delegatee);
+                        logRegistration(delegator, delegatee);
                         registerDelegation(delegationRegistry, method, targetMethod);
                     } catch (final NoSuchMethodException e) {
                         // IGNORE if the method with same name can not be found in delegatee
@@ -138,7 +123,7 @@ public abstract class DelegationBuilder {
      * Delegation builder of method which registers delegation for specific method.
      * 
      */
-    protected final class MethodDelegatorBuilder extends AbstractDelegationBuilder<Method> {
+    public final class MethodDelegatorBuilder extends AbstractDelegationBuilder<Method> {
         private MethodDelegatorBuilder(final Method delegator) {
             super(delegator);
             abstractClassOnly(delegator.getDeclaringClass());
@@ -187,7 +172,7 @@ public abstract class DelegationBuilder {
          */
         @Override
         protected void register(final Method delegator, final Method delegatee) {
-            traceRegistration(delegator, delegatee);
+            logRegistration(delegator, delegatee);
             registerDelegation(delegationRegistry, delegator, delegatee);
         }
     }
@@ -224,8 +209,8 @@ public abstract class DelegationBuilder {
             }
         }
 
-        protected final void traceRegistration(final Object delegatee, final Object delegator) {
-            LOGGER.trace("Register delegations from {} to {}.", delegator, delegatee);
+        protected final void logRegistration(final Object delegatee, final Object delegator) {
+            LOGGER.info("Register delegations from {} to {}.", delegator, delegatee);
         }
 
         protected final void register(final T delegatee) {

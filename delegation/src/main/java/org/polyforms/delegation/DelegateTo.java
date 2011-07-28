@@ -1,4 +1,4 @@
-package org.polyforms.delegation.annotation;
+package org.polyforms.delegation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
