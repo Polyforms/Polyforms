@@ -1,7 +1,6 @@
 package org.polyforms.delegation.spring.converter;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
@@ -133,8 +132,8 @@ public class ModelMapperFactoryBean implements FactoryBean<ModelMapper> {
         final Field field = ReflectionUtils.findField(ConverterStore.class, "converters");
         ReflectionUtils.makeAccessible(field);
 
-        final List<ConditionalConverter<?, ?>> buildinConverters = new ArrayList<ConditionalConverter<?, ?>>(
-                (List<ConditionalConverter<?, ?>>) ReflectionUtils.getField(field, converterStore));
+        final List<ConditionalConverter<?, ?>> buildinConverters = (List<ConditionalConverter<?, ?>>) ReflectionUtils
+                .getField(field, converterStore);
         buildinConverters.addAll(converters);
         ReflectionUtils.setField(field, converterStore, buildinConverters);
     }
