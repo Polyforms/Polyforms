@@ -41,19 +41,18 @@ public final class DelegationRegisterProcessor implements BeanDefinitionRegistry
      * {@inheritDoc}
      */
     public void postProcessBeanDefinitionRegistry(final BeanDefinitionRegistry registry) {
-        registerDelegations(delegationRegistry);
-        registerBeansIfNecessary(registry, delegationRegistry);
+        registerDelegations();
+        registerBeansIfNecessary(registry);
     }
 
-    private void registerDelegations(final DelegationRegistry delegationRegistry) {
+    private void registerDelegations() {
         for (final DelegationRegister register : delegationRegisters) {
             LOGGER.info("Register delegations from register {}", register.getClass().getName());
             register.registerDelegations(getDelegationBuilder());
         }
     }
 
-    private void registerBeansIfNecessary(final BeanDefinitionRegistry registry,
-            final DelegationRegistry delegationRegistry) {
+    private void registerBeansIfNecessary(final BeanDefinitionRegistry registry) {
         final Set<Class<?>> classesForRegistration = new HashSet<Class<?>>();
         for (final Delegation delegationPair : delegationRegistry.getAll()) {
             classesForRegistration.add(delegationPair.getDelegator().getDeclaringClass());

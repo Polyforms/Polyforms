@@ -44,7 +44,7 @@ public final class DelegationBuilder {
      * @param delegator the delegator class
      * @return delegation builder of class
      */
-    public final ClassDelegatorBuilder delegate(final Class<?> delegator) {
+    public ClassDelegatorBuilder delegate(final Class<?> delegator) {
         return new ClassDelegatorBuilder(delegator);
     }
 
@@ -54,7 +54,7 @@ public final class DelegationBuilder {
      * @param delegator the delegator method
      * @return delegation builder of method
      */
-    public final MethodDelegatorBuilder delegate(final Method delegator) {
+    public MethodDelegatorBuilder delegate(final Method delegator) {
         return new MethodDelegatorBuilder(delegator);
     }
 
@@ -66,7 +66,7 @@ public final class DelegationBuilder {
      * @param parameterTypes parameter types of method
      * @return delegation builder of method
      */
-    public final MethodDelegatorBuilder delegate(final Class<?> clazz, final String methodName,
+    public MethodDelegatorBuilder delegate(final Class<?> clazz, final String methodName,
             final Class<?>... parameterTypes) {
         return delegate(findMethod(clazz, methodName, parameterTypes));
     }
