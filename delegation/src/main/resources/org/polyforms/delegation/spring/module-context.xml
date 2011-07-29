@@ -6,13 +6,6 @@
 		http://www.polyforms.org/schema
 		http://www.polyforms.org/schema/polyforms.xsd">
 
-	<bean class="org.polyforms.delegation.spring.DelegationRegisterProcessor">
-		<property name="delegationRegisters">
-			<polyforms:beansOf class="org.polyforms.delegation.DelegationRegister" />
-		</property>
-		<property name="delegationRegistry" ref="genericDelegationRegistry" />
-	</bean>
-
 	<bean id="modelMapper"
 		class="org.polyforms.delegation.spring.converter.ModelMapperFactoryBean">
 		<property name="fieldMatching" value="true" />

@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
  * @author Kuisong Tong
  * @since 1.0
  */
-public final class DelegationBuilder {
+public class DelegationBuilder {
     private final DelegationRegistry delegationRegistry;
 
     /**

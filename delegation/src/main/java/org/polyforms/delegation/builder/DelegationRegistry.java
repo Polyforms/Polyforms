@@ -1,7 +1,6 @@
 package org.polyforms.delegation.builder;
 
 import java.lang.reflect.Method;
-import java.util.Collection;
 
 import org.springframework.util.StringUtils;
 
@@ -34,13 +33,6 @@ public interface DelegationRegistry {
      * @return true if there is a delegation of specific method, false if not
      */
     boolean contains(final Method method);
-
-    /**
-     * Get all delegation registered in this Registry.
-     * 
-     * @return all delegations in this resistry
-     */
-    Collection<Delegation> getAll();
 
     /**
      * Context about a delegation.
@@ -93,6 +85,51 @@ public interface DelegationRegistry {
          */
         public void setName(final String name) {
             this.name = name;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + delegatee.hashCode();
+            result = prime * result + delegator.hashCode();
+            result = prime * result + name.hashCode();
+            return result;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (obj == null) {
+                return false;
+            }
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+
+            Delegation other = (Delegation) obj;
+
+            if (!delegatee.equals(other.delegatee)) {
+                return false;
+            }
+
+            if (!delegator.equals(other.delegator)) {
+                return false;
+            }
+
+            if (!name.equals(other.name)) {
+                return false;
+            }
+
+            return true;
         }
     }
 }

@@ -113,4 +113,8 @@ abstract class AbstactDelegationExecutor implements DelegationExecutor {
 
         return null;
     }
+
+    protected ConversionService getConversionService() {
+        return conversionService;
+    }
 }

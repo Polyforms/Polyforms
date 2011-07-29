@@ -1,8 +1,6 @@
 package org.polyforms.delegation.builder;
 
 import java.lang.reflect.Method;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,12 +46,5 @@ public final class GenericDelegationRegistry implements DelegationRegistry {
      */
     public boolean contains(final Method method) {
         return delegators.containsKey(method);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public Collection<Delegation> getAll() {
-        return Collections.unmodifiableCollection(delegators.values());
     }
 }

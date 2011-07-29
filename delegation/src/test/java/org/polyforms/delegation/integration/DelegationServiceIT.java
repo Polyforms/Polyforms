@@ -6,8 +6,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.polyforms.delegation.DelegateTo;
-import org.polyforms.delegation.DelegatedBy;
+import org.polyforms.delegation.Delegate;
 import org.polyforms.delegation.DelegationRegister;
 import org.polyforms.delegation.DelegationService;
 import org.polyforms.delegation.builder.DelegationBuilder;
@@ -71,11 +70,6 @@ public class DelegationServiceIT {
     }
 
     @Test
-    public void delegatorBy() {
-        Assert.assertEquals("1", annotationDelegator.echo("1"));
-    }
-
-    @Test
     public void delegateTo() {
         Assert.assertEquals(4, annotationDelegator.getLength("test"));
     }
@@ -95,6 +89,7 @@ public class DelegationServiceIT {
         delegator.name();
     }
 
+    @Test
     public void cannotDelegateNullMethod() {
         Assert.assertFalse(delegationService.canDelegate(null));
     }
@@ -164,6 +159,7 @@ public class DelegationServiceIT {
         }
     }
 
+    @Component
     public static interface Delegator {
         String echo(String string);
 
@@ -196,16 +192,8 @@ public class DelegationServiceIT {
     public static interface AnnotationDelegator {
         String echo(String string);
 
-        @DelegateTo(value = String.class, methodName = "length")
+        @Delegate(value = String.class, methodName = "length")
         int getLength(String string);
-    }
-
-    @Component
-    public static class AnnotationDelegatee {
-        @DelegatedBy(AnnotationDelegator.class)
-        public Integer echo(final Integer number) {
-            return number;
-        }
     }
 
     public static interface GenericDelegatee<T extends Number> {

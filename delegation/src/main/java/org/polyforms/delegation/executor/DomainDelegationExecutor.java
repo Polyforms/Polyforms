@@ -10,11 +10,8 @@ import org.springframework.core.convert.ConversionService;
  * @since 1.0
  */
 final class DomainDelegationExecutor extends AbstactDelegationExecutor {
-    private final ConversionService conversionService;
-
     protected DomainDelegationExecutor(final ConversionService conversionService) {
         super(conversionService);
-        this.conversionService = conversionService;
     }
 
     /**
@@ -31,7 +28,7 @@ final class DomainDelegationExecutor extends AbstactDelegationExecutor {
             throw new IllegalArgumentException("The first argument of invocation of method["
                     + delegation.getDelegatee().getName() + "] is null.");
         }
-        return conversionService.convert(argument, delegation.getDelegatee().getDeclaringClass());
+        return getConversionService().convert(argument, delegation.getDelegatee().getDeclaringClass());
     }
 
     /**
