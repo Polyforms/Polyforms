@@ -1,6 +1,5 @@
 package org.polyforms.delegation.spring.converter;
 
-import java.lang.annotation.ElementType;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +15,6 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.modelmapper.convention.NameTokenizers;
 import org.modelmapper.convention.NameTransformers;
 import org.modelmapper.convention.NamingConventions;
-import org.modelmapper.internal.InheritingConfiguration;
 import org.modelmapper.spi.ConditionalConverter;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -163,19 +161,17 @@ public class ModelMapperFactoryBeanTest {
 
     @Test
     public void setConverters() {
+        final List<ConditionalConverter<?, ?>> defaultConverters = new ArrayList<ConditionalConverter<?, ?>>();
+        configuration.getConverters();
+        EasyMock.expectLastCall().andReturn(defaultConverters);
+        EasyMock.replay(modelMapper, configuration);
+
         final ConditionalConverter<?, ?> converter = EasyMock.createMock(ConditionalConverter.class);
         final List<ConditionalConverter<?, ?>> converters = new ArrayList<ConditionalConverter<?, ?>>();
         converters.add(converter);
-
-        converter.supports(String.class, ElementType.class);
-        EasyMock.expectLastCall().andReturn(true);
-        EasyMock.replay(converter);
-
-        final ModelMapperFactoryBean factory = new ModelMapperFactoryBean();
         factory.setConverters(converters);
-        final InheritingConfiguration configuration = (InheritingConfiguration) factory.getObject().getConfiguration();
-        Assert.assertSame(converter, configuration.converterStore.getFirstSupported(String.class, ElementType.class));
-        EasyMock.verify(converter);
+        Assert.assertTrue(defaultConverters.contains(converter));
+        EasyMock.verify(modelMapper, configuration);
     }
 
     @Test

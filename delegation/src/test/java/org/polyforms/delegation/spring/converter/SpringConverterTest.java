@@ -12,6 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.spi.ConditionalConverter;
+import org.modelmapper.spi.ConditionalConverter.MatchResult;
 import org.modelmapper.spi.MappingContext;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.TypeDescriptor;
@@ -66,7 +67,7 @@ public class SpringConverterTest {
     public void supports() {
         prepareConversionService();
 
-        Assert.assertTrue(converter.supports(String.class, Locale.class));
+        Assert.assertSame(MatchResult.FULL, converter.match(String.class, Locale.class));
         EasyMock.verify(provider);
     }
 
@@ -74,7 +75,7 @@ public class SpringConverterTest {
     public void notSupports() {
         prepareConversionService();
 
-        Assert.assertFalse(converter.supports(String.class, Method.class));
+        Assert.assertSame(MatchResult.NONE, converter.match(String.class, Method.class));
         EasyMock.verify(provider);
     }
 
@@ -82,7 +83,7 @@ public class SpringConverterTest {
     public void notSupportsWithException() {
         prepareConversionService();
 
-        Assert.assertFalse(converter.supports(String.class, null));
+        Assert.assertSame(MatchResult.NONE, converter.match(String.class, null));
         EasyMock.verify(provider);
     }
 
@@ -93,15 +94,5 @@ public class SpringConverterTest {
         provider.get();
         EasyMock.expectLastCall().andReturn(conversionService);
         EasyMock.replay(provider);
-    }
-
-    @Test
-    public void supportsSource() {
-        Assert.assertTrue(converter.supportsSource(String.class));
-    }
-
-    @Test
-    public void verifysSource() {
-        Assert.assertTrue(converter.verifiesSource());
     }
 }

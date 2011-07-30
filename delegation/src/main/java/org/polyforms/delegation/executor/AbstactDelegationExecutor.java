@@ -36,7 +36,7 @@ abstract class AbstactDelegationExecutor implements DelegationExecutor {
             final Object returnValue = delegation.getDelegatee().invoke(target, convertedAguments);
             return convertReturnValue(returnValue, delegatorClass, delegation.getDelegator());
         } catch (final InvocationTargetException e) {
-            throw convertException(e.getTargetException(), delegation);
+            throw convertException(e.getTargetException(), delegation); // NOPMD
         }
     }
 

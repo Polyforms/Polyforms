@@ -9,8 +9,7 @@ import org.junit.runner.RunWith;
 import org.polyforms.delegation.Delegate;
 import org.polyforms.delegation.DelegationRegister;
 import org.polyforms.delegation.DelegationService;
-import org.polyforms.delegation.builder.DelegationBuilder;
-import org.polyforms.delegation.builder.DelegationRegistrationException;
+import org.polyforms.delegation.builder.DelegationBuilderFactory;
 import org.polyforms.delegation.builder.DelegationRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -32,11 +31,11 @@ public class DelegationServiceIT {
     private DelegationRegistry delegationRegistry;
     @Autowired
     private AnnotationDelegator annotationDelegator;
-    private DelegationBuilder delegationBuilder;
+    private DelegationBuilderFactory delegationBuilder;
 
     @Before
     public void setUp() {
-        delegationBuilder = new DelegationBuilder(delegationRegistry);
+        delegationBuilder = new DelegationBuilderFactory(delegationRegistry);
     }
 
     @Test
@@ -109,37 +108,37 @@ public class DelegationServiceIT {
         delegator.exceptionWithName(false);
     }
 
-    @Test(expected = DelegationRegistrationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void registerInexistentDelegator() {
         new DelegationRegister() {
-            public void registerDelegations(final DelegationBuilder delegationBuilder) {
+            public void registerDelegations(final DelegationBuilderFactory delegationBuilder) {
                 delegationBuilder.delegate(Delegator.class, "inexistentMethod");
             }
         }.registerDelegations(delegationBuilder);
     }
 
-    @Test(expected = DelegationRegistrationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void registerInexistentDelegatee() {
         new DelegationRegister() {
-            public void registerDelegations(final DelegationBuilder delegationBuilder) {
+            public void registerDelegations(final DelegationBuilderFactory delegationBuilder) {
                 delegationBuilder.delegate(Delegator.class, "length").to(String.class, "inexistentMethod");
             }
         }.registerDelegations(delegationBuilder);
     }
 
-    @Test(expected = DelegationRegistrationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void registerClassDelegator() {
         new DelegationRegister() {
-            public void registerDelegations(final DelegationBuilder delegationBuilder) {
+            public void registerDelegations(final DelegationBuilderFactory delegationBuilder) {
                 delegationBuilder.delegate(Delegatee.class);
             }
         }.registerDelegations(delegationBuilder);
     }
 
-    @Test(expected = DelegationRegistrationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void withNameBeforeTo() {
         new DelegationRegister() {
-            public void registerDelegations(final DelegationBuilder delegationBuilder) {
+            public void registerDelegations(final DelegationBuilderFactory delegationBuilder) {
                 delegationBuilder.delegate(Delegator.class).withName("bean");
             }
         }.registerDelegations(delegationBuilder);
@@ -147,13 +146,13 @@ public class DelegationServiceIT {
 
     @Component
     public static class TestDelegationBuilder implements DelegationRegister {
-        public void registerDelegations(final DelegationBuilder delegationBuilder) {
+        public void registerDelegations(final DelegationBuilderFactory delegationBuilder) {
             delegationBuilder.delegate(AbstractDelegator.class).to(Delegatee.class);
-            delegationBuilder.delegate(Delegator.class, "length", String.class).to(String.class);
+            delegationBuilder.delegate(Delegator.class, "length", String.class).to(String.class, "length");
             delegationBuilder.delegate(Delegator.class).to(Delegatee.class).withName("delegationServiceIT.Delegatee");
             delegationBuilder.delegate(Delegator.class, "name").to(String.class, "toString");
             delegationBuilder.delegate(Delegator.class, "name").to(String.class, "length");
-            delegationBuilder.delegate(Delegator.class, "getCountry").to(Locale.class);
+            delegationBuilder.delegate(Delegator.class, "getCountry").to(Locale.class, "getCountry");
             delegationBuilder.delegate(Delegator.class, "length").to(Delegatee.class, "voidMethod");
             delegationBuilder.delegate(Delegator.class, "voidMethod").to(String.class, "length");
         }

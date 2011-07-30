@@ -5,24 +5,22 @@ import java.util.Collection;
 
 import org.polyforms.delegation.Delegate;
 import org.polyforms.delegation.DelegationRegister;
-import org.polyforms.delegation.builder.DelegationBuilder;
+import org.polyforms.delegation.builder.DelegationBuilderFactory;
 import org.polyforms.delegation.builder.DelegationRegistry;
 import org.polyforms.di.spring.util.BeanFactoryVisitor;
 import org.polyforms.di.spring.util.BeanFactoryVisitor.BeanClassVisitor;
 import org.polyforms.di.spring.util.support.GenericBeanFactoryVisitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
-import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 /**
- * {@link BeanDefinitionRegistryPostProcessor} which executing {@link DelegationBuilder} to bind delegator and delegatee
- * and register delegator as a bean if necessary.
+ * {@link BeanFactoryPostProcessor} which executing {@link DelegationBuilderFactory} to bind delegator and delegatee and
+ * register delegator as a bean if necessary.
  * 
  * @author Kuisong Tong
  * @since 1.0
@@ -35,9 +33,9 @@ public final class DelegationRegisterProcessor implements BeanFactoryPostProcess
     /**
      * {@inheritDoc}
      */
-    public void postProcessBeanFactory(final ConfigurableListableBeanFactory beanFactory) throws BeansException {
+    public void postProcessBeanFactory(final ConfigurableListableBeanFactory beanFactory) {
         final DelegationRegistry delegationRegistry = beanFactory.getBean(DelegationRegistry.class);
-        final DelegationBuilder delegationBuilder = new DelegationBuilder(delegationRegistry);
+        final DelegationBuilderFactory delegationBuilder = new DelegationBuilderFactory(delegationRegistry);
         final Collection<DelegationRegister> delegationRegisters = beanFactory.getBeansOfType(DelegationRegister.class)
                 .values();
 
@@ -50,9 +48,9 @@ public final class DelegationRegisterProcessor implements BeanFactoryPostProcess
     }
 
     protected static class AnnotatedDelegationRegister implements BeanClassVisitor {
-        private final DelegationBuilder delegationBuilder;
+        private final DelegationBuilderFactory delegationBuilder;
 
-        protected AnnotatedDelegationRegister(final DelegationBuilder delegationBuilder) {
+        protected AnnotatedDelegationRegister(final DelegationBuilderFactory delegationBuilder) {
             this.delegationBuilder = delegationBuilder;
         }
 

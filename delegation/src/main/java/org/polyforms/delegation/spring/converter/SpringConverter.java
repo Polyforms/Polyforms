@@ -48,13 +48,13 @@ public class SpringConverter implements ConditionalConverter<Object, Object> {
     /**
      * {@inheritDoc}
      */
-    public boolean supports(final Class<?> sourceType, final Class<?> destinationType) {
+    public MatchResult match(final Class<?> sourceType, final Class<?> destinationType) {
         final Method method = ReflectionUtils.findMethod(GenericConversionService.class, "getConverter",
                 new Class<?>[] { TypeDescriptor.class, TypeDescriptor.class });
         ReflectionUtils.makeAccessible(method);
 
         final GenericConverter converter = getConverter(sourceType, destinationType);
-        return converter != null && !(converter instanceof ModelMapperConverter);
+        return converter == null || converter instanceof ModelMapperConverter ? MatchResult.NONE : MatchResult.FULL;
     }
 
     private GenericConverter getConverter(final Class<?> sourceType, final Class<?> destinationType) {
@@ -69,19 +69,5 @@ public class SpringConverter implements ConditionalConverter<Object, Object> {
         } catch (final IllegalAccessException e) {
             throw new IllegalStateException("Should never get here");
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public boolean supportsSource(final Class<?> sourceType) {
-        return true;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public boolean verifiesSource() {
-        return true;
     }
 }

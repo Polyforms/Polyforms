@@ -5,7 +5,7 @@ import java.lang.reflect.Method;
 import org.springframework.util.StringUtils;
 
 /**
- * The registry to keep all delegation registered by {@link DelegationBuilder}.
+ * The registry to keep all delegation registered by {@link DelegationBuilderFactory}.
  * 
  * @author Kuisong Tong
  * @since 1.0
@@ -104,7 +104,7 @@ public interface DelegationRegistry {
          * {@inheritDoc}
          */
         @Override
-        public boolean equals(Object obj) {
+        public boolean equals(final Object obj) {
             if (this == obj) {
                 return true;
             }
@@ -115,7 +115,7 @@ public interface DelegationRegistry {
                 return false;
             }
 
-            Delegation other = (Delegation) obj;
+            final Delegation other = (Delegation) obj;
 
             if (!delegatee.equals(other.delegatee)) {
                 return false;

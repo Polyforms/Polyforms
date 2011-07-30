@@ -1,20 +1,16 @@
 package org.polyforms.delegation.spring.converter;
 
-import java.lang.reflect.Field;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.Provider;
 import org.modelmapper.config.Configuration.AccessLevel;
-import org.modelmapper.internal.InheritingConfiguration;
-import org.modelmapper.internal.converter.ConverterStore;
 import org.modelmapper.spi.ConditionalConverter;
 import org.modelmapper.spi.MatchingStrategy;
 import org.modelmapper.spi.NameTokenizer;
 import org.modelmapper.spi.NameTransformer;
 import org.modelmapper.spi.NamingConvention;
 import org.springframework.beans.factory.FactoryBean;
-import org.springframework.util.ReflectionUtils;
 
 /**
  * A factory for a {@link ModelMapper}.
@@ -126,16 +122,8 @@ public class ModelMapperFactoryBean implements FactoryBean<ModelMapper> {
     /**
      * @see org.modelmapper.config.Configuration#addConverter(ConditionalConverter)
      */
-    @SuppressWarnings("unchecked")
     public void setConverters(final List<ConditionalConverter<?, ?>> converters) {
-        final ConverterStore converterStore = ((InheritingConfiguration) modelMapper.getConfiguration()).converterStore;
-        final Field field = ReflectionUtils.findField(ConverterStore.class, "converters");
-        ReflectionUtils.makeAccessible(field);
-
-        final List<ConditionalConverter<?, ?>> buildinConverters = (List<ConditionalConverter<?, ?>>) ReflectionUtils
-                .getField(field, converterStore);
-        buildinConverters.addAll(converters);
-        ReflectionUtils.setField(field, converterStore, buildinConverters);
+        modelMapper.getConfiguration().getConverters().addAll(converters);
     }
 
     /**

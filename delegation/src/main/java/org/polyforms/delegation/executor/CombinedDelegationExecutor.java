@@ -37,9 +37,9 @@ public final class CombinedDelegationExecutor implements DelegationExecutor {
     /**
      * {@inheritDoc}
      */
-    public Object execute(final Delegation delegation, final Class<?> returnType, final Object[] arguments)
+    public Object execute(final Delegation delegation, final Class<?> delegatorClass, final Object[] arguments)
             throws Throwable {
-        return getDelegationExecutor(delegation).execute(delegation, returnType, arguments);
+        return getDelegationExecutor(delegation).execute(delegation, delegatorClass, arguments);
     }
 
     private DelegationExecutor getDelegationExecutor(final Delegation delegation) {

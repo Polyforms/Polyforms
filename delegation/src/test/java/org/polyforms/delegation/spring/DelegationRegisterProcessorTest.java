@@ -6,7 +6,7 @@ import java.util.Map;
 import org.easymock.EasyMock;
 import org.junit.Test;
 import org.polyforms.delegation.DelegationRegister;
-import org.polyforms.delegation.builder.DelegationBuilder;
+import org.polyforms.delegation.builder.DelegationBuilderFactory;
 import org.polyforms.delegation.builder.DelegationRegistry;
 import org.polyforms.delegation.spring.DelegationRegisterProcessor.AnnotatedDelegationRegister;
 import org.polyforms.di.spring.util.BeanFactoryVisitor;
@@ -29,7 +29,7 @@ public class DelegationRegisterProcessorTest {
         delegationRegisters.put("delegationRegister", delegationRegister);
         beanFactory.getBeansOfType(DelegationRegister.class);
         EasyMock.expectLastCall().andReturn(delegationRegisters);
-        delegationRegister.registerDelegations(EasyMock.isA(DelegationBuilder.class));
+        delegationRegister.registerDelegations(EasyMock.isA(DelegationBuilderFactory.class));
         beanFactoryVisitor.visit(EasyMock.same(beanFactory), EasyMock.isA(AnnotatedDelegationRegister.class));
         EasyMock.replay(beanFactoryVisitor, beanFactory, delegationRegister);
 

@@ -1,6 +1,6 @@
 package org.polyforms.delegation;
 
-import org.polyforms.delegation.builder.DelegationBuilder;
+import org.polyforms.delegation.builder.DelegationBuilderFactory;
 
 /**
  * The interface is used to create delegation programmatically.
@@ -10,9 +10,9 @@ import org.polyforms.delegation.builder.DelegationBuilder;
  */
 public interface DelegationRegister {
     /**
-     * Create delegations with help by {@link DelegationBuilder}.
+     * Create delegations with help by {@link DelegationBuilderFactory}.
      * 
      * @param delegationBuilder builder of delegation
      */
-    void registerDelegations(DelegationBuilder delegationBuilder);
+    void registerDelegations(DelegationBuilderFactory delegationBuilder);
 }
