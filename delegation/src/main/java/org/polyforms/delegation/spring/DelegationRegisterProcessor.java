@@ -1,12 +1,16 @@
 package org.polyforms.delegation.spring;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.polyforms.delegation.Delegate;
-import org.polyforms.delegation.DelegationRegister;
-import org.polyforms.delegation.builder.DelegationBuilderFactory;
+import org.polyforms.delegation.builder.DelegationBuilder;
+import org.polyforms.delegation.builder.DelegationRegister;
 import org.polyforms.delegation.builder.DelegationRegistry;
+import org.polyforms.delegation.builder.support.DefaultDelegationBuilder;
 import org.polyforms.di.spring.util.BeanFactoryVisitor;
 import org.polyforms.di.spring.util.BeanFactoryVisitor.BeanClassVisitor;
 import org.polyforms.di.spring.util.support.GenericBeanFactoryVisitor;
@@ -16,7 +20,6 @@ import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 /**
  * {@link BeanFactoryPostProcessor} which executing {@link DelegationBuilderFactory} to bind delegator and delegatee and
@@ -35,22 +38,21 @@ public final class DelegationRegisterProcessor implements BeanFactoryPostProcess
      */
     public void postProcessBeanFactory(final ConfigurableListableBeanFactory beanFactory) {
         final DelegationRegistry delegationRegistry = beanFactory.getBean(DelegationRegistry.class);
-        final DelegationBuilderFactory delegationBuilder = new DelegationBuilderFactory(delegationRegistry);
+        final DelegationBuilder delegationBuilder = new DefaultDelegationBuilder(delegationRegistry);
         final Collection<DelegationRegister> delegationRegisters = beanFactory.getBeansOfType(DelegationRegister.class)
                 .values();
 
         for (final DelegationRegister register : delegationRegisters) {
             LOGGER.info("Register delegations from register {}", register.getClass().getName());
-            register.registerDelegations(delegationBuilder);
+            register.register(delegationBuilder);
         }
-
         beanFactoryVisitor.visit(beanFactory, new AnnotatedDelegationRegister(delegationBuilder));
     }
 
     protected static class AnnotatedDelegationRegister implements BeanClassVisitor {
-        private final DelegationBuilderFactory delegationBuilder;
+        private final DelegationBuilder delegationBuilder;
 
-        protected AnnotatedDelegationRegister(final DelegationBuilderFactory delegationBuilder) {
+        protected AnnotatedDelegationRegister(final DelegationBuilder delegationBuilder) {
             this.delegationBuilder = delegationBuilder;
         }
 
@@ -58,22 +60,45 @@ public final class DelegationRegisterProcessor implements BeanFactoryPostProcess
          * {@inheritDoc}
          */
         public void visit(final String beanName, final AbstractBeanDefinition beanDefinition, final Class<?> clazz) {
-            for (final Method method : clazz.getMethods()) {
-                registerDelegate(method);
+            final boolean annotationPresent = clazz.isAnnotationPresent(Delegate.class);
+            final Set<Method> annotatedMethods = getAnnotatedMethods(clazz.getMethods());
+            if (!annotationPresent && annotatedMethods.isEmpty()) {
+                return;
             }
+
+            final Object source = delegationBuilder.from(clazz);
+
+            if (annotationPresent) {
+                delegationBuilder.delegate();
+            }
+
+            for (final Method method : annotatedMethods) {
+                registerDelegate(source, method);
+            }
+
+            delegationBuilder.registerDelegations();
         }
 
-        private void registerDelegate(final Method method) {
-            final Delegate delegateTo = method.getAnnotation(Delegate.class);
-            if (delegateTo != null) {
-                final String methodName = normalizeMethodName(delegateTo.methodName(), method);
-                delegationBuilder.delegate(method).to(delegateTo.value(), methodName, delegateTo.parameterTypes())
-                        .withName(delegateTo.name());
+        private Set<Method> getAnnotatedMethods(final Method[] methods) {
+            final Set<Method> annotatedMethods = new HashSet<Method>();
+            for (final Method method : methods) {
+                if (method.isAnnotationPresent(Delegate.class)) {
+                    annotatedMethods.add(method);
+                }
             }
+            return annotatedMethods;
         }
 
-        private String normalizeMethodName(final String methodName, final Method method) {
-            return StringUtils.hasText(methodName) ? methodName : method.getName();
+        private void registerDelegate(final Object source, final Method method) {
+            final Object[] arguments = new Object[method.getParameterTypes().length];
+            try {
+                method.invoke(source, arguments);
+            } catch (final IllegalAccessException e) {
+                throw new IllegalStateException("Should never get here");
+            } catch (final InvocationTargetException e) {
+                throw new IllegalStateException("Should never get here");
+            }
+            delegationBuilder.delegate();
         }
     }
 }

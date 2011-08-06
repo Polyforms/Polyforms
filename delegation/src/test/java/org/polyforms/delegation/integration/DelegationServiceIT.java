@@ -3,14 +3,11 @@ package org.polyforms.delegation.integration;
 import java.util.Locale;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.polyforms.delegation.Delegate;
-import org.polyforms.delegation.DelegationRegister;
 import org.polyforms.delegation.DelegationService;
-import org.polyforms.delegation.builder.DelegationBuilderFactory;
-import org.polyforms.delegation.builder.DelegationRegistry;
+import org.polyforms.delegation.DelegatorRegister;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,46 +18,39 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration("ComponentScannerIT-context.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
 public class DelegationServiceIT {
+    private final StringWrapper string = new StringWrapper("test");
     @Autowired
     private DelegationService delegationService;
     @Autowired
     private Delegator delegator;
     @Autowired
-    private AbstractDelegator abstractDelegator;
-    @Autowired
-    private DelegationRegistry delegationRegistry;
+    private AbstractInterface<String> AbstractInterface;
     @Autowired
     private AnnotationDelegator annotationDelegator;
-    private DelegationBuilderFactory delegationBuilder;
-
-    @Before
-    public void setUp() {
-        delegationBuilder = new DelegationBuilderFactory(delegationRegistry);
-    }
 
     @Test
     public void delegateAbstractClass() {
-        Assert.assertEquals("1", abstractDelegator.echo("1"));
+        Assert.assertEquals("1", AbstractInterface.echo("1"));
     }
 
     @Test
     public void beanDelegation() {
-        Assert.assertEquals("1", delegator.echo("1"));
+        Assert.assertEquals("test", delegator.echo(string));
     }
 
     @Test
     public void domainDelegation() {
-        Assert.assertEquals(4, delegator.length("test"));
+        Assert.assertEquals(4, delegator.length(string));
     }
 
     @Test
     public void delegationWithMoreParameters() {
-        Assert.assertEquals("CN", delegator.getCountry("zh_CN", 1));
+        Assert.assertEquals("CN", delegator.getCountry(Locale.CHINA, 1));
     }
 
     @Test
     public void delegateToVoidMethod() {
-        delegator.voidMethod("Test");
+        delegator.voidMethod(string);
     }
 
     @Test
@@ -70,7 +60,7 @@ public class DelegationServiceIT {
 
     @Test
     public void delegateTo() {
-        Assert.assertEquals(4, annotationDelegator.getLength("test"));
+        Assert.assertEquals(4, annotationDelegator.length(string));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -83,14 +73,19 @@ public class DelegationServiceIT {
         delegator.length(null);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = UnsupportedOperationException.class)
     public void domainDelegationWithoutParameters() {
         delegator.name();
     }
 
     @Test
+    public void cannotDelegateNullClass() {
+        Assert.assertFalse(delegationService.supports(null, null));
+    }
+
+    @Test
     public void cannotDelegateNullMethod() {
-        Assert.assertFalse(delegationService.canDelegate(null));
+        Assert.assertFalse(delegationService.supports(Delegator.class, null));
     }
 
     @Test(expected = DelegateException.class)
@@ -103,74 +98,60 @@ public class DelegationServiceIT {
         delegator.exceptionWithName(true);
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test(expected = MockException.class)
     public void testExceptionWithoutException() {
         delegator.exceptionWithName(false);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void registerInexistentDelegator() {
-        new DelegationRegister() {
-            public void registerDelegations(final DelegationBuilderFactory delegationBuilder) {
-                delegationBuilder.delegate(Delegator.class, "inexistentMethod");
-            }
-        }.registerDelegations(delegationBuilder);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void registerInexistentDelegatee() {
-        new DelegationRegister() {
-            public void registerDelegations(final DelegationBuilderFactory delegationBuilder) {
-                delegationBuilder.delegate(Delegator.class, "length").to(String.class, "inexistentMethod");
-            }
-        }.registerDelegations(delegationBuilder);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void registerClassDelegator() {
-        new DelegationRegister() {
-            public void registerDelegations(final DelegationBuilderFactory delegationBuilder) {
-                delegationBuilder.delegate(Delegatee.class);
-            }
-        }.registerDelegations(delegationBuilder);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void withNameBeforeTo() {
-        new DelegationRegister() {
-            public void registerDelegations(final DelegationBuilderFactory delegationBuilder) {
-                delegationBuilder.delegate(Delegator.class).withName("bean");
-            }
-        }.registerDelegations(delegationBuilder);
+    @Component
+    public static class TestDelegationBuilder extends DelegatorRegister<AbstractDelegator> {
+        @Override
+        protected void register(final AbstractDelegator source) {
+            with(new DelegateeRegister<Delegatee>() {
+                @Override
+                protected void register(final AbstractDelegator delegator) {
+                    delegate(delegator.echo(null)).echo(at(Integer.class, 0));
+                }
+            });
+        }
     }
 
     @Component
-    public static class TestDelegationBuilder implements DelegationRegister {
-        public void registerDelegations(final DelegationBuilderFactory delegationBuilder) {
-            delegationBuilder.delegate(AbstractDelegator.class).to(Delegatee.class);
-            delegationBuilder.delegate(Delegator.class, "length", String.class).to(String.class, "length");
-            delegationBuilder.delegate(Delegator.class).to(Delegatee.class).withName("delegationServiceIT.Delegatee");
-            delegationBuilder.delegate(Delegator.class, "name").to(String.class, "toString");
-            delegationBuilder.delegate(Delegator.class, "name").to(String.class, "length");
-            delegationBuilder.delegate(Delegator.class, "getCountry").to(Locale.class, "getCountry");
-            delegationBuilder.delegate(Delegator.class, "length").to(Delegatee.class, "voidMethod");
-            delegationBuilder.delegate(Delegator.class, "voidMethod").to(String.class, "length");
+    public static class DelegateeDelegationBuilder extends DelegatorRegister<Delegator> {
+        @Override
+        protected void register(final Delegator source) {
+            delegate();
+            this.<StringWrapper> delegate(source.echo(null)).toString();
+            source.voidMethod(null);
+            this.<StringWrapper> delegate().length();
+
+            with(new DelegateeRegister<Delegatee>("delegationServiceIT.Delegatee") {
+                @Override
+                protected void register(final Delegator delegator) {
+                    delegator.exceptionWithName(false);
+                    delegate();
+                    delegator.exception();
+                    delegate();
+                    delegate(delegator.length()).voidMethod();
+                    delegate(delegator.hello());
+                }
+            });
         }
     }
 
     @Component
     public static interface Delegator {
-        String echo(String string);
+        String echo(StringWrapper string);
 
-        int length(String string);
+        int length(StringWrapper string);
 
         String name();
 
-        String getCountry(String locale, int start);
+        String getCountry(Locale locale, int start);
 
         String hello();
 
-        void voidMethod(String string);
+        void voidMethod(StringWrapper string);
 
         int length();
 
@@ -179,11 +160,31 @@ public class DelegationServiceIT {
         void exceptionWithName(boolean exception) throws DelegateException;
     }
 
-    @Component
-    public static abstract interface AbstractDelegator extends AbstractInterface<String> {
+    public static class StringWrapper {
+        private String string;
+
+        protected StringWrapper() {
+        }
+
+        public StringWrapper(final String string) {
+            this.string = string;
+        }
+
+        public int length() {
+            return string.length();
+        }
+
+        @Override
+        public String toString() {
+            return string.toString();
+        }
     }
 
-    public static interface AbstractInterface<T> {
+    @Component
+    public static abstract class AbstractDelegator implements AbstractInterface<String> {
+    }
+
+    public interface AbstractInterface<T> {
         T echo(T String);
     }
 
@@ -191,8 +192,8 @@ public class DelegationServiceIT {
     public static interface AnnotationDelegator {
         String echo(String string);
 
-        @Delegate(value = String.class, methodName = "length")
-        int getLength(String string);
+        @Delegate
+        int length(StringWrapper string);
     }
 
     public static interface GenericDelegatee<T extends Number> {
@@ -225,12 +226,8 @@ public class DelegationServiceIT {
             if (exception) {
                 throw new DelegateException();
             } else {
-                throw new RuntimeException();
+                throw new MockException();
             }
-        }
-
-        @SuppressWarnings("serial")
-        private class MockException extends RuntimeException {
         }
 
         @SuppressWarnings("serial")
@@ -240,6 +237,10 @@ public class DelegationServiceIT {
 
     @SuppressWarnings("serial")
     public static class DelegateException extends RuntimeException {
+    }
+
+    @SuppressWarnings("serial")
+    public static class MockException extends RuntimeException {
     }
 }
 

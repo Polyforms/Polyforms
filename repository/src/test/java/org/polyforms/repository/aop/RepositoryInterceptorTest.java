@@ -2,10 +2,9 @@ package org.polyforms.repository.aop;
 
 import java.lang.reflect.Method;
 
-import org.junit.Assert;
-
 import org.aopalliance.intercept.MethodInvocation;
 import org.easymock.EasyMock;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.polyforms.repository.spi.Executor;

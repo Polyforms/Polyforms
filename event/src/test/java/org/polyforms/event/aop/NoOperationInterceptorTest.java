@@ -1,7 +1,6 @@
 package org.polyforms.event.aop;
 
 import org.junit.Assert;
-
 import org.junit.Test;
 
 public class NoOperationInterceptorTest {

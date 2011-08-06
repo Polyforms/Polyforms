@@ -78,14 +78,12 @@ public class MethodUtilsTest {
         Assert.assertEquals(method, MethodUtils.findMostSpecificMethod(MockSubClass.class, "interfaceEcho"));
     }
 
-    @Test(expected = NoSuchMethodException.class)
     public void getInexistentMethod() throws Exception {
-        MethodUtils.findMostSpecificMethod(MockClass.class, "notExist");
+        Assert.assertNull(MethodUtils.findMostSpecificMethod(MockClass.class, "notExist"));
     }
 
-    @Test(expected = NoSuchMethodException.class)
     public void getUnmatchedMethod() throws Exception {
-        MethodUtils.findMostSpecificMethod(MockClass.class, "echo", String.class, null);
+        Assert.assertNull(MethodUtils.findMostSpecificMethod(MockClass.class, "echo", String.class, null));
     }
 
     @Test(expected = IllegalArgumentException.class)

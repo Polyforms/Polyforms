@@ -8,8 +8,9 @@ import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
 import org.polyforms.delegation.DelegationService;
+import org.polyforms.delegation.builder.Delegation;
 import org.polyforms.delegation.builder.DelegationRegistry;
-import org.polyforms.delegation.builder.DelegationRegistry.Delegation;
+import org.polyforms.delegation.builder.Delegator;
 
 public class GenericDelegationServiceTest {
     private Method method;
@@ -27,42 +28,45 @@ public class GenericDelegationServiceTest {
 
     @Test
     public void canDelegate() {
-        delegationRegistry.contains(method);
+        delegationRegistry.supports(new Delegator(String.class, method));
         EasyMock.expectLastCall().andReturn(true);
         EasyMock.replay(delegationRegistry);
 
-        Assert.assertTrue(delegationService.canDelegate(method));
+        Assert.assertTrue(delegationService.supports(String.class, method));
         EasyMock.verify(delegationRegistry);
     }
 
     @Test
     public void cannotDelegate() {
-        delegationRegistry.contains(method);
+        delegationRegistry.supports(new Delegator(String.class, method));
         EasyMock.expectLastCall().andReturn(false);
         EasyMock.replay(delegationRegistry);
 
-        Assert.assertFalse(delegationService.canDelegate(method));
+        Assert.assertFalse(delegationService.supports(String.class, method));
         EasyMock.verify(delegationRegistry);
     }
 
     @Test
     public void cannotDelegateNull() {
-        Assert.assertFalse(delegationService.canDelegate(null));
+        Assert.assertFalse(delegationService.supports(String.class, null));
     }
 
     @Test
     public void convert() throws Throwable {
         final Object returnValue = new Object();
         final Object[] arguments = new Object[0];
-        final Delegation delegation = new Delegation(method, method);
+        final Delegation delegation = EasyMock.createMock(Delegation.class);
 
-        delegationRegistry.get(method);
+        final Delegator delegator = new Delegator(String.class, method);
+        delegationRegistry.supports(delegator);
+        EasyMock.expectLastCall().andReturn(true);
+        delegationRegistry.get(delegator);
         EasyMock.expectLastCall().andReturn(delegation);
-        delegationExecutor.execute(delegation, String.class, arguments);
+        delegationExecutor.execute(delegation, arguments);
         EasyMock.expectLastCall().andReturn(returnValue);
         EasyMock.replay(delegationRegistry, delegationExecutor);
 
-        Assert.assertSame(returnValue, delegationService.delegate("Mock String", method, arguments));
+        Assert.assertSame(returnValue, delegationService.delegate(String.class, method, arguments));
         EasyMock.verify(delegationRegistry, delegationExecutor);
     }
 }

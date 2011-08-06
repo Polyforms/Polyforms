@@ -1,7 +1,6 @@
 package org.polyforms.repository.integration;
 
 import org.junit.Assert;
-
 import org.junit.Test;
 import org.polyforms.repository.integration.mock.MockEntity;
 import org.polyforms.repository.integration.mock.PropertyEntity;

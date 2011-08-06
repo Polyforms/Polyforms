@@ -5,8 +5,8 @@ import java.util.Map;
 
 import org.easymock.EasyMock;
 import org.junit.Test;
-import org.polyforms.delegation.DelegationRegister;
-import org.polyforms.delegation.builder.DelegationBuilderFactory;
+import org.polyforms.delegation.builder.DelegationBuilder;
+import org.polyforms.delegation.builder.DelegationRegister;
 import org.polyforms.delegation.builder.DelegationRegistry;
 import org.polyforms.delegation.spring.DelegationRegisterProcessor.AnnotatedDelegationRegister;
 import org.polyforms.di.spring.util.BeanFactoryVisitor;
@@ -16,8 +16,8 @@ import org.springframework.test.util.ReflectionTestUtils;
 public class DelegationRegisterProcessorTest {
     @Test
     public void postProcessBeanFactory() {
-        final BeanFactoryVisitor beanFactoryVisitor = EasyMock.createMock(BeanFactoryVisitor.class);
         final DelegationRegisterProcessor delegationRegisterProcessor = new DelegationRegisterProcessor();
+        final BeanFactoryVisitor beanFactoryVisitor = EasyMock.createMock(BeanFactoryVisitor.class);
         ReflectionTestUtils.setField(delegationRegisterProcessor, "beanFactoryVisitor", beanFactoryVisitor);
 
         final ConfigurableListableBeanFactory beanFactory = EasyMock.createMock(ConfigurableListableBeanFactory.class);
@@ -29,11 +29,14 @@ public class DelegationRegisterProcessorTest {
         delegationRegisters.put("delegationRegister", delegationRegister);
         beanFactory.getBeansOfType(DelegationRegister.class);
         EasyMock.expectLastCall().andReturn(delegationRegisters);
-        delegationRegister.registerDelegations(EasyMock.isA(DelegationBuilderFactory.class));
+        delegationRegister.register(EasyMock.isA(DelegationBuilder.class));
         beanFactoryVisitor.visit(EasyMock.same(beanFactory), EasyMock.isA(AnnotatedDelegationRegister.class));
         EasyMock.replay(beanFactoryVisitor, beanFactory, delegationRegister);
 
         delegationRegisterProcessor.postProcessBeanFactory(beanFactory);
         EasyMock.verify(beanFactoryVisitor, beanFactory, delegationRegister);
+    }
+
+    interface MockInterface {
     }
 }

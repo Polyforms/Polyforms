@@ -31,22 +31,16 @@ public final class MethodUtils {
      * @param clazz the interface or class to resolve method against
      * @param methodName the name of resolving method
      * @param parameterTypes the parameter types of resolving method
-     * @return the corresponding method
-     * @throws NoSuchMethodException if the method cannot be found
+     * @return the corresponding method or null if the method cannot be found
      */
     public static Method findMostSpecificMethod(final Class<?> clazz, final String methodName,
-            final Class<?>... parameterTypes) throws NoSuchMethodException {
+            final Class<?>... parameterTypes) {
         validateParameters(clazz, methodName);
 
         Method method = ClassUtils.getMethodIfAvailable(clazz, methodName, parameterTypes);
         if (method == null && parameterTypes.length == 0) {
             method = findMethodInHierarchy(clazz, methodName);
         }
-
-        if (method == null) {
-            throw new NoSuchMethodException(clazz.getName() + "." + methodName + typesToString(parameterTypes));
-        }
-
         return method;
     }
 
@@ -118,19 +112,5 @@ public final class MethodUtils {
         }
 
         return null;
-    }
-
-    private static String typesToString(final Class<?>[] types) {
-        final StringBuilder buf = new StringBuilder();
-        buf.append("(");
-        for (int i = 0; i < types.length; i++) {
-            if (i > 0) {
-                buf.append(", ");
-            }
-            final Class<?> c = types[i];
-            buf.append(c == null ? "null" : c.getName());
-        }
-        buf.append(")");
-        return buf.toString();
     }
 }

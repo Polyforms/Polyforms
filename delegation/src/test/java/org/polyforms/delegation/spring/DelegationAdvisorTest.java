@@ -28,7 +28,7 @@ public class DelegationAdvisorTest {
     @Test
     public void matches() throws NoSuchMethodException {
         final Method method = String.class.getMethod("toString", new Class<?>[0]);
-        delegationService.canDelegate(method);
+        delegationService.supports(String.class, method);
         EasyMock.expectLastCall().andReturn(true);
         EasyMock.replay(delegationService);
 

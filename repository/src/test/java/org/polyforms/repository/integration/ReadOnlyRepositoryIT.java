@@ -1,7 +1,6 @@
 package org.polyforms.repository.integration;
 
 import org.junit.Assert;
-
 import org.junit.Test;
 import org.polyforms.repository.integration.mock.MockEntityRepository;
 import org.springframework.beans.factory.annotation.Autowired;

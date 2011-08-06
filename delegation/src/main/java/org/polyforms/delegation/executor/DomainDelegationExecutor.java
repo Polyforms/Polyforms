@@ -1,6 +1,6 @@
 package org.polyforms.delegation.executor;
 
-import org.polyforms.delegation.builder.DelegationRegistry.Delegation;
+import org.polyforms.delegation.builder.Delegation;
 import org.springframework.core.convert.ConversionService;
 
 /**
@@ -21,14 +21,14 @@ final class DomainDelegationExecutor extends AbstactDelegationExecutor {
     protected Object getTarget(final Delegation delegation, final Object[] arguments) {
         if (arguments.length == 0) {
             throw new IllegalArgumentException("There is no parameters in method["
-                    + delegation.getDelegatee().getName() + "]. ");
+                    + delegation.getDelegateeMethod().getName() + "]. ");
         }
         final Object argument = arguments[0];
         if (argument == null) {
             throw new IllegalArgumentException("The first argument of invocation of method["
-                    + delegation.getDelegatee().getName() + "] is null.");
+                    + delegation.getDelegateeMethod().getName() + "] is null.");
         }
-        return getConversionService().convert(argument, delegation.getDelegatee().getDeclaringClass());
+        return getConversionService().convert(argument, delegation.getDelegateeType());
     }
 
     /**

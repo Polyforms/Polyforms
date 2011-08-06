@@ -24,7 +24,7 @@ public final class DelegationInterceptor implements MethodInterceptor {
      * {@inheritDoc}
      */
     public Object invoke(final MethodInvocation methodInvocation) throws Throwable {
-        return delegationService.delegate(methodInvocation.getThis(), methodInvocation.getMethod(),
+        return delegationService.delegate(methodInvocation.getThis().getClass(), methodInvocation.getMethod(),
                 methodInvocation.getArguments());
     }
 }

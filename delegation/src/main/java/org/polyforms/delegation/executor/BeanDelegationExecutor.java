@@ -1,6 +1,6 @@
 package org.polyforms.delegation.executor;
 
-import org.polyforms.delegation.builder.DelegationRegistry.Delegation;
+import org.polyforms.delegation.builder.Delegation;
 import org.polyforms.di.BeanContainer;
 import org.springframework.core.convert.ConversionService;
 
@@ -23,11 +23,10 @@ final class BeanDelegationExecutor extends AbstactDelegationExecutor {
      */
     @Override
     protected Object getTarget(final Delegation delegation, final Object[] arguments) {
-        final Class<?> clazz = delegation.getDelegatee().getDeclaringClass();
-        if (delegation.hasName()) {
-            return beanContainer.getBean(delegation.getName(), clazz);
+        if (delegation.hasDelegateeName()) {
+            return beanContainer.getBean(delegation.getDelegateeName(), delegation.getDelegateeType());
         }
 
-        return beanContainer.getBean(clazz);
+        return beanContainer.getBean(delegation.getDelegateeType());
     }
 }

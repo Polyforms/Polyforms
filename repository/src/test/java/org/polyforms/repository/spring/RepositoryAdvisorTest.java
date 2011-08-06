@@ -1,11 +1,11 @@
 package org.polyforms.repository.spring;
 
-import org.junit.Assert;
 import net.sf.cglib.proxy.Callback;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 
 import org.easymock.EasyMock;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.polyforms.repository.aop.RepositoryInterceptor;

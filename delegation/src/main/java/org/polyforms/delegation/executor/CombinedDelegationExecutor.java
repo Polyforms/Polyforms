@@ -6,13 +6,13 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.polyforms.delegation.builder.DelegationRegistry.Delegation;
+import org.polyforms.delegation.builder.Delegation;
 import org.polyforms.delegation.support.DelegationExecutor;
 import org.polyforms.di.BeanContainer;
 import org.springframework.core.convert.ConversionService;
 
 /**
- * Factory which selects executor to execute specific {@link Delegation}.
+ * Factory which selects executor to execute specific {@link ClassDelegation}.
  * 
  * @author Kuisong Tong
  * @since 1.0
@@ -37,9 +37,8 @@ public final class CombinedDelegationExecutor implements DelegationExecutor {
     /**
      * {@inheritDoc}
      */
-    public Object execute(final Delegation delegation, final Class<?> delegatorClass, final Object[] arguments)
-            throws Throwable {
-        return getDelegationExecutor(delegation).execute(delegation, delegatorClass, arguments);
+    public Object execute(final Delegation delegation, final Object[] arguments) throws Throwable {
+        return getDelegationExecutor(delegation).execute(delegation, arguments);
     }
 
     private DelegationExecutor getDelegationExecutor(final Delegation delegation) {
@@ -50,6 +49,6 @@ public final class CombinedDelegationExecutor implements DelegationExecutor {
     }
 
     private boolean isBeanDelegation(final Delegation delegation) {
-        return delegation.hasName() || beanContainer.containsBean(delegation.getDelegatee().getDeclaringClass());
+        return delegation.hasDelegateeName() || beanContainer.containsBean(delegation.getDelegateeType());
     }
 }

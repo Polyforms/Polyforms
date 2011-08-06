@@ -2,8 +2,10 @@ package org.polyforms.delegation.executor;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.List;
 
-import org.polyforms.delegation.builder.DelegationRegistry.Delegation;
+import org.polyforms.delegation.builder.Delegation;
+import org.polyforms.delegation.builder.ParameterProvider;
 import org.polyforms.delegation.support.DelegationExecutor;
 import org.polyforms.delegation.util.DefaultValue;
 import org.springframework.core.GenericTypeResolver;
@@ -26,15 +28,25 @@ abstract class AbstactDelegationExecutor implements DelegationExecutor {
     /**
      * {@inheritDoc}
      */
-    public final Object execute(final Delegation delegation, final Class<?> delegatorClass, final Object[] arguments)
-            throws Throwable {
+    public final Object execute(final Delegation delegation, final Object[] arguments) throws Throwable {
+        Object[] tailoredArguments;
+        final List<ParameterProvider<?>> parameterProviders = delegation.getParameterProviders();
+        if (parameterProviders.isEmpty()) {
+            tailoredArguments = tailorArguments(arguments);
+        } else {
+            tailoredArguments = new Object[parameterProviders.size()];
+            int i = 0;
+            for (final ParameterProvider<?> parameterProvider : parameterProviders) {
+                tailoredArguments[i++] = parameterProvider.get(arguments);
+            }
+        }
+
         final Object target = getTarget(delegation, arguments);
-        final Object[] convertedAguments = convertParameters(target, delegation.getDelegatee(),
-                tailorArguments(arguments));
+        final Object[] convertedAguments = convertParameters(target, delegation.getDelegateeMethod(), tailoredArguments);
 
         try {
-            final Object returnValue = delegation.getDelegatee().invoke(target, convertedAguments);
-            return convertReturnValue(returnValue, delegatorClass, delegation.getDelegator());
+            final Object returnValue = delegation.getDelegateeMethod().invoke(target, convertedAguments);
+            return convertReturnValue(returnValue, delegation.getDelegatorType(), delegation.getDelegatorMethod());
         } catch (final InvocationTargetException e) {
             throw convertException(e.getTargetException(), delegation); // NOPMD
         }
@@ -85,7 +97,7 @@ abstract class AbstactDelegationExecutor implements DelegationExecutor {
     }
 
     private Class<?> getExceptionType(final Throwable exception, final Delegation delegation) {
-        final Class<?>[] exceptions = delegation.getDelegator().getExceptionTypes();
+        final Class<?>[] exceptions = delegation.getDelegatorMethod().getExceptionTypes();
         final Class<?> exceptionType = getExceptionTypeByPosition(exception, delegation, exceptions);
         if (exceptionType != null) {
             return exceptionType;
@@ -95,7 +107,7 @@ abstract class AbstactDelegationExecutor implements DelegationExecutor {
 
     private Class<?> getExceptionTypeByPosition(final Throwable exception, final Delegation delegation,
             final Class<?>[] exceptions) {
-        final Class<?>[] targetExceptions = delegation.getDelegatee().getExceptionTypes();
+        final Class<?>[] targetExceptions = delegation.getDelegateeMethod().getExceptionTypes();
         for (int i = 0; i < targetExceptions.length; i++) {
             if (targetExceptions[i] == exception.getClass() && exceptions.length > i) {
                 return exceptions[i];

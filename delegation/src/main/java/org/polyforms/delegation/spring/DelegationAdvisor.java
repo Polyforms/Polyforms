@@ -29,7 +29,7 @@ public final class DelegationAdvisor extends DefaultPointcutAdvisor {
              * {@inheritDoc}
              */
             public boolean matches(final Method method, final Class<?> targetClass) {
-                return delegationService.canDelegate(method);
+                return delegationService.supports(targetClass, method);
             }
         }, new DelegationInterceptor(delegationService));
     }
