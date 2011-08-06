@@ -5,9 +5,8 @@ import java.lang.reflect.Method;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
-import org.junit.Assert;
-
 import org.easymock.EasyMock;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.polyforms.repository.jpa.QueryBuilder;

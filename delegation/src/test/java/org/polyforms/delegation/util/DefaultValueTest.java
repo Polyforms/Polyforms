@@ -55,7 +55,7 @@ public final class DefaultValueTest {
     }
 
     @Test
-    public void returnNothing() {
-        Assert.assertEquals(void.class, DefaultValue.get(void.class));
+    public void returnNull() {
+        Assert.assertNull(DefaultValue.get(void.class));
     }
 }

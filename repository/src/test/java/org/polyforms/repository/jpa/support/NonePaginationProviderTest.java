@@ -1,7 +1,6 @@
 package org.polyforms.repository.jpa.support;
 
 import org.junit.Assert;
-
 import org.junit.Test;
 import org.polyforms.repository.jpa.PaginationProvider;
 
