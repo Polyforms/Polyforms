@@ -9,6 +9,7 @@ import org.polyforms.delegation.builder.ParameterProvider;
 import org.polyforms.delegation.util.DefaultValue;
 import org.springframework.core.GenericTypeResolver;
 
+@SuppressWarnings("unchecked")
 public abstract class DelegatorRegister<S> implements DelegationRegister {
     private DelegationBuilder builder;
     private S source;
@@ -20,7 +21,6 @@ public abstract class DelegatorRegister<S> implements DelegationRegister {
         builder.registerDelegations();
     }
 
-    @SuppressWarnings("unchecked")
     private Class<S> getDelegatorType() {
         return (Class<S>) GenericTypeResolver.resolveTypeArgument(this.getClass(), DelegatorRegister.class);
     }
@@ -49,7 +49,6 @@ public abstract class DelegatorRegister<S> implements DelegationRegister {
         return provideBy(targetType, new TypeOf<P>(sourceType));
     }
 
-    @SuppressWarnings("unchecked")
     protected final <P> P constant(final P value) {
         return provideBy((Class<P>) (value == null ? null : value.getClass()), new Constant<P>(value));
     }
@@ -71,7 +70,6 @@ public abstract class DelegatorRegister<S> implements DelegationRegister {
             target = builder.to(getDelegateeType());
         }
 
-        @SuppressWarnings("unchecked")
         private Class<T> getDelegateeType() {
             return (Class<T>) GenericTypeResolver.resolveTypeArgument(this.getClass(), DelegateeRegister.class);
         }

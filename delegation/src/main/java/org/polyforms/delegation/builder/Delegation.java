@@ -4,17 +4,17 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 public interface Delegation {
-    public abstract Class<?> getDelegatorType();
+    Class<?> getDelegatorType();
 
-    public abstract Method getDelegatorMethod();
+    Method getDelegatorMethod();
 
-    public abstract Class<?> getDelegateeType();
+    Class<?> getDelegateeType();
 
-    public abstract Method getDelegateeMethod();
+    Method getDelegateeMethod();
 
-    public abstract String getDelegateeName();
+    String getDelegateeName();
 
-    public abstract List<ParameterProvider<?>> getParameterProviders();
+    List<ParameterProvider<?>> getParameterProviders();
 
-    public abstract boolean hasDelegateeName();
+    boolean hasDelegateeName();
 }

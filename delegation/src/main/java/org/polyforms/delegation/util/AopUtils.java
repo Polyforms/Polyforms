@@ -6,6 +6,10 @@ import net.sf.cglib.proxy.Proxy;
 public class AopUtils {
     private static final Class<?>[] EMPTY_CLASS = new Class<?>[0];
 
+    protected AopUtils() {
+        throw new UnsupportedOperationException();
+    }
+
     public static Class<?>[] deproxy(final Class<?> clazz) {
         if (clazz == Object.class) {
             return EMPTY_CLASS;

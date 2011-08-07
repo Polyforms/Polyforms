@@ -80,12 +80,12 @@ public final class DefaultDelegationBuilder implements DelegationBuilder {
             if (Modifier.isAbstract(method.getModifiers())
                     && !delegationRegistry.supports(new Delegator(delegatorType, method))) {
                 try {
-                    final SimpleDelegation delegation = newDelegation(method);
-                    final Method delegateeMethod = MethodUtils.findMostSpecificMethod(delegation.getDelegateeType(),
-                            delegation.getDelegatorMethod().getName());
+                    final SimpleDelegation newDelegation = newDelegation(method);
+                    final Method delegateeMethod = MethodUtils.findMostSpecificMethod(newDelegation.getDelegateeType(),
+                            newDelegation.getDelegatorMethod().getName());
                     if (delegateeMethod != null) {
-                        delegation.setDelegateeMethod(delegateeMethod);
-                        registerDelegation(delegation);
+                        newDelegation.setDelegateeMethod(delegateeMethod);
+                        registerDelegation(newDelegation);
                     }
                 } catch (final IllegalArgumentException e) {
                     // IGNORE if the delegatee type cannot be resolved from delegator method.
@@ -95,14 +95,14 @@ public final class DefaultDelegationBuilder implements DelegationBuilder {
     }
 
     private SimpleDelegation newDelegation(final Method method) {
-        final SimpleDelegation delegation = new SimpleDelegation(delegatorType, method);
+        final SimpleDelegation newDelegation = new SimpleDelegation(delegatorType, method);
         if (delegateeType != null) {
-            delegation.setDelegateeType(delegateeType);
-            delegation.setDelegateeName(delegateeName);
+            newDelegation.setDelegateeType(delegateeType);
+            newDelegation.setDelegateeName(delegateeName);
         } else {
-            delegation.setDelegateeType(getTypeOfFirstParameter(method));
+            newDelegation.setDelegateeType(getTypeOfFirstParameter(method));
         }
-        return delegation;
+        return newDelegation;
     }
 
     private Class<?> getTypeOfFirstParameter(final Method method) {
@@ -136,6 +136,9 @@ public final class DefaultDelegationBuilder implements DelegationBuilder {
 
     private final class DelegateeMethodVisitor implements MethodVisitor {
         public void visit(final Method method) {
+            if (delegation.getDelegateeMethod() != null) {
+                throw new IllegalArgumentException("The delegatee method has been set.");
+            }
             if (!parameterProviders.isEmpty()) {
                 if (parameterProviders.size() != method.getParameterTypes().length) {
                     throw new IllegalArgumentException("Unmatched parameter providers and parameter types of method.");
@@ -155,16 +158,16 @@ public final class DefaultDelegationBuilder implements DelegationBuilder {
             registerAllAbstractMethods();
         }
 
-        for (final SimpleDelegation delegation : delegations) {
-            if (delegation.getDelegateeMethod() == null) {
-                final Method delegateeMethod = MethodUtils.findMostSpecificMethod(delegation.getDelegateeType(),
-                        delegation.getDelegatorMethod().getName());
+        for (final SimpleDelegation newDelegation : delegations) {
+            if (newDelegation.getDelegateeMethod() == null) {
+                final Method delegateeMethod = MethodUtils.findMostSpecificMethod(newDelegation.getDelegateeType(),
+                        newDelegation.getDelegatorMethod().getName());
                 if (delegateeMethod == null) {
                     throw new IllegalArgumentException("The mathod with same name cannot find in delegatee type");
                 }
-                delegation.setDelegateeMethod(delegateeMethod);
+                newDelegation.setDelegateeMethod(delegateeMethod);
             }
-            delegationRegistry.register(delegation);
+            delegationRegistry.register(newDelegation);
         }
         delegations.clear();
         resetDelegatee();
