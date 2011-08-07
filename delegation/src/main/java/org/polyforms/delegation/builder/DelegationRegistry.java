@@ -1,5 +1,7 @@
 package org.polyforms.delegation.builder;
 
+import java.lang.reflect.Method;
+
 /**
  * The registry to keep all delegation built by {@link DelegationBuilder}.
  * 
@@ -14,13 +16,12 @@ public interface DelegationRegistry {
      */
     void register(Delegation delegation);
 
-    Delegation get(Delegator delegator);
-
     /**
      * Check whether a delegation for specific method supports.
      * 
-     * @param delegator the delegator
+     * @param delegatorType the delegator class
+     * @param delegatorMethod the delegator method
      * @return true if there is a delegation of specific delegator, false if not
      */
-    boolean supports(Delegator delegator);
+    boolean supports(Class<?> delegatorType, Method delegatorMethod);
 }

@@ -7,15 +7,14 @@ import java.util.List;
 
 import org.polyforms.delegation.builder.Delegation;
 import org.polyforms.delegation.builder.ParameterProvider;
-import org.springframework.util.StringUtils;
 
 final class SimpleDelegation implements Delegation {
+    private final List<ParameterProvider<?>> parameterProviders = new ArrayList<ParameterProvider<?>>();
     private final Class<?> delegatorType;
     private final Method delegatorMethod;
     private Class<?> delegateeType;
-    private Method delegateeMethod;
     private String delegateeName;
-    private final List<ParameterProvider<?>> parameterProviders = new ArrayList<ParameterProvider<?>>();
+    private Method delegateeMethod;
 
     public SimpleDelegation(final Class<?> delegatorType, final Method delegatorMethod) {
         this.delegatorType = delegatorType;
@@ -46,10 +45,6 @@ final class SimpleDelegation implements Delegation {
         return Collections.unmodifiableList(parameterProviders);
     }
 
-    public boolean hasDelegateeName() {
-        return StringUtils.hasText(delegateeName);
-    }
-
     protected void addParameterProvider(final ParameterProvider<?> parameterProvider) {
         parameterProviders.add(parameterProvider);
     }
@@ -64,5 +59,32 @@ final class SimpleDelegation implements Delegation {
 
     protected void setDelegateeName(final String delegateeName) {
         this.delegateeName = delegateeName;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + delegatorType.hashCode();
+        result = prime * result + delegatorMethod.hashCode();
+        return result;
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (obj == null) {
+            return false;
+        }
+
+        if (!(obj instanceof SimpleDelegation)) {
+            return false;
+        }
+
+        final SimpleDelegation other = (SimpleDelegation) obj;
+        return delegatorType == other.delegatorType && delegatorMethod.equals(other.delegatorMethod);
     }
 }

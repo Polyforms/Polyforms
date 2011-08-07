@@ -10,6 +10,7 @@ import org.polyforms.delegation.builder.Delegation;
 import org.polyforms.delegation.support.DelegationExecutor;
 import org.polyforms.di.BeanContainer;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.util.StringUtils;
 
 /**
  * Factory which selects executor to execute specific {@link ClassDelegation}.
@@ -49,6 +50,7 @@ public final class CombinedDelegationExecutor implements DelegationExecutor {
     }
 
     private boolean isBeanDelegation(final Delegation delegation) {
-        return delegation.hasDelegateeName() || beanContainer.containsBean(delegation.getDelegateeType());
+        return StringUtils.hasText(delegation.getDelegateeName())
+                || beanContainer.containsBean(delegation.getDelegateeType());
     }
 }

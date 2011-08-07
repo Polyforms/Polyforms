@@ -1,5 +1,6 @@
 package org.polyforms.delegation.support;
 
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,7 +9,6 @@ import javax.inject.Singleton;
 
 import org.polyforms.delegation.builder.Delegation;
 import org.polyforms.delegation.builder.DelegationRegistry;
-import org.polyforms.delegation.builder.Delegator;
 
 /**
  * Generic implementation of {@link DelegationRegistry}.
@@ -18,7 +18,7 @@ import org.polyforms.delegation.builder.Delegator;
  */
 @Named
 @Singleton
-public final class SimpleDelegationRegistry implements DelegationRegistry {
+public final class SimpleDelegationRegistry implements DelegationRegistry, DelegationResolver {
     private final Map<Delegator, Delegation> delegations = new HashMap<Delegator, Delegation>();
 
     /**
@@ -26,6 +26,10 @@ public final class SimpleDelegationRegistry implements DelegationRegistry {
      */
     public void register(final Delegation delegation) {
         delegations.put(new Delegator(delegation.getDelegatorType(), delegation.getDelegatorMethod()), delegation);
+    }
+
+    public boolean supports(final Class<?> delegatorType, final Method delegatorMethod) {
+        return supports(new Delegator(delegatorType, delegatorMethod));
     }
 
     public Delegation get(final Delegator delegator) {

@@ -15,6 +15,4 @@ public interface Delegation {
     String getDelegateeName();
 
     List<ParameterProvider<?>> getParameterProviders();
-
-    boolean hasDelegateeName();
 }

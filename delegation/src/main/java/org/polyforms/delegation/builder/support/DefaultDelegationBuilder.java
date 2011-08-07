@@ -3,11 +3,13 @@ package org.polyforms.delegation.builder.support;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import org.polyforms.delegation.builder.Delegation;
 import org.polyforms.delegation.builder.DelegationBuilder;
 import org.polyforms.delegation.builder.DelegationRegistry;
-import org.polyforms.delegation.builder.Delegator;
 import org.polyforms.delegation.builder.ParameterProvider;
 import org.polyforms.delegation.builder.support.Cglib2ProxyFactory.MethodVisitor;
 import org.polyforms.delegation.util.MethodUtils;
@@ -15,7 +17,7 @@ import org.polyforms.delegation.util.MethodUtils;
 public final class DefaultDelegationBuilder implements DelegationBuilder {
     private final ProxyFactory delegatorProxyFactory = new Cglib2ProxyFactory(new DelegatorMethodVisitor());
     private final ProxyFactory delegateeProxyFactory = new Cglib2ProxyFactory(new DelegateeMethodVisitor());
-    private final List<SimpleDelegation> delegations = new ArrayList<SimpleDelegation>();
+    private final Set<SimpleDelegation> delegations = new HashSet<SimpleDelegation>();
     private final DelegationRegistry delegationRegistry;
     private Class<?> delegatorType;
     private Method delegatorMethod;
@@ -77,13 +79,12 @@ public final class DefaultDelegationBuilder implements DelegationBuilder {
 
     private void registerAllAbstractMethods() {
         for (final Method method : delegatorType.getMethods()) {
-            if (Modifier.isAbstract(method.getModifiers())
-                    && !delegationRegistry.supports(new Delegator(delegatorType, method))) {
+            if (Modifier.isAbstract(method.getModifiers())) {
                 try {
                     final SimpleDelegation newDelegation = newDelegation(method);
                     final Method delegateeMethod = MethodUtils.findMostSpecificMethod(newDelegation.getDelegateeType(),
                             newDelegation.getDelegatorMethod().getName());
-                    if (delegateeMethod != null) {
+                    if (delegateeMethod != null && !contains(newDelegation)) {
                         newDelegation.setDelegateeMethod(delegateeMethod);
                         registerDelegation(newDelegation);
                     }
@@ -92,6 +93,11 @@ public final class DefaultDelegationBuilder implements DelegationBuilder {
                 }
             }
         }
+    }
+
+    private boolean contains(final Delegation newDelegation) {
+        return delegations.contains(newDelegation)
+                || delegationRegistry.supports(newDelegation.getDelegatorType(), newDelegation.getDelegatorMethod());
     }
 
     private SimpleDelegation newDelegation(final Method method) {

@@ -106,10 +106,10 @@ public class DelegationServiceIT {
     @Component
     public static class TestDelegationBuilder extends DelegatorRegister<AbstractDelegator> {
         @Override
-        protected void register(final AbstractDelegator source) {
+        public void register(final AbstractDelegator source) {
             with(new DelegateeRegister<Delegatee>() {
                 @Override
-                protected void register(final AbstractDelegator delegator) {
+                public void register(final AbstractDelegator delegator) {
                     delegate(delegator.echo(null)).echo(at(Integer.class, 0));
                 }
             });
@@ -119,7 +119,7 @@ public class DelegationServiceIT {
     @Component
     public static class DelegateeDelegationBuilder extends DelegatorRegister<Delegator> {
         @Override
-        protected void register(final Delegator source) {
+        public void register(final Delegator source) {
             delegate();
             this.<StringWrapper> delegate(source.echo(null)).toString();
             source.voidMethod(null);
@@ -127,7 +127,7 @@ public class DelegationServiceIT {
 
             with(new DelegateeRegister<Delegatee>("delegationServiceIT.Delegatee") {
                 @Override
-                protected void register(final Delegator delegator) {
+                public void register(final Delegator delegator) {
                     delegator.exceptionWithName(false);
                     delegate();
                     delegator.exception();

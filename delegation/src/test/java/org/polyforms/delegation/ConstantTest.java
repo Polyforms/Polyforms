@@ -17,4 +17,10 @@ public class ConstantTest {
         final ParameterProvider<String> constantProvider = new Constant<String>(null);
         Assert.assertNull(constantProvider.get(new Object[0]));
     }
+
+    @Test
+    public void validate() {
+        final ParameterProvider<String> constantProvider = new Constant<String>("test");
+        constantProvider.validate(new Class<?>[0]);
+    }
 }

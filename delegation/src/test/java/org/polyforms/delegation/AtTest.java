@@ -16,4 +16,16 @@ public class AtTest {
     public void atProvideWithNegativePosition() {
         new At<String>(-1);
     }
+
+    @Test
+    public void validate() {
+        final ParameterProvider<String> atProvider = new At<String>(0);
+        atProvider.validate(new Class<?>[] { String.class });
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void positionOutOfBound() {
+        final ParameterProvider<String> atProvider = new At<String>(1);
+        atProvider.validate(new Class<?>[] { String.class });
+    }
 }

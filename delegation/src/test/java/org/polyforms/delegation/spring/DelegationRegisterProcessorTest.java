@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.easymock.EasyMock;
 import org.junit.Test;
-import org.polyforms.delegation.builder.DelegationBuilder;
 import org.polyforms.delegation.builder.DelegationRegister;
 import org.polyforms.delegation.builder.DelegationRegistry;
 import org.polyforms.delegation.spring.DelegationRegisterProcessor.AnnotatedDelegationRegister;
@@ -24,19 +23,21 @@ public class DelegationRegisterProcessorTest {
         final DelegationRegistry delegationRegistry = EasyMock.createMock(DelegationRegistry.class);
         beanFactory.getBean(DelegationRegistry.class);
         EasyMock.expectLastCall().andReturn(delegationRegistry);
-        final DelegationRegister delegationRegister = EasyMock.createMock(DelegationRegister.class);
+        final DelegationRegister<MockInterface> delegationRegister = new DelegationRegister<MockInterface>() {
+            public void register(final MockInterface source) {
+            }
+        };
         final Map<String, Object> delegationRegisters = new HashMap<String, Object>();
         delegationRegisters.put("delegationRegister", delegationRegister);
         beanFactory.getBeansOfType(DelegationRegister.class);
         EasyMock.expectLastCall().andReturn(delegationRegisters);
-        delegationRegister.register(EasyMock.isA(DelegationBuilder.class));
         beanFactoryVisitor.visit(EasyMock.same(beanFactory), EasyMock.isA(AnnotatedDelegationRegister.class));
-        EasyMock.replay(beanFactoryVisitor, beanFactory, delegationRegister);
+        EasyMock.replay(beanFactoryVisitor, beanFactory);
 
         delegationRegisterProcessor.postProcessBeanFactory(beanFactory);
-        EasyMock.verify(beanFactoryVisitor, beanFactory, delegationRegister);
+        EasyMock.verify(beanFactoryVisitor, beanFactory);
     }
 
-    interface MockInterface {
+    public interface MockInterface {
     }
 }

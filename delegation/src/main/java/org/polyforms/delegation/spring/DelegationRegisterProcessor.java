@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.polyforms.delegation.Delegate;
 import org.polyforms.delegation.builder.DelegationBuilder;
+import org.polyforms.delegation.builder.DelegationBuilderHolder;
 import org.polyforms.delegation.builder.DelegationRegister;
 import org.polyforms.delegation.builder.DelegationRegistry;
 import org.polyforms.delegation.builder.support.DefaultDelegationBuilder;
@@ -19,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
+import org.springframework.core.GenericTypeResolver;
 import org.springframework.stereotype.Component;
 
 /**
@@ -36,16 +38,23 @@ public final class DelegationRegisterProcessor implements BeanFactoryPostProcess
     /**
      * {@inheritDoc}
      */
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public void postProcessBeanFactory(final ConfigurableListableBeanFactory beanFactory) {
         final DelegationRegistry delegationRegistry = beanFactory.getBean(DelegationRegistry.class);
         final DelegationBuilder delegationBuilder = new DefaultDelegationBuilder(delegationRegistry);
         final Collection<DelegationRegister> delegationRegisters = beanFactory.getBeansOfType(DelegationRegister.class)
                 .values();
 
+        DelegationBuilderHolder.set(delegationBuilder);
         for (final DelegationRegister register : delegationRegisters) {
             LOGGER.info("Register delegations from register {}", register.getClass().getName());
-            register.register(delegationBuilder);
+            final Object source = delegationBuilder.from(GenericTypeResolver.resolveTypeArgument(register.getClass(),
+                    DelegationRegister.class));
+            register.register(source);
+            delegationBuilder.registerDelegations();
         }
+        DelegationBuilderHolder.remove();
+
         beanFactoryVisitor.visit(beanFactory, new AnnotatedDelegationRegister(delegationBuilder));
     }
 

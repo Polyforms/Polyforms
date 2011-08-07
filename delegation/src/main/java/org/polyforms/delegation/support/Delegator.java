@@ -1,4 +1,4 @@
-package org.polyforms.delegation.builder;
+package org.polyforms.delegation.support;
 
 import java.lang.reflect.Method;
 
@@ -44,14 +44,6 @@ public final class Delegator {
 
         final Delegator other = (Delegator) obj;
 
-        if (!type.equals(other.type)) {
-            return false;
-        }
-
-        if (!method.equals(other.method)) {
-            return false;
-        }
-
-        return true;
+        return type == other.type && method.equals(other.method);
     }
 }

@@ -10,7 +10,6 @@ import javax.inject.Named;
 import org.polyforms.delegation.DelegationService;
 import org.polyforms.delegation.builder.Delegation;
 import org.polyforms.delegation.builder.DelegationRegistry;
-import org.polyforms.delegation.builder.Delegator;
 import org.polyforms.delegation.util.AopUtils;
 import org.springframework.util.ClassUtils;
 
@@ -24,16 +23,16 @@ import org.springframework.util.ClassUtils;
 public final class GenericDelegationService implements DelegationService {
     private final Map<Delegator, Delegator> delegatorMappingCache = new HashMap<Delegator, Delegator>();
     private final DelegationExecutor delegationExecutor;
-    private final DelegationRegistry delegationRegistry;
+    private final DelegationResolver delegationResolver;
 
     /**
      * Create an instance with {@link DelegationExecutor} and {@link DelegationRegistry}.
      */
     @Inject
     public GenericDelegationService(final DelegationExecutor delegationExecutor,
-            final DelegationRegistry delegationRegistry) {
+            final DelegationResolver delegationResolver) {
         this.delegationExecutor = delegationExecutor;
-        this.delegationRegistry = delegationRegistry;
+        this.delegationResolver = delegationResolver;
     }
 
     /**
@@ -56,7 +55,7 @@ public final class GenericDelegationService implements DelegationService {
         for (final Class<?> clazz : AopUtils.deproxy(originalDelegator.getType())) {
             final Method method = ClassUtils.getMostSpecificMethod(originalDelegator.getMethod(), clazz);
             final Delegator delegator = new Delegator(clazz, method);
-            if (delegationRegistry.supports(delegator)) {
+            if (delegationResolver.supports(delegator)) {
                 delegatorMappingCache.put(originalDelegator, delegator);
                 return true;
             }
@@ -82,7 +81,7 @@ public final class GenericDelegationService implements DelegationService {
             throw new IllegalArgumentException(
                     "The delegation of {} in {} is not supported. You can use 'supports' method to check whether a delegation is supported.");
         }
-        final Delegation delegation = delegationRegistry.get(delegatorMappingCache.get(originalDelegator));
+        final Delegation delegation = delegationResolver.get(delegatorMappingCache.get(originalDelegator));
         return delegationExecutor.execute(delegation, arguments);
     }
 }

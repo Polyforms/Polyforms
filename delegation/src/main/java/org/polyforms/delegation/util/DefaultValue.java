@@ -45,6 +45,9 @@ public final class DefaultValue {
      */
     @SuppressWarnings("unchecked")
     public static <T> T get(final Class<T> type) {
+        if (type == null) {
+            return null;
+        }
         return (T) PRIVITIVE_MAP.get(ClassUtils.resolvePrimitiveIfNecessary(type));
     }
 }

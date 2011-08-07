@@ -10,52 +10,57 @@ public final class DefaultValueTest {
     }
 
     @Test
-    public void returnObject() {
+    public void defaultOfObject() {
         Assert.assertNull(DefaultValue.get(Object.class));
     }
 
     @Test
-    public void returnBoolean() {
+    public void defaultOfBoolean() {
         Assert.assertFalse(DefaultValue.get(boolean.class));
     }
 
     @Test
-    public void returnChar() {
+    public void defaultOfChar() {
         Assert.assertEquals('\u0000', DefaultValue.get(char.class).charValue());
     }
 
     @Test
-    public void returnByte() {
+    public void defaultOfByte() {
         Assert.assertEquals(0, DefaultValue.get(byte.class).byteValue());
     }
 
     @Test
-    public void returnShort() {
+    public void defaultOfShort() {
         Assert.assertEquals(0, DefaultValue.get(short.class).shortValue());
     }
 
     @Test
-    public void returnInt() {
+    public void defaultOfInt() {
         Assert.assertEquals(0, DefaultValue.get(int.class).intValue());
     }
 
     @Test
-    public void returnLong() {
+    public void defaultOfLong() {
         Assert.assertEquals(0, DefaultValue.get(long.class).longValue());
     }
 
     @Test
-    public void returnFloat() {
+    public void defaultOfFloat() {
         Assert.assertEquals(0F, DefaultValue.get(float.class).floatValue(), 0);
     }
 
     @Test
-    public void returnDouble() {
+    public void defaultOfDouble() {
         Assert.assertEquals(0D, DefaultValue.get(double.class).doubleValue(), 0);
     }
 
     @Test
-    public void returnNull() {
+    public void defaultOfVoid() {
         Assert.assertNull(DefaultValue.get(void.class));
+    }
+
+    @Test
+    public void defaultOfNull() {
+        Assert.assertNull(DefaultValue.get(null));
     }
 }

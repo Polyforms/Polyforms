@@ -3,7 +3,7 @@ package org.polyforms.delegation.util;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.Proxy;
 
-public class AopUtils {
+public final class AopUtils {
     private static final Class<?>[] EMPTY_CLASS = new Class<?>[0];
 
     protected AopUtils() {
@@ -11,23 +11,22 @@ public class AopUtils {
     }
 
     public static Class<?>[] deproxy(final Class<?> clazz) {
-        if (clazz == Object.class) {
+        if (clazz == null || clazz == Object.class) {
             return EMPTY_CLASS;
         }
 
-        if (isProxy(clazz)) {
-            final Class<?> superClazz = clazz.getSuperclass();
-            if (superClazz == Object.class) {
-                return clazz.getInterfaces();
-            } else {
-                return new Class<?>[] { superClazz };
-            }
+        if (java.lang.reflect.Proxy.isProxyClass(clazz) || Proxy.isProxyClass(clazz)) {
+            return clazz.getInterfaces();
+        }
+
+        if (Enhancer.isEnhanced(clazz)) {
+            final Class<?>[] interfaces = clazz.getInterfaces();
+            final Class<?>[] result = new Class<?>[interfaces.length + 1];
+            System.arraycopy(interfaces, 0, result, 0, interfaces.length);
+            result[interfaces.length] = clazz.getSuperclass();
+            return result;
         }
 
         return new Class<?>[] { clazz };
-    }
-
-    private static boolean isProxy(final Class<?> clazz) {
-        return Proxy.isProxyClass(clazz) || Enhancer.isEnhanced(clazz) || java.lang.reflect.Proxy.isProxyClass(clazz);
     }
 }
