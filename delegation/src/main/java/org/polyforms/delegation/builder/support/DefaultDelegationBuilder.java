@@ -97,7 +97,7 @@ public final class DefaultDelegationBuilder implements DelegationBuilder {
 
     private boolean contains(final Delegation newDelegation) {
         return delegations.contains(newDelegation)
-                || delegationRegistry.supports(newDelegation.getDelegatorType(), newDelegation.getDelegatorMethod());
+                || delegationRegistry.contains(newDelegation.getDelegatorType(), newDelegation.getDelegatorMethod());
     }
 
     private SimpleDelegation newDelegation(final Method method) {
@@ -146,16 +146,20 @@ public final class DefaultDelegationBuilder implements DelegationBuilder {
                 throw new IllegalArgumentException("The delegatee method has been set.");
             }
             if (!parameterProviders.isEmpty()) {
-                if (parameterProviders.size() != method.getParameterTypes().length) {
-                    throw new IllegalArgumentException("Unmatched parameter providers and parameter types of method.");
-                }
-                for (final ParameterProvider<?> parameterProvider : parameterProviders) {
-                    parameterProvider.validate(delegation.getDelegatorMethod().getParameterTypes());
-                    delegation.addParameterProvider(parameterProvider);
-                }
+                setParameterProviders(method);
             }
             parameterProviders = null;
             delegation.setDelegateeMethod(method);
+        }
+
+        private void setParameterProviders(final Method method) {
+            if (parameterProviders.size() != method.getParameterTypes().length) {
+                throw new IllegalArgumentException("Unmatched parameter providers and parameter types of method.");
+            }
+            for (final ParameterProvider<?> parameterProvider : parameterProviders) {
+                parameterProvider.validate(delegation.getDelegatorMethod().getParameterTypes());
+                delegation.addParameterProvider(parameterProvider);
+            }
         }
     }
 

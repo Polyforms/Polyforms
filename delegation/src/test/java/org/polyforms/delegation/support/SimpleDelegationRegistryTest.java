@@ -28,12 +28,12 @@ public class SimpleDelegationRegistryTest {
 
     @Test
     public void supports() throws NoSuchMethodException {
-        Assert.assertTrue(delegationRegistry.supports(String.class, String.class.getMethod("toString", new Class<?>[0])));
+        Assert.assertTrue(delegationRegistry.contains(String.class, String.class.getMethod("toString", new Class<?>[0])));
     }
 
     @Test
     public void notSupports() throws NoSuchMethodException {
-        Assert.assertFalse(delegationRegistry.supports(String.class,
+        Assert.assertFalse(delegationRegistry.contains(String.class,
                 String.class.getMethod("hashCode", new Class<?>[0])));
     }
 

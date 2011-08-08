@@ -1,7 +1,7 @@
 package org.polyforms.delegation.builder;
 
 public interface ParameterProvider<P> {
-    void validate(Class<?>[] parameterTypes);
+    void validate(Class<?>... parameterTypes);
 
-    P get(Object[] arguments);
+    P get(Object... arguments);
 }

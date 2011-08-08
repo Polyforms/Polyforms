@@ -20,7 +20,7 @@ import org.springframework.util.StringUtils;
  */
 @Named
 public final class CombinedDelegationExecutor implements DelegationExecutor {
-    private final Map<Delegation, DelegationExecutor> delegationExecutorMapping = new HashMap<Delegation, DelegationExecutor>();
+    private final Map<Delegation, DelegationExecutor> delegationExecutorCache = new HashMap<Delegation, DelegationExecutor>();
     private final BeanContainer beanContainer;
     private final DelegationExecutor beanExecutor;
     private final DelegationExecutor domainExecutor;
@@ -38,15 +38,15 @@ public final class CombinedDelegationExecutor implements DelegationExecutor {
     /**
      * {@inheritDoc}
      */
-    public Object execute(final Delegation delegation, final Object[] arguments) throws Throwable {
+    public Object execute(final Delegation delegation, final Object... arguments) throws Throwable {
         return getDelegationExecutor(delegation).execute(delegation, arguments);
     }
 
     private DelegationExecutor getDelegationExecutor(final Delegation delegation) {
-        if (!delegationExecutorMapping.containsKey(delegation)) {
-            delegationExecutorMapping.put(delegation, isBeanDelegation(delegation) ? beanExecutor : domainExecutor);
+        if (!delegationExecutorCache.containsKey(delegation)) {
+            delegationExecutorCache.put(delegation, isBeanDelegation(delegation) ? beanExecutor : domainExecutor);
         }
-        return delegationExecutorMapping.get(delegation);
+        return delegationExecutorCache.get(delegation);
     }
 
     private boolean isBeanDelegation(final Delegation delegation) {

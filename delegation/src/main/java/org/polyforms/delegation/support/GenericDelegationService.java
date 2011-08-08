@@ -9,8 +9,8 @@ import javax.inject.Named;
 
 import org.polyforms.delegation.DelegationService;
 import org.polyforms.delegation.builder.Delegation;
-import org.polyforms.delegation.builder.DelegationRegistry;
 import org.polyforms.delegation.util.AopUtils;
+import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 
 /**
@@ -26,7 +26,7 @@ public final class GenericDelegationService implements DelegationService {
     private final DelegationResolver delegationResolver;
 
     /**
-     * Create an instance with {@link DelegationExecutor} and {@link DelegationRegistry}.
+     * Create an instance with {@link DelegationExecutor} and {@link DelegationResolver}.
      */
     @Inject
     public GenericDelegationService(final DelegationExecutor delegationExecutor,
@@ -43,15 +43,18 @@ public final class GenericDelegationService implements DelegationService {
             return false;
         }
 
-        final Delegator originalDelegator = new Delegator(delegatorType, delegatorMethod);
-        return supports(originalDelegator);
+        return supportsWithCache(new Delegator(delegatorType, delegatorMethod));
     }
 
-    private boolean supports(final Delegator originalDelegator) {
+    private boolean supportsWithCache(final Delegator originalDelegator) {
         if (delegatorMappingCache.containsKey(originalDelegator)) {
             return true;
         }
 
+        return supports(originalDelegator);
+    }
+
+    private boolean supports(final Delegator originalDelegator) {
         for (final Class<?> clazz : AopUtils.deproxy(originalDelegator.getType())) {
             final Method method = ClassUtils.getMostSpecificMethod(originalDelegator.getMethod(), clazz);
             final Delegator delegator = new Delegator(clazz, method);
@@ -69,19 +72,16 @@ public final class GenericDelegationService implements DelegationService {
      */
     public Object delegate(final Class<?> delegatorType, final Method delegatorMethod, final Object... arguments)
             throws Throwable {
-        if (delegatorType == null) {
-            throw new IllegalArgumentException("Parameter delegatorType (Class<?>) must not be null.");
-        }
-        if (delegatorMethod == null) {
-            throw new IllegalArgumentException("Parameter delegatorType (Class<?>) must not be null.");
-        }
+        Assert.notNull(delegatorType);
+        Assert.notNull(delegatorMethod);
 
-        final Delegator originalDelegator = new Delegator(delegatorType, delegatorMethod);
-        if (!delegatorMappingCache.containsKey(originalDelegator) && !supports(originalDelegator)) {
+        final Delegator candidate = new Delegator(delegatorType, delegatorMethod);
+        if (!supportsWithCache(candidate)) {
             throw new IllegalArgumentException(
                     "The delegation of {} in {} is not supported. You can use 'supports' method to check whether a delegation is supported.");
         }
-        final Delegation delegation = delegationResolver.get(delegatorMappingCache.get(originalDelegator));
+
+        final Delegation delegation = delegationResolver.get(delegatorMappingCache.get(candidate));
         return delegationExecutor.execute(delegation, arguments);
     }
 }

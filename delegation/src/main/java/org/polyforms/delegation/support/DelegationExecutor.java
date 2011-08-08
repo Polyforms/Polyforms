@@ -17,5 +17,5 @@ public interface DelegationExecutor {
      * @return the return value of execution of delegatee method
      * @throws Throwable if invocation of delegatee method throw an exception
      */
-    Object execute(Delegation delegation, Object[] arguments) throws Throwable;
+    Object execute(Delegation delegation, Object... arguments) throws Throwable;
 }

@@ -28,7 +28,7 @@ abstract class AbstactDelegationExecutor implements DelegationExecutor {
     /**
      * {@inheritDoc}
      */
-    public final Object execute(final Delegation delegation, final Object[] arguments) throws Throwable {
+    public final Object execute(final Delegation delegation, final Object... arguments) throws Throwable {
         Object[] tailoredArguments;
         final List<ParameterProvider<?>> parameterProviders = delegation.getParameterProviders();
         if (parameterProviders.isEmpty()) {

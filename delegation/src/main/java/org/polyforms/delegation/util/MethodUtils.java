@@ -5,8 +5,8 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
-import org.springframework.util.StringUtils;
 
 /**
  * Utilities for working with method by reflection.
@@ -35,7 +35,8 @@ public final class MethodUtils {
      */
     public static Method findMostSpecificMethod(final Class<?> clazz, final String methodName,
             final Class<?>... parameterTypes) {
-        validateParameters(clazz, methodName);
+        Assert.notNull(clazz);
+        Assert.hasText(methodName);
 
         Method method = ClassUtils.getMethodIfAvailable(clazz, methodName, parameterTypes);
         if (method == null && parameterTypes.length == 0) {
@@ -44,27 +45,18 @@ public final class MethodUtils {
         return method;
     }
 
-    private static void validateParameters(final Class<?> clazz, final String methodName) {
-        if (clazz == null) {
-            throw new IllegalArgumentException("Parameter clazz (Class<?>) must not be null.");
-        }
-        if (!StringUtils.hasText(methodName)) {
-            throw new IllegalArgumentException("Parameter methodName (String) must not be null or empty.");
-        }
-    }
-
     private static Method findMethodInHierarchy(final Class<?> clazz, final String methodName) {
         Method method = findMethod(clazz, methodName);
-        if (method != null) {
-            return method;
+
+        if (method == null) {
+            method = findMethodInSuperClass(clazz, methodName);
         }
 
-        method = findMethodInSuperClass(clazz, methodName);
-        if (method != null) {
-            return method;
+        if (method == null) {
+            method = findMethodInInterfaces(clazz, methodName);
         }
 
-        return findMethodInInterfaces(clazz, methodName);
+        return method;
     }
 
     private static Method findMethod(final Class<?> clazz, final String methodName) {
@@ -81,12 +73,16 @@ public final class MethodUtils {
     private static List<Method> findMethods(final Class<?> clazz, final String methodName) {
         final List<Method> methods = new ArrayList<Method>();
         for (final Method candidate : clazz.getDeclaredMethods()) {
-            if (!candidate.isBridge() && Modifier.isPublic(candidate.getModifiers())
-                    && candidate.getName().equals(methodName)) {
+            if (isMatchedMethod(methodName, candidate)) {
                 methods.add(candidate);
             }
         }
         return methods;
+    }
+
+    private static boolean isMatchedMethod(final String methodName, final Method candidate) {
+        return !candidate.isBridge() && Modifier.isPublic(candidate.getModifiers())
+                && candidate.getName().equals(methodName);
     }
 
     private static Method findMethodInSuperClass(final Class<?> clazz, final String methodName) {
@@ -95,12 +91,12 @@ public final class MethodUtils {
             return null;
         }
 
-        final Method method = findMethod(superClass, methodName);
-        if (method != null) {
-            return method;
+        Method method = findMethod(superClass, methodName);
+        if (method == null) {
+            method = findMethodInSuperClass(superClass, methodName);
         }
 
-        return findMethodInSuperClass(superClass, methodName);
+        return method;
     }
 
     private static Method findMethodInInterfaces(final Class<?> clazz, final String methodName) {

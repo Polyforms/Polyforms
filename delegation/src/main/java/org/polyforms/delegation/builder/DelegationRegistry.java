@@ -23,5 +23,5 @@ public interface DelegationRegistry {
      * @param delegatorMethod the delegator method
      * @return true if there is a delegation of specific delegator, false if not
      */
-    boolean supports(Class<?> delegatorType, Method delegatorMethod);
+    boolean contains(Class<?> delegatorType, Method delegatorMethod);
 }

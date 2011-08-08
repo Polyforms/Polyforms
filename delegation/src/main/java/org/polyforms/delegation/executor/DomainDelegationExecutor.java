@@ -26,7 +26,7 @@ final class DomainDelegationExecutor extends AbstactDelegationExecutor {
         final Object argument = arguments[0];
         if (argument == null) {
             throw new IllegalArgumentException("The first argument of invocation of method["
-                    + delegation.getDelegateeMethod().getName() + "] is null.");
+                    + delegation.getDelegateeMethod().getName() + "] must not be null.");
         }
         return getConversionService().convert(argument, delegation.getDelegateeType());
     }

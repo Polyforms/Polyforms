@@ -24,9 +24,9 @@ public class DefaultDelegationBuilderTest {
     @Test
     public void delegateAllToDomain() throws NoSuchMethodException {
         final Method delegatorMethod = DomainDelegator.class.getMethod("get", new Class<?>[] { DomainObject.class });
-        delegationRegistry.supports(DomainDelegator.class, delegatorMethod);
+        delegationRegistry.contains(DomainDelegator.class, delegatorMethod);
         EasyMock.expectLastCall().andReturn(false);
-        delegationRegistry.supports(DomainDelegator.class,
+        delegationRegistry.contains(DomainDelegator.class,
                 DomainDelegator.class.getMethod("set", new Class<?>[] { DomainObject.class, String.class }));
         EasyMock.expectLastCall().andReturn(true);
         delegationRegistry.register(new SimpleDelegation(DomainDelegator.class, delegatorMethod));
@@ -42,12 +42,12 @@ public class DefaultDelegationBuilderTest {
         final Method getMethod = DomainDelegator.class.getMethod("get", new Class<?>[] { DomainObject.class });
         final Method setMethod = DomainDelegator.class.getMethod("set", new Class<?>[] { DomainObject.class,
                 String.class });
-        delegationRegistry.supports(DomainDelegator.class, getMethod);
+        delegationRegistry.contains(DomainDelegator.class, getMethod);
         EasyMock.expectLastCall().andReturn(false);
-        delegationRegistry.supports(DomainDelegator.class, setMethod);
+        delegationRegistry.contains(DomainDelegator.class, setMethod);
         EasyMock.expectLastCall().andReturn(true);
         final ParameterProvider<?> parameterProvider = EasyMock.createMock(ParameterProvider.class);
-        parameterProvider.validate(EasyMock.aryEq(new Class<?>[] { DomainObject.class, String.class }));
+        parameterProvider.validate(DomainObject.class, String.class);
         delegationRegistry.register(new SimpleDelegation(DomainDelegator.class, getMethod));
         delegationRegistry.register(new SimpleDelegation(DomainDelegator.class, setMethod));
         EasyMock.replay(delegationRegistry, parameterProvider);

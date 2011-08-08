@@ -42,11 +42,11 @@ final class At<P> implements ParameterProvider<P> {
     }
 
     @SuppressWarnings("unchecked")
-    public P get(final Object[] arguments) {
+    public P get(final Object... arguments) {
         return (P) arguments[position];
     }
 
-    public void validate(final Class<?>[] parameterType) {
+    public void validate(final Class<?>... parameterType) {
         if (position >= parameterType.length) {
             throw new IllegalArgumentException("Parameter position " + position
                     + " must not less than parameter count " + parameterType.length + " of delegator method.");
@@ -61,11 +61,11 @@ final class Constant<P> implements ParameterProvider<P> {
         this.value = value;
     }
 
-    public P get(final Object[] arguments) {
+    public P get(final Object... arguments) {
         return value;
     }
 
-    public void validate(final Class<?>[] parameterType) {
+    public void validate(final Class<?>... parameterType) {
     }
 }
 
@@ -80,7 +80,7 @@ final class TypeOf<P> implements ParameterProvider<P> {
     }
 
     @SuppressWarnings("unchecked")
-    public P get(final Object[] arguments) {
+    public P get(final Object... arguments) {
         for (final Object argument : arguments) {
             if (argument != null && type.isInstance(argument)) {
                 return (P) argument;
@@ -90,7 +90,7 @@ final class TypeOf<P> implements ParameterProvider<P> {
         return null;
     }
 
-    public void validate(final Class<?>[] parameterTypes) {
+    public void validate(final Class<?>... parameterTypes) {
         final List<Class<?>> matchedParameterTypes = new ArrayList<Class<?>>();
         for (final Class<?> parameterType : parameterTypes) {
             if (type == parameterType) {

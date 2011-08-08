@@ -18,7 +18,7 @@ public abstract class DelegatorRegister<S> extends ParameterAwareRegister<S> {
     }
 
     protected final <T> T delegate(final Object delegator) {
-        return delegate();
+        return this.<T> delegate();
     }
 
     protected final <T> void with(final DelegateeRegister<T> delegateeRegister) {
