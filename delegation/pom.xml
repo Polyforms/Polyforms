@@ -68,7 +68,7 @@
 	</dependencies>
 
 	<properties>
-		<modelmapper.version>0.3.4</modelmapper.version>
+		<modelmapper.version>0.3.5</modelmapper.version>
 		<cglib.version>2.2.2</cglib.version>
 	</properties>
 </project>
