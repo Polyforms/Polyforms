@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>polyforms</artifactId>
 		<groupId>org.polyforms</groupId>
-		<version>1.0.0-M4-SNAPSHOT</version>
+		<version>0.4-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>polyforms-delegation</artifactId>

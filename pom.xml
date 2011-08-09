@@ -6,7 +6,7 @@
 	<groupId>org.polyforms</groupId>
 	<artifactId>polyforms</artifactId>
 	<packaging>pom</packaging>
-	<version>1.0.0-M4-SNAPSHOT</version>
+	<version>0.4-SNAPSHOT</version>
 
 	<name>Polyforms Framework</name>
 	<description><![CDATA[A framework focusing on simplifying the business layer development base on <a href="http://domaindrivendesign.org/">Domain Driven Design</a> methodology.]]></description>
