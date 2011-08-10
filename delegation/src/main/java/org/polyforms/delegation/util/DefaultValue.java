@@ -3,8 +3,6 @@ package org.polyforms.delegation.util;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.util.ClassUtils;
-
 /**
  * Utilities for getting default value for type.
  * 
@@ -22,14 +20,14 @@ public final class DefaultValue {
     private static double primitiveDouble;
 
     static {
-        PRIVITIVE_MAP.put(Boolean.class, Boolean.FALSE);
-        PRIVITIVE_MAP.put(Character.class, primitiveChar);
-        PRIVITIVE_MAP.put(Byte.class, primitiveByte);
-        PRIVITIVE_MAP.put(Short.class, primitiveShort);
-        PRIVITIVE_MAP.put(Integer.class, primitiveInt);
-        PRIVITIVE_MAP.put(Long.class, primitiveLong);
-        PRIVITIVE_MAP.put(Float.class, primitiveFloat);
-        PRIVITIVE_MAP.put(Double.class, primitiveDouble);
+        PRIVITIVE_MAP.put(boolean.class, Boolean.FALSE);
+        PRIVITIVE_MAP.put(char.class, primitiveChar);
+        PRIVITIVE_MAP.put(byte.class, primitiveByte);
+        PRIVITIVE_MAP.put(short.class, primitiveShort);
+        PRIVITIVE_MAP.put(int.class, primitiveInt);
+        PRIVITIVE_MAP.put(long.class, primitiveLong);
+        PRIVITIVE_MAP.put(float.class, primitiveFloat);
+        PRIVITIVE_MAP.put(double.class, primitiveDouble);
     }
 
     protected DefaultValue() {
@@ -45,9 +43,6 @@ public final class DefaultValue {
      */
     @SuppressWarnings("unchecked")
     public static <T> T get(final Class<T> type) {
-        if (type == null) {
-            return null;
-        }
-        return (T) PRIVITIVE_MAP.get(ClassUtils.resolvePrimitiveIfNecessary(type));
+        return (T) PRIVITIVE_MAP.get(type);
     }
 }

@@ -46,7 +46,7 @@ public class ParameterAwareRegisterTest {
         delegationBuilder.parameter(EasyMock.isA(TypeOf.class));
         EasyMock.replay(delegationBuilder);
 
-        Assert.assertEquals(0, parameterAwareRegister.typeOf(Integer.class, String.class).intValue());
+        Assert.assertEquals(0, parameterAwareRegister.typeOf(int.class, String.class).intValue());
         EasyMock.verify(delegationBuilder);
     }
 
