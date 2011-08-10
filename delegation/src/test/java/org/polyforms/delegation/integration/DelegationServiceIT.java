@@ -89,7 +89,7 @@ public class DelegationServiceIT {
     }
 
     @Test(expected = DelegateException.class)
-    public void testException() {
+    public void testMappedException() {
         delegator.exception();
     }
 
@@ -98,8 +98,8 @@ public class DelegationServiceIT {
         delegator.exceptionWithName(true);
     }
 
-    @Test(expected = MockException.class)
-    public void testExceptionWithoutException() {
+    @Test(expected = IllegalArgumentException.class)
+    public void testExceptionWithoutMapping() {
         delegator.exceptionWithName(false);
     }
 
@@ -132,6 +132,7 @@ public class DelegationServiceIT {
                     delegate();
                     delegator.exception();
                     delegate();
+                    map(DelegateException.class, MockException.class);
                     delegate(delegator.length()).voidMethod();
                     delegate(delegator.hello());
                 }
@@ -155,7 +156,7 @@ public class DelegationServiceIT {
 
         int length();
 
-        void exception() throws IllegalArgumentException, DelegateException;
+        void exception() throws DelegateException;
 
         void exceptionWithName(boolean exception) throws DelegateException;
     }
@@ -226,7 +227,7 @@ public class DelegationServiceIT {
             if (exception) {
                 throw new DelegateException();
             } else {
-                throw new MockException();
+                throw new IllegalArgumentException();
             }
         }
 

@@ -58,13 +58,13 @@ class DelegationExecutor {
             return convertReturnValue(returnValue, delegation.getDelegatorType(), delegation.getDelegatorMethod());
         } catch (final InvocationTargetException e) {
             final Throwable exception = e.getTargetException();
-            final Class<?> targetExceptionType = getExceptionType(exception, delegation.getDelegatorMethod(),
-                    delegateeMethod);
-            if (targetExceptionType == null) {
+            final Class<? extends Throwable> delegatorExceptionType = getDelegatorExceptionType(delegation,
+                    exception.getClass());
+
+            if (delegatorExceptionType == null) {
                 throw exception;
             }
-
-            throw (Throwable) conversionService.convert(exception, targetExceptionType);
+            throw conversionService.convert(exception, delegatorExceptionType);
         }
     }
 
@@ -141,30 +141,21 @@ class DelegationExecutor {
         return conversionService.convert(returnValue, GenericTypeResolver.resolveReturnType(method, targetClass));
     }
 
-    private Class<?> getExceptionType(final Throwable exception, final Method sourceMethod, final Method targetMethod) {
-        Class<?> exceptionType = getExceptionTypeByPosition(exception, sourceMethod, targetMethod);
-        if (exceptionType == null) {
-            exceptionType = getExceptionTypeByName(exception, sourceMethod);
+    private Class<? extends Throwable> getDelegatorExceptionType(final Delegation delegation,
+            final Class<? extends Throwable> delegateeExceptionType) throws Throwable {
+        Class<? extends Throwable> delegatorExceptionType = delegation.getExceptionType(delegateeExceptionType);
+        if (delegatorExceptionType == null) {
+            delegatorExceptionType = getExceptionTypeByName(delegateeExceptionType, delegation.getDelegatorMethod());
         }
-        return exceptionType;
+        return delegatorExceptionType;
     }
 
-    private Class<?> getExceptionTypeByPosition(final Throwable exception, final Method sourceMethod,
-            final Method targetMethod) {
-        final Class<?>[] sourceExceptionTypes = sourceMethod.getExceptionTypes();
-        final Class<?>[] targetExceptionTypes = targetMethod.getExceptionTypes();
-        for (int i = 0; i < targetExceptionTypes.length; i++) {
-            if (targetExceptionTypes[i] == exception.getClass() && sourceExceptionTypes.length > i) {
-                return sourceExceptionTypes[i];
-            }
-        }
-        return null;
-    }
-
-    private Class<?> getExceptionTypeByName(final Throwable exception, final Method sourceMethod) {
-        for (final Class<?> targetException : sourceMethod.getExceptionTypes()) {
-            if (targetException.getSimpleName().equals(exception.getClass().getSimpleName())) {
-                return targetException;
+    @SuppressWarnings("unchecked")
+    private Class<? extends Throwable> getExceptionTypeByName(final Class<? extends Throwable> delegateeExceptionType,
+            final Method delegatorMethod) {
+        for (final Class<?> delegatorExceptionType : delegatorMethod.getExceptionTypes()) {
+            if (delegatorExceptionType.getSimpleName().equals(delegateeExceptionType.getSimpleName())) {
+                return (Class<? extends Throwable>) delegatorExceptionType;
             }
         }
 

@@ -2,6 +2,7 @@ package org.polyforms.delegation.builder.support;
 
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Map;
 
 import junit.framework.Assert;
 
@@ -60,6 +61,25 @@ public class SimpleDelegationTest {
     public void unmodifiedParameterProviders() {
         final ParameterProvider<?> parameterProvider = EasyMock.createMock(ParameterProvider.class);
         delegationA.getParameterProviders().add(parameterProvider);
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void getExceptionType() {
+        final Map<Class<? extends Throwable>, Class<? extends Throwable>> exceptionTypeMap = EasyMock
+                .createMock(Map.class);
+        exceptionTypeMap.get(Exception.class);
+        EasyMock.expectLastCall().andReturn(RuntimeException.class);
+        EasyMock.replay(exceptionTypeMap);
+
+        delegationA.setExceptionTypeMap(exceptionTypeMap);
+        Assert.assertEquals(RuntimeException.class, delegationA.getExceptionType(Exception.class));
+        EasyMock.verify(exceptionTypeMap);
+    }
+
+    @Test
+    public void getExceptionTypeWithNullMap() {
+        Assert.assertNull(delegationA.getExceptionType(Exception.class));
     }
 
     @Test

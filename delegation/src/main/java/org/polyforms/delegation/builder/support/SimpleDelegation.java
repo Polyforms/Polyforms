@@ -4,12 +4,14 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import org.polyforms.delegation.builder.Delegation;
 import org.polyforms.delegation.builder.ParameterProvider;
 
 final class SimpleDelegation implements Delegation {
     private final List<ParameterProvider<?>> parameterProviders = new ArrayList<ParameterProvider<?>>();
+    private Map<Class<? extends Throwable>, Class<? extends Throwable>> exceptionTypeMap;
     private final Class<?> delegatorType;
     private final Method delegatorMethod;
     private Class<?> delegateeType;
@@ -45,6 +47,13 @@ final class SimpleDelegation implements Delegation {
         return Collections.unmodifiableList(parameterProviders);
     }
 
+    public Class<? extends Throwable> getExceptionType(final Class<? extends Throwable> exceptionType) {
+        if (exceptionTypeMap == null) {
+            return null;
+        }
+        return exceptionTypeMap.get(exceptionType);
+    }
+
     protected void addParameterProvider(final ParameterProvider<?> parameterProvider) {
         parameterProviders.add(parameterProvider);
     }
@@ -59,6 +68,11 @@ final class SimpleDelegation implements Delegation {
 
     protected void setDelegateeName(final String delegateeName) {
         this.delegateeName = delegateeName;
+    }
+
+    protected void setExceptionTypeMap(
+            final Map<Class<? extends Throwable>, Class<? extends Throwable>> exceptionTypeMap) {
+        this.exceptionTypeMap = exceptionTypeMap;
     }
 
     @Override

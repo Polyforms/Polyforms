@@ -52,10 +52,8 @@ public class DelegatorRegisterTest {
         EasyMock.expectLastCall().andReturn(mockInterface);
         delegationBuilder.delegate();
         EasyMock.expectLastCall().andReturn(domainObject);
-        delegationBuilder.registerDelegations();
         delegationBuilder.to(String.class);
         EasyMock.expectLastCall().andReturn(null);
-        delegationBuilder.registerDelegations();
         EasyMock.replay(delegationBuilder);
 
         new DelegatorRegister<MockInterface>() {

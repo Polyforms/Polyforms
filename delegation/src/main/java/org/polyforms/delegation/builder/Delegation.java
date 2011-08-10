@@ -15,4 +15,6 @@ public interface Delegation {
     String getDelegateeName();
 
     List<ParameterProvider<?>> getParameterProviders();
+
+    Class<? extends Throwable> getExceptionType(Class<? extends Throwable> exceptionType);
 }

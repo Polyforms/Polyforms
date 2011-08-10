@@ -184,6 +184,8 @@ public class DelegationExecutorTest {
         mockBeanDelegation(delegatee);
         delegatee.length("test");
         EasyMock.expectLastCall().andThrow(new IllegalStateException());
+        delegation.getExceptionType(IllegalStateException.class);
+        EasyMock.expectLastCall().andReturn(null);
         delegation.getDelegatorMethod();
         EasyMock.expectLastCall().andReturn(Delegator.class.getMethod("length", new Class<?>[] { String.class }));
         EasyMock.replay(beanContainer, conversionService, delegation, delegatee);
@@ -199,6 +201,9 @@ public class DelegationExecutorTest {
         mockBeanDelegation(delegatee);
         delegatee.length("test");
         EasyMock.expectLastCall().andThrow(delegatorException);
+        delegation
+                .getExceptionType(org.polyforms.delegation.support.DelegationExecutorTest.Delegatee.DelegateException.class);
+        EasyMock.expectLastCall().andReturn(null);
         delegation.getDelegatorMethod();
         EasyMock.expectLastCall().andReturn(Delegator.class.getMethod("length", new Class<?>[] { String.class }));
         conversionService.convert(delegatorException, DelegateException.class);
@@ -209,15 +214,15 @@ public class DelegationExecutorTest {
     }
 
     @Test(expected = DelegateException.class)
-    public void beanDelegationExecuteWithPositionalException() throws Throwable {
+    public void beanDelegationExecuteWithMappedException() throws Throwable {
         final Delegatee delegatee = EasyMock.createMock(Delegatee.class);
         final MockException mockException = new MockException();
 
         mockBeanDelegation(delegatee);
         delegatee.length("test");
         EasyMock.expectLastCall().andThrow(mockException);
-        delegation.getDelegatorMethod();
-        EasyMock.expectLastCall().andReturn(Delegator.class.getMethod("length", new Class<?>[] { String.class }));
+        delegation.getExceptionType(MockException.class);
+        EasyMock.expectLastCall().andReturn(DelegateException.class);
         conversionService.convert(mockException, DelegateException.class);
         EasyMock.expectLastCall().andReturn(new DelegateException());
         EasyMock.replay(beanContainer, conversionService, delegation, delegatee);

@@ -23,7 +23,6 @@ public abstract class DelegatorRegister<S> extends ParameterAwareRegister<S> {
 
     protected final <T> void with(final DelegateeRegister<T> delegateeRegister) {
         delegateeRegister.register(getSource());
-        getBuilder().registerDelegations();
     }
 
     private S getSource() {

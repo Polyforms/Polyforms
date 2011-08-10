@@ -3,8 +3,10 @@ package org.polyforms.delegation.builder.support;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.polyforms.delegation.builder.Delegation;
@@ -17,8 +19,9 @@ import org.polyforms.delegation.util.MethodUtils;
 public final class DefaultDelegationBuilder implements DelegationBuilder {
     private final ProxyFactory delegatorProxyFactory = new Cglib2ProxyFactory(new DelegatorMethodVisitor());
     private final ProxyFactory delegateeProxyFactory = new Cglib2ProxyFactory(new DelegateeMethodVisitor());
-    private final Set<SimpleDelegation> delegations = new HashSet<SimpleDelegation>();
     private final DelegationRegistry delegationRegistry;
+    private final Set<SimpleDelegation> delegations = new HashSet<SimpleDelegation>();
+    private Map<Class<? extends Throwable>, Class<? extends Throwable>> exceptionTypeMap;
     private Class<?> delegatorType;
     private Method delegatorMethod;
     private Class<?> delegateeType;
@@ -35,6 +38,7 @@ public final class DefaultDelegationBuilder implements DelegationBuilder {
 
     public <S> S from(final Class<S> delegatorType) {
         this.delegatorType = delegatorType;
+        exceptionTypeMap = new HashMap<Class<? extends Throwable>, Class<? extends Throwable>>();
         return delegatorProxyFactory.getProxy(delegatorType);
     }
 
@@ -42,6 +46,10 @@ public final class DefaultDelegationBuilder implements DelegationBuilder {
         this.delegateeType = delegateeType;
         resetDelegation();
         return delegateeProxyFactory.getProxy(delegateeType);
+    }
+
+    public void map(final Class<? extends Throwable> sourceType, final Class<? extends Throwable> targetType) {
+        exceptionTypeMap.put(targetType, sourceType);
     }
 
     private void resetDelegatee() {
@@ -177,9 +185,12 @@ public final class DefaultDelegationBuilder implements DelegationBuilder {
                 }
                 newDelegation.setDelegateeMethod(delegateeMethod);
             }
+            newDelegation.setExceptionTypeMap(exceptionTypeMap);
             delegationRegistry.register(newDelegation);
         }
+        delegatorType = null;
         delegations.clear();
+        exceptionTypeMap = null;
         resetDelegatee();
     }
 }

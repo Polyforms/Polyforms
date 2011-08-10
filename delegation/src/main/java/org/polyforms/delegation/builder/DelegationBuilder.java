@@ -11,5 +11,7 @@ public interface DelegationBuilder {
 
     void parameter(ParameterProvider<?> parameterProvider);
 
+    void map(Class<? extends Throwable> sourceType, Class<? extends Throwable> targetType);
+
     void registerDelegations();
 }

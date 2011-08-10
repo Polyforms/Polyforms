@@ -58,6 +58,7 @@ public class DefaultDelegationBuilderTest {
         final DomainObject domainObject = delegationBuilder.delegate();
         delegationBuilder.parameter(parameterProvider);
         domainObject.set(null);
+        delegationBuilder.map(RuntimeException.class, Exception.class);
         delegationBuilder.registerDelegations();
         EasyMock.verify(delegationRegistry, parameterProvider);
     }

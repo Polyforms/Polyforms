@@ -12,6 +12,10 @@ abstract class ParameterAwareRegister<S> implements DelegationRegister<S> {
     public void register(final S source) {
     }
 
+    protected void map(final Class<? extends Throwable> sourceType, final Class<? extends Throwable> targetType) {
+        DelegationBuilderHolder.get().map(sourceType, targetType);
+    }
+
     protected final <P> P at(final Class<P> targetType, final int position) {
         return provideBy(targetType, new At<P>(position));
     }

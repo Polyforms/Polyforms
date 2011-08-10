@@ -33,6 +33,15 @@ public class ParameterAwareRegisterTest {
     }
 
     @Test
+    public void map() {
+        delegationBuilder.map(RuntimeException.class, Exception.class);
+        EasyMock.replay(delegationBuilder);
+
+        parameterAwareRegister.map(RuntimeException.class, Exception.class);
+        EasyMock.verify(delegationBuilder);
+    }
+
+    @Test
     public void at() {
         delegationBuilder.parameter(EasyMock.isA(At.class));
         EasyMock.replay(delegationBuilder);
