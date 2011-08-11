@@ -10,6 +10,7 @@ public abstract class DelegatorRegister<S> extends ParameterAwareRegister<S> {
     private S source;
 
     protected DelegatorRegister() {
+        super();
         delegatorType = (Class<S>) GenericTypeResolver.resolveTypeArgument(this.getClass(), DelegatorRegister.class);
     }
 
@@ -27,7 +28,7 @@ public abstract class DelegatorRegister<S> extends ParameterAwareRegister<S> {
 
     private S getSource() {
         if (source == null) {
-            source = getBuilder().from(delegatorType);
+            source = getBuilder().delegateFrom(delegatorType);
         }
         return source;
     }
@@ -45,9 +46,10 @@ public abstract class DelegatorRegister<S> extends ParameterAwareRegister<S> {
         }
 
         protected DelegateeRegister() {
+            super();
             final Class<T> delegateeType = (Class<T>) GenericTypeResolver.resolveTypeArgument(this.getClass(),
                     DelegateeRegister.class);
-            target = getBuilder().to(delegateeType);
+            target = getBuilder().delegateTo(delegateeType);
         }
 
         protected final T delegate() {

@@ -32,7 +32,7 @@ public class DefaultDelegationBuilderTest {
         delegationRegistry.register(new SimpleDelegation(DomainDelegator.class, delegatorMethod));
         EasyMock.replay(delegationRegistry);
 
-        delegationBuilder.from(DomainDelegator.class);
+        delegationBuilder.delegateFrom(DomainDelegator.class);
         delegationBuilder.registerDelegations();
         EasyMock.verify(delegationRegistry);
     }
@@ -52,7 +52,7 @@ public class DefaultDelegationBuilderTest {
         delegationRegistry.register(new SimpleDelegation(DomainDelegator.class, setMethod));
         EasyMock.replay(delegationRegistry, parameterProvider);
 
-        final DomainDelegator domainDelegator = delegationBuilder.from(DomainDelegator.class);
+        final DomainDelegator domainDelegator = delegationBuilder.delegateFrom(DomainDelegator.class);
         Assert.assertNull(delegationBuilder.delegate());
         domainDelegator.set(null, null);
         final DomainObject domainObject = delegationBuilder.delegate();
@@ -69,8 +69,8 @@ public class DefaultDelegationBuilderTest {
         delegationRegistry.register(new SimpleDelegation(DomainDelegator.class, delegatorMethod));
         EasyMock.replay(delegationRegistry);
 
-        final DomainDelegator domainDelegator = delegationBuilder.from(DomainDelegator.class);
-        Assert.assertNotNull(delegationBuilder.to(DomainObject.class));
+        final DomainDelegator domainDelegator = delegationBuilder.delegateFrom(DomainDelegator.class);
+        Assert.assertNotNull(delegationBuilder.delegateTo(DomainObject.class));
         delegationBuilder.withName("domainObject");
         Assert.assertEquals(0, domainDelegator.get(null));
         Assert.assertNull(delegationBuilder.delegate());
@@ -80,14 +80,14 @@ public class DefaultDelegationBuilderTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void invokeDelegatorMethodTwice() {
-        final DomainDelegator domainDelegator = delegationBuilder.from(DomainDelegator.class);
+        final DomainDelegator domainDelegator = delegationBuilder.delegateFrom(DomainDelegator.class);
         domainDelegator.get(null);
         domainDelegator.get(null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void invokeDelegateeMethodTwice() {
-        final DomainDelegator domainDelegator = delegationBuilder.from(DomainDelegator.class);
+        final DomainDelegator domainDelegator = delegationBuilder.delegateFrom(DomainDelegator.class);
         Assert.assertEquals(0, domainDelegator.get(null));
         final DomainObject domainObject = delegationBuilder.<DomainObject> delegate();
         domainObject.get();
@@ -96,14 +96,14 @@ public class DefaultDelegationBuilderTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void setParameterBeforeDelegate() {
-        final DomainDelegator domainDelegator = delegationBuilder.from(DomainDelegator.class);
+        final DomainDelegator domainDelegator = delegationBuilder.delegateFrom(DomainDelegator.class);
         domainDelegator.get(null);
         delegationBuilder.parameter(EasyMock.createMock(ParameterProvider.class));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void setParameterMoreThanRequired() {
-        final DomainDelegator domainDelegator = delegationBuilder.from(DomainDelegator.class);
+        final DomainDelegator domainDelegator = delegationBuilder.delegateFrom(DomainDelegator.class);
         domainDelegator.get(null);
         final DomainObject domainObject = delegationBuilder.<DomainObject> delegate();
         delegationBuilder.parameter(EasyMock.createMock(ParameterProvider.class));
@@ -113,7 +113,7 @@ public class DefaultDelegationBuilderTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void cannotFindMethodInDelegateeType() {
-        final DomainDelegator domainDelegator = delegationBuilder.from(DomainDelegator.class);
+        final DomainDelegator domainDelegator = delegationBuilder.delegateFrom(DomainDelegator.class);
         domainDelegator.cannotFindMethodInDelegateeType(null);
         Assert.assertNotNull(delegationBuilder.delegate());
         delegationBuilder.registerDelegations();

@@ -8,7 +8,10 @@ import org.polyforms.delegation.builder.DelegationRegister;
 import org.polyforms.delegation.builder.ParameterProvider;
 import org.polyforms.delegation.util.DefaultValue;
 
-abstract class ParameterAwareRegister<S> implements DelegationRegister<S> {
+class ParameterAwareRegister<S> implements DelegationRegister<S> {
+    /**
+     * {@inheritDoc}
+     */
     public void register(final S source) {
     }
 
@@ -16,7 +19,7 @@ abstract class ParameterAwareRegister<S> implements DelegationRegister<S> {
         DelegationBuilderHolder.get().map(sourceType, targetType);
     }
 
-    protected final <P> P at(final Class<P> targetType, final int position) {
+    protected final <P> P at(final Class<P> targetType, final int position) { // NOPMD
         return provideBy(targetType, new At<P>(position));
     }
 
@@ -69,6 +72,9 @@ final class Constant<P> implements ParameterProvider<P> {
         return value;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void validate(final Class<?>... parameterType) {
     }
 }

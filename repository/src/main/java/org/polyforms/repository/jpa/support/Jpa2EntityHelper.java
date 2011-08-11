@@ -42,7 +42,8 @@ public final class Jpa2EntityHelper implements EntityHelper {
      */
     public boolean isEntity(final Class<?> candidate) {
         try {
-            return getIdentifierAttribute(candidate) != null;
+            getIdentifierAttribute(candidate);
+            return true;
         } catch (final IllegalArgumentException e) {
             return false;
         }

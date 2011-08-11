@@ -37,6 +37,7 @@ public final class RepositoryAdvisor extends DefaultPointcutAdvisor {
         private final RepositoryMatcher repositoryMatcher;
 
         protected RepositoryMatcherPointcut(final RepositoryMatcher repositoryMatcher) {
+            super();
             this.repositoryMatcher = repositoryMatcher;
         }
 

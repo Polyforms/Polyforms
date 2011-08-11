@@ -45,5 +45,5 @@ public interface DelegationService {
      * 
      * @throws Throwable if invocation of delegatee method throw an exception
      */
-    Object delegate(Class<?> delegatorType, Method delegatorMethod, Object... arguments) throws Throwable;
+    Object delegate(Class<?> delegatorType, Method delegatorMethod, Object... arguments) throws Throwable; // SUPPRESS CHECKSTYLE
 }

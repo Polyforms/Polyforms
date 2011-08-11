@@ -23,7 +23,7 @@ public final class DelegationInterceptor implements MethodInterceptor {
     /**
      * {@inheritDoc}
      */
-    public Object invoke(final MethodInvocation methodInvocation) throws Throwable {
+    public Object invoke(final MethodInvocation methodInvocation) throws Throwable { // SUPPRESS CHECKSTYLE
         return delegationService.delegate(methodInvocation.getThis().getClass(), methodInvocation.getMethod(),
                 methodInvocation.getArguments());
     }

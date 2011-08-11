@@ -25,7 +25,7 @@ public class AnnotatedDelegationRegisterTest {
 
     @Test
     public void visitAnnotatedClass() {
-        delegationBuilder.from(AnnotatedClass.class);
+        delegationBuilder.delegateFrom(AnnotatedClass.class);
         EasyMock.expectLastCall().andReturn(new AnnotatedClass());
         delegationBuilder.delegate();
         EasyMock.expectLastCall().andReturn(null);
@@ -38,7 +38,7 @@ public class AnnotatedDelegationRegisterTest {
 
     @Test
     public void visitAnnotatedMethod() {
-        delegationBuilder.from(AnnotatedMethod.class);
+        delegationBuilder.delegateFrom(AnnotatedMethod.class);
         EasyMock.expectLastCall().andReturn(new AnnotatedMethod());
         delegationBuilder.delegate();
         EasyMock.expectLastCall().andReturn(null);

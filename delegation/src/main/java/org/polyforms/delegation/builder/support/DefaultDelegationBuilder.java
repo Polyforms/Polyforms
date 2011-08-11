@@ -36,13 +36,13 @@ public final class DefaultDelegationBuilder implements DelegationBuilder {
         this.delegationRegistry = delegationRegistry;
     }
 
-    public <S> S from(final Class<S> delegatorType) {
+    public <S> S delegateFrom(final Class<S> delegatorType) {
         this.delegatorType = delegatorType;
         exceptionTypeMap = new HashMap<Class<? extends Throwable>, Class<? extends Throwable>>();
         return delegatorProxyFactory.getProxy(delegatorType);
     }
 
-    public <T> T to(final Class<T> delegateeType) {
+    public <T> T delegateTo(final Class<T> delegateeType) {
         this.delegateeType = delegateeType;
         resetDelegation();
         return delegateeProxyFactory.getProxy(delegateeType);
