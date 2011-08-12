@@ -15,5 +15,5 @@ public interface ExecutorAlias {
      * @param name of executor
      * @return alias for specified name or empty set if no matching
      */
-    Set<String> alias(String name);
+    Set<String> getAlias(String name);
 }

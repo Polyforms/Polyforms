@@ -20,6 +20,7 @@ public final class BeansOfTypeFactoryBean<T> extends AbstractFactoryBean<Collect
      * Create an instance with specific bean type.
      */
     public BeansOfTypeFactoryBean(final Class<T> beanClass) {
+        super();
         this.beanClass = beanClass;
     }
 

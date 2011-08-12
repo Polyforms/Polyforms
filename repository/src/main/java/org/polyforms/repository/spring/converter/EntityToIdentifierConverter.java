@@ -1,10 +1,9 @@
 package org.polyforms.repository.spring.converter;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.polyforms.repository.jpa.EntityHelper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.TypeDescriptor;
+import org.springframework.stereotype.Component;
 
 /**
  * Converter which converts entity to its identifier.
@@ -12,12 +11,12 @@ import org.springframework.core.convert.TypeDescriptor;
  * @author Kuisong Tong
  * @since 1.0
  */
-@Named
+@Component
 public final class EntityToIdentifierConverter extends EntityConverter {
     /**
      * Create an instance with {@link EntityHelper}.
      */
-    @Inject
+    @Autowired
     public EntityToIdentifierConverter(final EntityHelper entityHelper) {
         super(entityHelper);
     }

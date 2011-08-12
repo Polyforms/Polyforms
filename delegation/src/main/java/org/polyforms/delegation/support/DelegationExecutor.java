@@ -39,7 +39,7 @@ class DelegationExecutor {
     /**
      * {@inheritDoc}
      */
-    public Object execute(final Delegation delegation, final Object... arguments) throws Throwable {
+    public Object execute(final Delegation delegation, final Object... arguments) throws Throwable { // SUPPRESS CHECKSTYLE
         final Class<?> delegateeType = delegation.getDelegateeType();
         final Method delegateeMethod = delegation.getDelegateeMethod();
 
@@ -64,7 +64,7 @@ class DelegationExecutor {
             if (delegatorExceptionType == null) {
                 throw exception;
             }
-            throw conversionService.convert(exception, delegatorExceptionType);
+            throw conversionService.convert(exception, delegatorExceptionType); // NOPMD
         }
     }
 
@@ -142,7 +142,7 @@ class DelegationExecutor {
     }
 
     private Class<? extends Throwable> getDelegatorExceptionType(final Delegation delegation,
-            final Class<? extends Throwable> delegateeExceptionType) throws Throwable {
+            final Class<? extends Throwable> delegateeExceptionType) {
         Class<? extends Throwable> delegatorExceptionType = delegation.getExceptionType(delegateeExceptionType);
         if (delegatorExceptionType == null) {
             delegatorExceptionType = getExceptionTypeByName(delegateeExceptionType, delegation.getDelegatorMethod());

@@ -35,7 +35,7 @@ public final class AopUtils {
         }
 
         public Class<?>[] deproxy(final Class<?> clazz) {
-            return EMPTY_CLASS;
+            return EMPTY_CLASS.clone();
         }
     }
 

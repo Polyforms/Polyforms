@@ -20,7 +20,7 @@ public class NameBasedExecutorFinderTest {
     private final ExecutorAlias executorAlias = new ExecutorAlias() {
         private final HashSet<String> alias = new HashSet<String>(Arrays.asList(new String[] { "load" }));
 
-        public Set<String> alias(final String name) {
+        public Set<String> getAlias(final String name) {
             return name.equals("get") ? alias : Collections.EMPTY_SET;
         }
     };

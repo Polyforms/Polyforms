@@ -1,9 +1,9 @@
 package org.polyforms.delegation.builder;
 
 public interface DelegationBuilder {
-    <S> S from(Class<S> delegatorType);
+    <S> S delegateFrom(Class<S> delegatorType);
 
-    <T> T to(Class<T> delegateeType);
+    <T> T delegateTo(Class<T> delegateeType);
 
     void withName(String name);
 

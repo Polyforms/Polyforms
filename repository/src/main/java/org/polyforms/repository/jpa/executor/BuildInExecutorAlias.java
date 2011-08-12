@@ -37,7 +37,7 @@ public class BuildInExecutorAlias implements ExecutorAlias {
     /**
      * {@inheritDoc}
      */
-    public Set<String> alias(final String name) {
+    public Set<String> getAlias(final String name) {
         if (!alias.containsKey(name)) {
             return Collections.emptySet();
         }

@@ -64,7 +64,7 @@ public final class NameBasedExecutorFinder implements ExecutorFinder {
         if (!aliasCache.containsKey(name)) {
             final Set<String> alias = new HashSet<String>();
             for (final ExecutorAlias executorAlias : executorAliases) {
-                alias.addAll(executorAlias.alias(name));
+                alias.addAll(executorAlias.getAlias(name));
             }
             aliasCache.put(name, alias);
         }
