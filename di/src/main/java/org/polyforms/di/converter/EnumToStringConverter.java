@@ -1,11 +1,12 @@
-package org.polyforms.di.spring.converter;
+package org.polyforms.di.converter;
 
 import java.util.Collections;
 import java.util.Set;
 
+import javax.inject.Named;
+
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.convert.converter.GenericConverter;
-import org.springframework.stereotype.Component;
 
 /**
  * Converter which converts {@link Enum} to {@link String}.
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Component;
  * @author Kuisong Tong
  * @since 1.0
  */
-@Component
+@Named
 public class EnumToStringConverter implements GenericConverter {
     /**
      * {@inheritDoc}

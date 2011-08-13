@@ -1,18 +1,18 @@
-package org.polyforms.delegation.spring.converter;
+package org.polyforms.delegation.converter;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Provider;
 
 import org.modelmapper.spi.ConditionalConverter;
 import org.modelmapper.spi.MappingContext;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.convert.converter.GenericConverter;
 import org.springframework.core.convert.support.GenericConversionService;
-import org.springframework.stereotype.Component;
 import org.springframework.util.ReflectionUtils;
 
 /**
@@ -21,14 +21,14 @@ import org.springframework.util.ReflectionUtils;
  * @author Kuisong Tong
  * @since 1.0
  */
-@Component
+@Named
 public class SpringConverter implements ConditionalConverter<Object, Object> {
     private final Provider<ConversionService> conversionServiceProvider;
 
     /**
      * Create an instance with Spring {@link ConversionService}.
      */
-    @Autowired
+    @Inject
     public SpringConverter(final Provider<ConversionService> conversionServiceProvider) {
         this.conversionServiceProvider = conversionServiceProvider;
     }

@@ -1,13 +1,14 @@
-package org.polyforms.delegation.spring.converter;
+package org.polyforms.delegation.converter;
 
 import java.util.Collections;
 import java.util.Set;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.convert.converter.ConditionalGenericConverter;
-import org.springframework.stereotype.Component;
 
 /**
  * Adapter of ModelMapper {@link ModelMapper} for Spring
@@ -16,14 +17,14 @@ import org.springframework.stereotype.Component;
  * @author Kuisong Tong
  * @since 1.0
  */
-@Component
+@Named
 public class ModelMapperConverter implements ConditionalGenericConverter {
     private final ModelMapper modelMapper;
 
     /**
      * Create an instance with {@link ModelMapper}.
      */
-    @Autowired
+    @Inject
     public ModelMapperConverter(final ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
     }

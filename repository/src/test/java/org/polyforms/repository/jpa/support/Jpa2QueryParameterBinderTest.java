@@ -86,7 +86,7 @@ public class Jpa2QueryParameterBinderTest {
 
     private void unmatchedParameters(final Parameter<?> parameter1, final Parameter<?> parameter2) {
         final Set<Parameter<?>> parameters = new TreeSet<Parameter<?>>(new Comparator<Parameter<?>>() {
-            public int compare(Parameter<?> o1, Parameter<?> o2) {
+            public int compare(final Parameter<?> o1, final Parameter<?> o2) {
                 return o1 == parameter1 ? -1 : 1;
             }
         });

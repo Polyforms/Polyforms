@@ -49,13 +49,14 @@ public class Jpa2QueryParameterBinder implements QueryParameterBinder {
     }
 
     private boolean bindByType(final Query query, final Object[] arguments, final Set<Parameter<?>> parameters) {
-        Map<Class<?>, Parameter<?>> parameterTypeMap = createParameterTypeMap(parameters);
+        final Map<Class<?>, Parameter<?>> parameterTypeMap = createParameterTypeMap(parameters);
         if (parameterTypeMap.isEmpty()) {
             return false;
         }
 
-        for (Object argument : arguments) {
-            Parameter<?> parameter = parameterTypeMap.get(ClassUtils.resolvePrimitiveIfNecessary(argument.getClass()));
+        for (final Object argument : arguments) {
+            final Parameter<?> parameter = parameterTypeMap.get(ClassUtils.resolvePrimitiveIfNecessary(argument
+                    .getClass()));
             final Integer position = parameter.getPosition();
             if (position != null) {
                 query.setParameter(parameter.getPosition(), argument);
@@ -68,9 +69,9 @@ public class Jpa2QueryParameterBinder implements QueryParameterBinder {
 
     @SuppressWarnings("unchecked")
     private Map<Class<?>, Parameter<?>> createParameterTypeMap(final Set<Parameter<?>> parameters) {
-        Map<Class<?>, Parameter<?>> parameterTypeMap = new HashMap<Class<?>, Parameter<?>>();
-        for (Parameter<?> parameter : parameters) {
-            Class<?> parameterType = ClassUtils.resolvePrimitiveIfNecessary(parameter.getParameterType());
+        final Map<Class<?>, Parameter<?>> parameterTypeMap = new HashMap<Class<?>, Parameter<?>>();
+        for (final Parameter<?> parameter : parameters) {
+            final Class<?> parameterType = ClassUtils.resolvePrimitiveIfNecessary(parameter.getParameterType());
             if (parameterTypeMap.containsKey(parameterType)) {
                 return Collections.EMPTY_MAP;
             }

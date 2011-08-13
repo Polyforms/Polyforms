@@ -36,7 +36,7 @@ public class DelegationRegisterProcessorTest {
     public void postProcessBeanDefinitionRegistry() {
         final DefaultListableBeanFactory beanFactory = EasyMock.createMock(DefaultListableBeanFactory.class);
         final BeanFactoryVisitor beanFactoryVisitor = new BeanFactoryVisitor() {
-            public void visit(ConfigurableListableBeanFactory beanFactory, BeanClassVisitor visitor) {
+            public void visit(final ConfigurableListableBeanFactory beanFactory, final BeanClassVisitor visitor) {
                 visitor.visit(null, null, MockClass.class);
             }
         };

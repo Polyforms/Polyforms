@@ -1,4 +1,4 @@
-package org.polyforms.repository.spring.converter;
+package org.polyforms.repository.converter;
 
 import java.util.Collections;
 import java.util.Set;

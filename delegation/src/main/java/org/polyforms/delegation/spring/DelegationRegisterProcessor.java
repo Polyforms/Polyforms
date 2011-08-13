@@ -57,12 +57,12 @@ public final class DelegationRegisterProcessor implements BeanDefinitionRegistry
         final Collection<DelegationRegister> delegationRegisters = beanFactory.getBeansOfType(DelegationRegister.class)
                 .values();
 
-        RegisteredClassCollector registeredClassCollector = new RegisteredClassCollector();
+        final RegisteredClassCollector registeredClassCollector = new RegisteredClassCollector();
         beanFactoryVisitor.visit(beanFactory, registeredClassCollector);
 
         DelegationBuilderHolder.set(delegationBuilder);
         for (final DelegationRegister register : delegationRegisters) {
-            Class<?> delegatorType = GenericTypeResolver.resolveTypeArgument(register.getClass(),
+            final Class<?> delegatorType = GenericTypeResolver.resolveTypeArgument(register.getClass(),
                     DelegationRegister.class);
             if (!registeredClassCollector.contains(delegatorType)) {
                 registerDelegatorIfNecessary(registry, delegatorType);
@@ -74,14 +74,14 @@ public final class DelegationRegisterProcessor implements BeanDefinitionRegistry
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
     private void registerDelegations(final DelegationBuilder delegationBuilder, final DelegationRegister register,
-            Class<?> delegatorType) {
+            final Class<?> delegatorType) {
         LOGGER.info("Register delegations from register {}", register.getClass().getName());
         final Object source = delegationBuilder.delegateFrom(delegatorType);
         register.register(source);
         delegationBuilder.registerDelegations();
     }
 
-    private void registerDelegatorIfNecessary(final BeanDefinitionRegistry registry, Class<?> delegatorType) {
+    private void registerDelegatorIfNecessary(final BeanDefinitionRegistry registry, final Class<?> delegatorType) {
         LOGGER.info("Register bean for delegator {}", delegatorType.getName());
         final RootBeanDefinition beanDefinition = new RootBeanDefinition(delegatorType);
         registry.registerBeanDefinition(beanNameGenerator.generateBeanName(beanDefinition, registry), beanDefinition);
@@ -103,7 +103,7 @@ public final class DelegationRegisterProcessor implements BeanDefinitionRegistry
             registeredClasses.add(clazz);
         }
 
-        public boolean contains(Class<?> clazz) {
+        public boolean contains(final Class<?> clazz) {
             return registeredClasses.contains(clazz);
         }
     }

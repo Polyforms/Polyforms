@@ -1,4 +1,4 @@
-package org.polyforms.repository.spring.converter;
+package org.polyforms.repository.converter;
 
 import org.easymock.EasyMock;
 import org.junit.Assert;

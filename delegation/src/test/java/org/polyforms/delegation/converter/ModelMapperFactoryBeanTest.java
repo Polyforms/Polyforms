@@ -1,4 +1,4 @@
-package org.polyforms.delegation.spring.converter;
+package org.polyforms.delegation.converter;
 
 import java.util.ArrayList;
 import java.util.List;
