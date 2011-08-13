@@ -71,7 +71,7 @@ public final class GenericDelegationService implements DelegationService {
      * {@inheritDoc}
      */
     public Object delegate(final Class<?> delegatorType, final Method delegatorMethod, final Object... arguments)
-            throws Throwable { // SUPPRESS CHECKSTYLE
+            throws Throwable {
         Assert.notNull(delegatorType);
         Assert.notNull(delegatorMethod);
 

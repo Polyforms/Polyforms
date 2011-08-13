@@ -39,7 +39,7 @@ class DelegationExecutor {
     /**
      * {@inheritDoc}
      */
-    public Object execute(final Delegation delegation, final Object... arguments) throws Throwable { // SUPPRESS CHECKSTYLE
+    public Object execute(final Delegation delegation, final Object... arguments) throws Throwable {
         final Class<?> delegateeType = delegation.getDelegateeType();
         final Method delegateeMethod = delegation.getDelegateeMethod();
 
