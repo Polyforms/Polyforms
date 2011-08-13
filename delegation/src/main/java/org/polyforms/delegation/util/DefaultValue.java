@@ -13,7 +13,7 @@ public final class DefaultValue {
     private static final Map<Class<?>, Object> PRIVITIVE_MAP = new HashMap<Class<?>, Object>();
     private static char primitiveChar;
     private static byte primitiveByte;
-    private static short primitiveShort; // NOPMD
+    private static short primitiveShort;
     private static int primitiveInt;
     private static long primitiveLong;
     private static float primitiveFloat;
@@ -23,7 +23,7 @@ public final class DefaultValue {
         PRIVITIVE_MAP.put(boolean.class, Boolean.FALSE);
         PRIVITIVE_MAP.put(char.class, primitiveChar);
         PRIVITIVE_MAP.put(byte.class, primitiveByte);
-        PRIVITIVE_MAP.put(short.class, primitiveShort); // NOPMD
+        PRIVITIVE_MAP.put(short.class, primitiveShort);
         PRIVITIVE_MAP.put(int.class, primitiveInt);
         PRIVITIVE_MAP.put(long.class, primitiveLong);
         PRIVITIVE_MAP.put(float.class, primitiveFloat);

@@ -14,6 +14,7 @@ import org.polyforms.di.BeanContainer;
 import org.springframework.core.GenericTypeResolver;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
@@ -45,9 +46,8 @@ class DelegationExecutor {
 
         final Object target = getTarget(delegation.getDelegateeName(), delegateeType, arguments);
         final Object[] tailoredArguments = getArguments(delegation.getParameterProviders(), target, arguments);
-        if (arguments.length < delegateeMethod.getParameterTypes().length) {
-            throw new IllegalArgumentException("The arguments passed to are less than parameters required by method.");
-        }
+        Assert.isTrue(arguments.length >= delegateeMethod.getParameterTypes().length,
+                "The arguments passed to are less than parameters required by method.");
 
         final Object convertedTarget = conversionService.convert(target, delegateeType);
         final Object[] convertedAguments = convertArguments(tailoredArguments, convertedTarget.getClass(),
@@ -89,16 +89,9 @@ class DelegationExecutor {
     }
 
     private Object getFromArguments(final Object[] arguments) {
-        if (arguments.length == 0) {
-            throw new IllegalArgumentException("There is no auguments. ");
-        }
-
+        Assert.notEmpty(arguments, "There is no auguments. ");
         final Object argument = arguments[0];
-
-        if (argument == null) {
-            throw new IllegalArgumentException("The first argument of invocation must not be null.");
-        }
-
+        Assert.notNull(argument, "The first argument of invocation must not be null.");
         return argument;
     }
 

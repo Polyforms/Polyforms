@@ -8,6 +8,7 @@ import org.polyforms.repository.spi.RepositoryMatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.GenericTypeResolver;
+import org.springframework.util.Assert;
 
 /**
  * Strategy of resolving entity's class for method which declares in classes inherited from generic interface.
@@ -38,19 +39,13 @@ public class GenericEntityClassResolver implements EntityClassResolver, Reposito
         if (!resolvedEntityClassCache.containsKey(repositoryClass)) {
             LOGGER.trace("Cache missed when resolving entity class for {}.", repositoryClass);
             final Class<?> entityClass = GenericTypeResolver.resolveTypeArgument(repositoryClass, genericInterface);
-            patchForOpenJpa(repositoryClass, entityClass);
+            Assert.notNull(entityClass, "The entity class of repository[" + repositoryClass.getName()
+                    + "] is not found. Please check the configuration of repository.");
             resolvedEntityClassCache.put(repositoryClass, entityClass);
         }
         final Class<?> entityClass = resolvedEntityClassCache.get(repositoryClass);
         LOGGER.debug("Resolved entity class {} for {}.", entityClass, repositoryClass);
         return entityClass;
-    }
-
-    private void patchForOpenJpa(final Class<?> repositoryClass, final Class<?> entityClass) {
-        if (entityClass == null) {
-            throw new IllegalArgumentException("The entity class of repository[" + repositoryClass.getName()
-                    + "] is not found. Please check the configuration of repository.");
-        }
     }
 
     /**

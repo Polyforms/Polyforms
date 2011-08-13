@@ -13,12 +13,15 @@ import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
 import org.polyforms.repository.jpa.QueryParameterBinder;
+import org.springframework.core.ParameterNameDiscoverer;
+import org.springframework.test.util.ReflectionTestUtils;
 
 public class Jpa2QueryParameterBinderTest {
     private final Object entity = new Object();
     private Method method;
     private Query query;
 
+    private ParameterNameDiscoverer parameterNameDiscoverer;
     private QueryParameterBinder queryParameterBinder;
 
     @Before
@@ -26,11 +29,13 @@ public class Jpa2QueryParameterBinderTest {
         method = MockRepository.class.getMethod("getByName", new Class<?>[] { String.class });
         query = EasyMock.createMock(Query.class);
 
+        parameterNameDiscoverer = EasyMock.createMock(ParameterNameDiscoverer.class);
         queryParameterBinder = new Jpa2QueryParameterBinder();
+        ReflectionTestUtils.setField(queryParameterBinder, "parameterNameDiscoverer", parameterNameDiscoverer);
     }
 
     @Test
-    public void bindPositionalParametersByCode() {
+    public void bindPositionalParametersByType() {
         final Parameter<?> parameter = EasyMock.createMock(Parameter.class);
         query.getParameters();
         EasyMock.expectLastCall().andReturn(Collections.singleton(parameter));
@@ -47,7 +52,7 @@ public class Jpa2QueryParameterBinderTest {
     }
 
     @Test
-    public void bindNamedParametersByCode() {
+    public void bindNamedParametersByType() {
         final Parameter<?> parameter = EasyMock.createMock(Parameter.class);
         query.getParameters();
         EasyMock.expectLastCall().andReturn(Collections.singleton(parameter));
@@ -67,6 +72,7 @@ public class Jpa2QueryParameterBinderTest {
 
     @Test
     public void bindPositionalParameters() {
+        ReflectionTestUtils.setField(queryParameterBinder, "parameterNameDiscoverer", parameterNameDiscoverer);
         final Parameter<?> parameter1 = EasyMock.createMock(Parameter.class);
         final Parameter<?> parameter2 = EasyMock.createMock(Parameter.class);
         unmatchedParameters(parameter1, parameter2);
@@ -101,11 +107,32 @@ public class Jpa2QueryParameterBinderTest {
     }
 
     @Test
+    public void bindNamedParamentersWhichNameIsFromMethod() {
+        final Parameter<?> parameter1 = EasyMock.createMock(Parameter.class);
+        final Parameter<?> parameter2 = EasyMock.createMock(Parameter.class);
+        unmatchedParameters(parameter1, parameter2);
+        parameter1.getPosition();
+        EasyMock.expectLastCall().andReturn(null);
+        parameterNameDiscoverer.getParameterNames(method);
+        EasyMock.expectLastCall().andReturn(new String[] { "code", "name" });
+        query.setParameter("name", entity);
+        EasyMock.expectLastCall().andReturn(query);
+        query.setParameter("code", entity);
+        EasyMock.expectLastCall().andReturn(query);
+        EasyMock.replay(parameterNameDiscoverer, query, parameter1, parameter2);
+
+        queryParameterBinder.bind(query, method, new Object[] { entity, entity });
+        EasyMock.verify(parameterNameDiscoverer, query, parameter1, parameter2);
+    }
+
+    @Test
     public void bindNamedParamentersWhichNameIsFromQuery() {
         final Parameter<?> parameter1 = EasyMock.createMock(Parameter.class);
         final Parameter<?> parameter2 = EasyMock.createMock(Parameter.class);
         unmatchedParameters(parameter1, parameter2);
         parameter1.getPosition();
+        EasyMock.expectLastCall().andReturn(null);
+        parameterNameDiscoverer.getParameterNames(method);
         EasyMock.expectLastCall().andReturn(null);
         parameter1.getName();
         EasyMock.expectLastCall().andReturn("name");
@@ -115,10 +142,10 @@ public class Jpa2QueryParameterBinderTest {
         EasyMock.expectLastCall().andReturn("code");
         query.setParameter("code", entity);
         EasyMock.expectLastCall().andReturn(query);
-        EasyMock.replay(query, parameter1, parameter2);
+        EasyMock.replay(parameterNameDiscoverer, query, parameter1, parameter2);
 
         queryParameterBinder.bind(query, method, new Object[] { entity, entity });
-        EasyMock.verify(query, parameter1, parameter2);
+        EasyMock.verify(parameterNameDiscoverer, query, parameter1, parameter2);
     }
 
     @Test

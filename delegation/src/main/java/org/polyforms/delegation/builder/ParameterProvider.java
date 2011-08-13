@@ -3,6 +3,8 @@ package org.polyforms.delegation.builder;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.util.Assert;
+
 public interface ParameterProvider<P> {
     void validate(Class<?>... parameterTypes);
 
@@ -12,9 +14,7 @@ public interface ParameterProvider<P> {
         private final int position;
 
         public At(final int position) {
-            if (position < 0) {
-                throw new IllegalArgumentException("Parameter position(int) must start from 0.");
-            }
+            Assert.isTrue(position >= 0);
             this.position = position;
         }
 
@@ -24,10 +24,8 @@ public interface ParameterProvider<P> {
         }
 
         public void validate(final Class<?>... parameterType) {
-            if (position >= parameterType.length) {
-                throw new IllegalArgumentException("Parameter position " + position
-                        + " must not less than parameter count " + parameterType.length + " of delegator method.");
-            }
+            Assert.isTrue(position < parameterType.length, "Parameter position " + position
+                    + " must not less than parameter count " + parameterType.length + " of delegator method.");
         }
     }
 
@@ -53,9 +51,7 @@ public interface ParameterProvider<P> {
         private final Class<?> type;
 
         public TypeOf(final Class<?> type) {
-            if (type == null) {
-                throw new IllegalArgumentException("Parameter type (Class<P) must not be null.");
-            }
+            Assert.notNull(type);
             this.type = type;
         }
 
@@ -78,10 +74,8 @@ public interface ParameterProvider<P> {
                 }
             }
 
-            if (matchedParameterTypes.size() != 1) {
-                throw new IllegalArgumentException("There is one and only one parameter of type " + type
-                        + " allowed in delegator method.");
-            }
+            Assert.isTrue(matchedParameterTypes.size() == 1, "There is one and only one parameter of type " + type
+                    + " allowed in delegator method.");
         }
     }
 }

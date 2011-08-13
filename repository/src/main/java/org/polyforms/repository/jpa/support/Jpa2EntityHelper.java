@@ -13,6 +13,7 @@ import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.SingularAttribute;
 
 import org.polyforms.repository.jpa.EntityHelper;
+import org.springframework.util.Assert;
 import org.springframework.util.ReflectionUtils;
 
 /**
@@ -77,9 +78,7 @@ public final class Jpa2EntityHelper implements EntityHelper {
             final EntityType<?> type = getEntityType(entityClass);
             // patch for openjpa because it returns null instead of IllegalArgumentException
             // when class is not an entity.
-            if (type == null) {
-                throw new IllegalArgumentException("Not an entity: " + entityClass);
-            }
+            Assert.notNull(type, "Not an entity: " + entityClass);
             idAttibuteCache.put(entityClass, type.getId(type.getIdType().getJavaType()));
         }
         return idAttibuteCache.get(entityClass);

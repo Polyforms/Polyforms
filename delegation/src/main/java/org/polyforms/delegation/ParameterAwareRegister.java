@@ -19,7 +19,7 @@ class ParameterAwareRegister<S> implements DelegationRegister<S> {
         DelegationBuilderHolder.get().map(sourceType, targetType);
     }
 
-    protected final <P> P at(final Class<P> targetType, final int position) { // NOPMD
+    protected final <P> P at(final Class<P> targetType, final int position) {
         return provideBy(targetType, new At<P>(position));
     }
 

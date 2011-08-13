@@ -61,12 +61,8 @@ public final class MethodUtils {
 
     private static Method findMethod(final Class<?> clazz, final String methodName) {
         final List<Method> candidates = findMethods(clazz, methodName);
-
-        if (candidates.size() > 1) {
-            throw new IllegalArgumentException("Too many method' name is " + methodName
-                    + ", please specify parameter types.");
-        }
-
+        Assert.isTrue(candidates.size() <= 1, "Too many method' name is " + methodName
+                + ", please specify parameter types.");
         return candidates.isEmpty() ? null : candidates.get(0);
     }
 

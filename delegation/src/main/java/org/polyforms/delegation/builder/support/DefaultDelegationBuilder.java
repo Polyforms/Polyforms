@@ -17,9 +17,13 @@ import org.polyforms.delegation.builder.ParameterProvider;
 import org.polyforms.delegation.builder.ParameterProvider.At;
 import org.polyforms.delegation.builder.support.Cglib2ProxyFactory.MethodVisitor;
 import org.polyforms.delegation.util.MethodUtils;
+import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
+import org.springframework.core.ParameterNameDiscoverer;
+import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 
 public final class DefaultDelegationBuilder implements DelegationBuilder {
+    private final ParameterNameDiscoverer parameterNameDiscoverer = new LocalVariableTableParameterNameDiscoverer();
     private final ProxyFactory delegatorProxyFactory = new Cglib2ProxyFactory(new DelegatorMethodVisitor());
     private final ProxyFactory delegateeProxyFactory = new Cglib2ProxyFactory(new DelegateeMethodVisitor());
     private final DelegationRegistry delegationRegistry;
@@ -51,10 +55,6 @@ public final class DefaultDelegationBuilder implements DelegationBuilder {
         return delegateeProxyFactory.getProxy(delegateeType);
     }
 
-    public void map(final Class<? extends Throwable> sourceType, final Class<? extends Throwable> targetType) {
-        exceptionTypeMap.put(targetType, sourceType);
-    }
-
     private void resetDelegatee() {
         delegateeType = null;
         delegateeName = null;
@@ -71,21 +71,26 @@ public final class DefaultDelegationBuilder implements DelegationBuilder {
         delegateeName = name;
     }
 
-    @SuppressWarnings("unchecked")
     public <T> T delegate() {
-        if (delegatorMethod != null) {
-            delegation = newDelegation(delegatorMethod);
-            registerDelegation(delegation);
-            delegatorMethod = null;
-            parameterProviders = new ArrayList<ParameterProvider<?>>();
-            if (delegateeType == null) {
-                return (T) delegateeProxyFactory.getProxy(delegation.getDelegateeType());
-            }
-        } else {
+        Assert.notNull(exceptionTypeMap,
+                "The delegatorType is null. The delegatorFrom method must be invoked before delegate method.");
+
+        if (delegatorMethod == null) {
             registerAllAbstractMethods();
+            return null;
         }
 
-        return null;
+        return this.<T> registerDelegation();
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T> T registerDelegation() {
+        delegation = newDelegation(delegatorMethod);
+        registerDelegation(delegation);
+        delegatorMethod = null;
+        parameterProviders = new ArrayList<ParameterProvider<?>>();
+
+        return delegateeType != null ? null : (T) delegateeProxyFactory.getProxy(delegation.getDelegateeType());
     }
 
     private void registerAllAbstractMethods() {
@@ -124,9 +129,7 @@ public final class DefaultDelegationBuilder implements DelegationBuilder {
 
     private Class<?> getTypeOfFirstParameter(final Method method) {
         final Class<?>[] parameterTypes = method.getParameterTypes();
-        if (parameterTypes.length == 0) {
-            throw new IllegalArgumentException("The delegatee method must have at lease one parameter.");
-        }
+        Assert.notEmpty(parameterTypes, "The delegatee method must have at lease one parameter.");
 
         return parameterTypes[0];
     }
@@ -136,31 +139,36 @@ public final class DefaultDelegationBuilder implements DelegationBuilder {
     }
 
     public void parameter(final ParameterProvider<?> parameterProvider) {
-        if (parameterProviders == null) {
-            throw new IllegalArgumentException("the parameter must be invoked after delegate.");
-        }
+        Assert.notNull(parameterProviders, "the parameter must be invoked after delegate.");
         parameterProviders.add(parameterProvider);
+    }
+
+    public void map(final Class<? extends Throwable> sourceType, final Class<? extends Throwable> targetType) {
+        Assert.notNull(exceptionTypeMap,
+                "The exceptionTypeMap is null. The delegateFrom method must be invoked before map method.");
+        exceptionTypeMap.put(targetType, sourceType);
     }
 
     private final class DelegatorMethodVisitor implements MethodVisitor {
         public void visit(final Method method) {
-            if (delegatorMethod != null) {
-                throw new IllegalArgumentException("Invoke source.xxx twice");
-            }
+            Assert.isNull(delegatorMethod, "Invoke source.xxx twice");
             delegatorMethod = method;
         }
     }
 
     private final class DelegateeMethodVisitor implements MethodVisitor {
         public void visit(final Method method) {
-            if (delegation.getDelegateeMethod() != null) {
-                throw new IllegalArgumentException("The delegatee method has been set.");
-            }
+            Assert.isNull(delegation.getDelegateeMethod(), "The delegatee method has been set.");
             delegation.setDelegateeMethod(method);
-
             if (parameterProviders.isEmpty()) {
-                parameterProviders = matchParameterTypes(delegation.getDelegatorMethod().getParameterTypes(),
-                        method.getParameterTypes());
+                parameterProviders = this.<String> matchParameters(
+                        parameterNameDiscoverer.getParameterNames(delegation.getDelegatorMethod()),
+                        parameterNameDiscoverer.getParameterNames(delegation.getDelegateeMethod()));
+            }
+            if (parameterProviders.isEmpty()) {
+                parameterProviders = this.<Class<?>> matchParameters(resolvePrimitiveIfNecessary(delegation
+                        .getDelegatorMethod().getParameterTypes()), resolvePrimitiveIfNecessary(method
+                        .getParameterTypes()));
             }
 
             if (!parameterProviders.isEmpty()) {
@@ -170,22 +178,30 @@ public final class DefaultDelegationBuilder implements DelegationBuilder {
             parameterProviders = null;
         }
 
+        private Class<?>[] resolvePrimitiveIfNecessary(final Class<?>[] parameterTypes) {
+            final Class<?>[] resolvedParameterTypes = new Class<?>[parameterTypes.length];
+            for (int i = 0; i < parameterTypes.length; i++) {
+                resolvedParameterTypes[i] = ClassUtils.resolvePrimitiveIfNecessary(parameterTypes[i]);
+            }
+            return resolvedParameterTypes;
+        }
+
         @SuppressWarnings("unchecked")
-        private List<ParameterProvider<?>> matchParameterTypes(final Class<?>[] delegatorParameterTypes,
-                final Class<?>[] delegateeParameterTypes) {
-            if (delegatorParameterTypes.length == 0 || delegateeParameterTypes.length == 0) {
+        private <T> List<ParameterProvider<?>> matchParameters(final T[] delegatorParameters,
+                final T[] delegateeParameters) {
+            if (isEmpty(delegatorParameters) || isEmpty(delegateeParameters)) {
                 return Collections.EMPTY_LIST;
             }
 
-            final Map<Class<?>, Integer> delegatorParameterTypeMap = createParameterTypeMap(delegatorParameterTypes);
-            if (delegatorParameterTypeMap.isEmpty()) {
+            final Map<T, Integer> delegatorParameterMap = this.<T> createParameterMap(delegatorParameters);
+            if (delegatorParameterMap.isEmpty()) {
                 return Collections.EMPTY_LIST;
             }
 
             final List<ParameterProvider<?>> resolvedParameterProviders = new ArrayList<ParameterProvider<?>>();
-            for (final Class<?> delegateeParameter : delegateeParameterTypes) {
-                final ParameterProvider<?> parameterProvider = findMatchedParameter(
-                        ClassUtils.resolvePrimitiveIfNecessary(delegateeParameter), delegatorParameterTypeMap);
+            for (final T delegateeParameter : delegateeParameters) {
+                final ParameterProvider<?> parameterProvider = findMatchedParameter(delegateeParameter,
+                        delegatorParameterMap);
                 if (parameterProvider == null) {
                     return Collections.EMPTY_LIST;
                 }
@@ -195,33 +211,36 @@ public final class DefaultDelegationBuilder implements DelegationBuilder {
             return resolvedParameterProviders;
         }
 
+        private <T> boolean isEmpty(final T[] delegatorParameters) {
+            return delegatorParameters == null || delegatorParameters.length == 0;
+        }
+
         @SuppressWarnings("rawtypes")
-        private ParameterProvider<?> findMatchedParameter(final Class<?> delegateeParameterType,
-                final Map<Class<?>, Integer> delegatorParameterTypeMap) {
-            if (delegatorParameterTypeMap.containsKey(delegateeParameterType)) {
-                return new At(delegatorParameterTypeMap.remove(delegateeParameterType));
+        private <T> ParameterProvider<?> findMatchedParameter(final T delegateeParameter,
+                final Map<T, Integer> delegatorParameterMap) {
+            if (delegatorParameterMap.containsKey(delegateeParameter)) {
+                return new At(delegatorParameterMap.remove(delegateeParameter));
             }
 
             return null;
         }
 
         @SuppressWarnings("unchecked")
-        private Map<Class<?>, Integer> createParameterTypeMap(final Class<?>[] parameterTypes) {
-            final Map<Class<?>, Integer> parameterTypeMap = new HashMap<Class<?>, Integer>();
-            for (int i = 0; i < parameterTypes.length; i++) {
-                final Class<?> parameterType = parameterTypes[i];
+        private <T> Map<T, Integer> createParameterMap(final T[] parameters) {
+            final Map<T, Integer> parameterTypeMap = new HashMap<T, Integer>();
+            for (int i = 0; i < parameters.length; i++) {
+                final T parameterType = parameters[i];
                 if (parameterTypeMap.containsKey(parameterType)) {
                     return Collections.EMPTY_MAP;
                 }
-                parameterTypeMap.put(ClassUtils.resolvePrimitiveIfNecessary(parameterType), i);
+                parameterTypeMap.put(parameterType, i);
             }
             return parameterTypeMap;
         }
 
         private void setParameterProviders() {
-            if (parameterProviders.size() != delegation.getDelegateeMethod().getParameterTypes().length) {
-                throw new IllegalArgumentException("Unmatched parameter providers and parameter types of method.");
-            }
+            Assert.isTrue(parameterProviders.size() == delegation.getDelegateeMethod().getParameterTypes().length,
+                    "Unmatched parameter providers and parameter types of method.");
             for (final ParameterProvider<?> parameterProvider : parameterProviders) {
                 parameterProvider.validate(delegation.getDelegatorMethod().getParameterTypes());
                 delegation.addParameterProvider(parameterProvider);
@@ -230,22 +249,32 @@ public final class DefaultDelegationBuilder implements DelegationBuilder {
     }
 
     public void registerDelegations() {
+        if (delegatorType == null) {
+            return;
+        }
+
         if (delegations.isEmpty()) {
             registerAllAbstractMethods();
         }
 
+        registerDelegationsToRegistry();
+        resetDelegator();
+    }
+
+    private void registerDelegationsToRegistry() {
         for (final SimpleDelegation newDelegation : delegations) {
             if (newDelegation.getDelegateeMethod() == null) {
                 final Method delegateeMethod = MethodUtils.findMostSpecificMethod(newDelegation.getDelegateeType(),
                         newDelegation.getDelegatorMethod().getName());
-                if (delegateeMethod == null) {
-                    throw new IllegalArgumentException("The mathod with same name cannot find in delegatee type");
-                }
+                Assert.notNull(delegateeMethod, "The mathod with same name cannot find in delegatee type");
                 newDelegation.setDelegateeMethod(delegateeMethod);
             }
             newDelegation.setExceptionTypeMap(exceptionTypeMap);
             delegationRegistry.register(newDelegation);
         }
+    }
+
+    private void resetDelegator() {
         delegatorType = null;
         delegations.clear();
         exceptionTypeMap = null;

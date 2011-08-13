@@ -14,6 +14,8 @@ import javax.persistence.Query;
 import org.polyforms.repository.jpa.QueryParameterBinder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
+import org.springframework.core.ParameterNameDiscoverer;
 import org.springframework.util.ClassUtils;
 
 /**
@@ -25,6 +27,7 @@ import org.springframework.util.ClassUtils;
 @Named
 public class Jpa2QueryParameterBinder implements QueryParameterBinder {
     private static final Logger LOGGER = LoggerFactory.getLogger(Jpa2QueryParameterBinder.class);
+    private final ParameterNameDiscoverer parameterNameDiscoverer = new LocalVariableTableParameterNameDiscoverer();
 
     /**
      * {@inheritDoc}
@@ -42,7 +45,7 @@ public class Jpa2QueryParameterBinder implements QueryParameterBinder {
                 setPositionalParameters(query, jpaParameters, arguments);
             } else {
                 LOGGER.debug("Bind named parameters for {}.", method);
-                final String[] parameterNames = getParameterNames(jpaParameters);
+                final String[] parameterNames = getParameterNames(method, jpaParameters);
                 setNamedParameters(query, parameterNames, arguments);
             }
         }
@@ -98,13 +101,17 @@ public class Jpa2QueryParameterBinder implements QueryParameterBinder {
         }
     }
 
-    private String[] getParameterNames(final Set<Parameter<?>> jpaParameters) {
-        final String[] parameterNames = new String[jpaParameters.size()];
-        int i = 0;
-        for (final Parameter<?> jpaParameter : jpaParameters) {
-            parameterNames[i++] = jpaParameter.getName();
+    private String[] getParameterNames(final Method method, final Set<Parameter<?>> jpaParameters) {
+        String[] parameterNames = parameterNameDiscoverer.getParameterNames(method);
+        if (parameterNames == null) {
+            LOGGER.debug("Cannot get parameter names from method signature for {}.", method);
+            parameterNames = new String[jpaParameters.size()];
+            int i = 0;
+            for (final Parameter<?> jpaParameter : jpaParameters) {
+                parameterNames[i++] = jpaParameter.getName();
+            }
+            Arrays.sort(parameterNames);
         }
-        Arrays.sort(parameterNames);
         return parameterNames;
     }
 }

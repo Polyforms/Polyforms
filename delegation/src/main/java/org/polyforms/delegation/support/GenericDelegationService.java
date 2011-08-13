@@ -76,11 +76,9 @@ public final class GenericDelegationService implements DelegationService {
         Assert.notNull(delegatorMethod);
 
         final Delegator candidate = new Delegator(delegatorType, delegatorMethod);
-        if (!supportsWithCache(candidate)) {
-            throw new IllegalArgumentException(
-                    "The delegation of {} in {} is not supported. You can use 'supports' method to check whether a delegation is supported.");
-        }
-
+        Assert.isTrue(
+                supportsWithCache(candidate),
+                "The delegation of {} in {} is not supported. You can use 'supports' method to check whether a delegation is supported.");
         final Delegation delegation = delegationResolver.get(delegatorMappingCache.get(candidate));
         return delegationExecutor.execute(delegation, arguments);
     }

@@ -123,6 +123,14 @@ public class DefaultDelegationBuilderTest {
         EasyMock.verify(delegationRegistry);
     }
 
+    @Test
+    public void registerDelegationsWithoudDelegatorType() {
+        EasyMock.replay(delegationRegistry);
+
+        delegationBuilder.registerDelegations();
+        EasyMock.verify(delegationRegistry);
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void invokeDelegatorMethodTwice() {
         final DomainDelegator domainDelegator = delegationBuilder.delegateFrom(DomainDelegator.class);
@@ -162,6 +170,16 @@ public class DefaultDelegationBuilderTest {
         domainDelegator.cannotFindMethodInDelegateeType(null);
         Assert.assertNotNull(delegationBuilder.delegate());
         delegationBuilder.registerDelegations();
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void mapWithoudDelegatorType() {
+        delegationBuilder.map(Exception.class, RuntimeException.class);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void delegateWithoudDelegatorType() {
+        delegationBuilder.delegate();
     }
 
     public static abstract class DomainDelegator {
