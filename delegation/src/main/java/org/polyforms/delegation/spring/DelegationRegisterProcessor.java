@@ -17,9 +17,15 @@ import org.polyforms.di.spring.util.BeanFactoryVisitor.BeanClassVisitor;
 import org.polyforms.di.spring.util.support.GenericBeanFactoryVisitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
+import org.springframework.beans.factory.support.BeanDefinitionRegistry;
+import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
+import org.springframework.beans.factory.support.BeanNameGenerator;
+import org.springframework.beans.factory.support.DefaultBeanNameGenerator;
+import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.core.GenericTypeResolver;
 import org.springframework.stereotype.Component;
 
@@ -31,31 +37,73 @@ import org.springframework.stereotype.Component;
  * @since 1.0
  */
 @Component
-public final class DelegationRegisterProcessor implements BeanFactoryPostProcessor {
+public final class DelegationRegisterProcessor implements BeanDefinitionRegistryPostProcessor {
     private static final Logger LOGGER = LoggerFactory.getLogger(DelegationRegisterProcessor.class);
     private final BeanFactoryVisitor beanFactoryVisitor = new GenericBeanFactoryVisitor();
+    private final BeanNameGenerator beanNameGenerator = new DefaultBeanNameGenerator();
 
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-    public void postProcessBeanFactory(final ConfigurableListableBeanFactory beanFactory) {
+    @SuppressWarnings("rawtypes")
+    public void postProcessBeanDefinitionRegistry(final BeanDefinitionRegistry registry) throws BeansException {
+        final ConfigurableListableBeanFactory beanFactory = (ConfigurableListableBeanFactory) registry;
+
         final DelegationRegistry delegationRegistry = beanFactory.getBean(DelegationRegistry.class);
         final DelegationBuilder delegationBuilder = new DefaultDelegationBuilder(delegationRegistry);
+
         final Collection<DelegationRegister> delegationRegisters = beanFactory.getBeansOfType(DelegationRegister.class)
                 .values();
 
+        RegisteredClassCollector registeredClassCollector = new RegisteredClassCollector();
+        beanFactoryVisitor.visit(beanFactory, registeredClassCollector);
+
         DelegationBuilderHolder.set(delegationBuilder);
         for (final DelegationRegister register : delegationRegisters) {
-            LOGGER.info("Register delegations from register {}", register.getClass().getName());
-            final Object source = delegationBuilder.delegateFrom(GenericTypeResolver.resolveTypeArgument(
-                    register.getClass(), DelegationRegister.class));
-            register.register(source);
-            delegationBuilder.registerDelegations();
+            Class<?> delegatorType = GenericTypeResolver.resolveTypeArgument(register.getClass(),
+                    DelegationRegister.class);
+            if (!registeredClassCollector.contains(delegatorType)) {
+                registerDelegatorIfNecessary(registry, delegatorType);
+            }
+            registerDelegations(delegationBuilder, register, delegatorType);
         }
         DelegationBuilderHolder.remove();
+    }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    private void registerDelegations(final DelegationBuilder delegationBuilder, final DelegationRegister register,
+            Class<?> delegatorType) {
+        LOGGER.info("Register delegations from register {}", register.getClass().getName());
+        final Object source = delegationBuilder.delegateFrom(delegatorType);
+        register.register(source);
+        delegationBuilder.registerDelegations();
+    }
+
+    private void registerDelegatorIfNecessary(final BeanDefinitionRegistry registry, Class<?> delegatorType) {
+        LOGGER.info("Register bean for delegator {}", delegatorType.getName());
+        final RootBeanDefinition beanDefinition = new RootBeanDefinition(delegatorType);
+        registry.registerBeanDefinition(beanNameGenerator.generateBeanName(beanDefinition, registry), beanDefinition);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void postProcessBeanFactory(final ConfigurableListableBeanFactory beanFactory) {
+        final DelegationRegistry delegationRegistry = beanFactory.getBean(DelegationRegistry.class);
+        final DelegationBuilder delegationBuilder = new DefaultDelegationBuilder(delegationRegistry);
         beanFactoryVisitor.visit(beanFactory, new AnnotatedDelegationRegister(delegationBuilder));
+    }
+
+    protected static final class RegisteredClassCollector implements BeanClassVisitor {
+        private final Set<Class<?>> registeredClasses = new HashSet<Class<?>>();
+
+        public void visit(final String beanName, final AbstractBeanDefinition beanDefinition, final Class<?> clazz) {
+            registeredClasses.add(clazz);
+        }
+
+        public boolean contains(Class<?> clazz) {
+            return registeredClasses.contains(clazz);
+        }
     }
 
     protected static class AnnotatedDelegationRegister implements BeanClassVisitor {

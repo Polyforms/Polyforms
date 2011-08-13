@@ -146,7 +146,6 @@ public class DelegationServiceIT {
         }
     }
 
-    @Component
     public static interface Delegator {
         String echo(StringWrapper string);
 
