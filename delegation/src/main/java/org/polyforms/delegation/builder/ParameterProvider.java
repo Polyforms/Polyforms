@@ -8,7 +8,7 @@ public interface ParameterProvider<P> {
 
     P get(Object... arguments);
 
-    public static final class At<P> implements ParameterProvider<P> {
+    final class At<P> implements ParameterProvider<P> {
         private final int position;
 
         public At(final int position) {
@@ -31,7 +31,7 @@ public interface ParameterProvider<P> {
         }
     }
 
-    public static final class Constant<P> implements ParameterProvider<P> {
+    final class Constant<P> implements ParameterProvider<P> {
         private final P value;
 
         public Constant(final P value) {
@@ -49,7 +49,7 @@ public interface ParameterProvider<P> {
         }
     }
 
-    public static final class TypeOf<P> implements ParameterProvider<P> {
+    final class TypeOf<P> implements ParameterProvider<P> {
         private final Class<?> type;
 
         public TypeOf(final Class<?> type) {

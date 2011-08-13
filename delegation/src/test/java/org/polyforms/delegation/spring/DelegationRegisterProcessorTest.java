@@ -11,6 +11,7 @@ import org.polyforms.delegation.builder.DelegationRegistry;
 import org.polyforms.delegation.spring.DelegationRegisterProcessor.AnnotatedDelegationRegister;
 import org.polyforms.di.spring.util.BeanFactoryVisitor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -25,8 +26,14 @@ public class DelegationRegisterProcessorTest {
         delegationRegistry = EasyMock.createMock(DelegationRegistry.class);
     }
 
+    @Test(expected = IllegalStateException.class)
+    public void notConfigurableListableBeanFactory() {
+        delegationRegisterProcessor
+                .postProcessBeanDefinitionRegistry(EasyMock.createMock(BeanDefinitionRegistry.class));
+    }
+
     @Test
-    public <T> void postProcessBeanDefinitionRegistry() {
+    public void postProcessBeanDefinitionRegistry() {
         final DefaultListableBeanFactory beanFactory = EasyMock.createMock(DefaultListableBeanFactory.class);
         final BeanFactoryVisitor beanFactoryVisitor = new BeanFactoryVisitor() {
             public void visit(ConfigurableListableBeanFactory beanFactory, BeanClassVisitor visitor) {

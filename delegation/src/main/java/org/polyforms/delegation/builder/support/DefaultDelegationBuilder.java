@@ -182,17 +182,17 @@ public final class DefaultDelegationBuilder implements DelegationBuilder {
                 return Collections.EMPTY_LIST;
             }
 
-            final List<ParameterProvider<?>> parameterProviders = new ArrayList<ParameterProvider<?>>();
+            final List<ParameterProvider<?>> resolvedParameterProviders = new ArrayList<ParameterProvider<?>>();
             for (final Class<?> delegateeParameter : delegateeParameterTypes) {
                 final ParameterProvider<?> parameterProvider = findMatchedParameter(
                         ClassUtils.resolvePrimitiveIfNecessary(delegateeParameter), delegatorParameterTypeMap);
                 if (parameterProvider == null) {
                     return Collections.EMPTY_LIST;
                 }
-                parameterProviders.add(parameterProvider);
+                resolvedParameterProviders.add(parameterProvider);
             }
 
-            return parameterProviders;
+            return resolvedParameterProviders;
         }
 
         @SuppressWarnings("rawtypes")

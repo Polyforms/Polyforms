@@ -17,8 +17,6 @@ import org.polyforms.di.spring.util.BeanFactoryVisitor.BeanClassVisitor;
 import org.polyforms.di.spring.util.support.GenericBeanFactoryVisitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
@@ -30,8 +28,8 @@ import org.springframework.core.GenericTypeResolver;
 import org.springframework.stereotype.Component;
 
 /**
- * {@link BeanFactoryPostProcessor} which executing {@link DelegationBuilderFactory} to bind delegator and delegatee and
- * register delegator as a bean if necessary.
+ * {@link BeanDefinitionRegistryPostProcessor} which executing {@link DelegationBuilderFactory} to bind delegator and
+ * delegatee and register delegator as a bean if necessary.
  * 
  * @author Kuisong Tong
  * @since 1.0
@@ -46,7 +44,11 @@ public final class DelegationRegisterProcessor implements BeanDefinitionRegistry
      * {@inheritDoc}
      */
     @SuppressWarnings("rawtypes")
-    public void postProcessBeanDefinitionRegistry(final BeanDefinitionRegistry registry) throws BeansException {
+    public void postProcessBeanDefinitionRegistry(final BeanDefinitionRegistry registry) {
+        if (!(registry instanceof ConfigurableListableBeanFactory)) {
+            throw new IllegalStateException(
+                    "DelegationRegisterProcessor must be registered in a ConfigurableListableBeanFactory.");
+        }
         final ConfigurableListableBeanFactory beanFactory = (ConfigurableListableBeanFactory) registry;
 
         final DelegationRegistry delegationRegistry = beanFactory.getBean(DelegationRegistry.class);
