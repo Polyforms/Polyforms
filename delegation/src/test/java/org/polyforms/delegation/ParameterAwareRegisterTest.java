@@ -9,6 +9,9 @@ import org.junit.Test;
 import org.polyforms.delegation.builder.DelegationBuilder;
 import org.polyforms.delegation.builder.DelegationBuilderHolder;
 import org.polyforms.delegation.builder.ParameterProvider;
+import org.polyforms.delegation.builder.ParameterProvider.At;
+import org.polyforms.delegation.builder.ParameterProvider.Constant;
+import org.polyforms.delegation.builder.ParameterProvider.TypeOf;
 
 public class ParameterAwareRegisterTest {
     private DelegationBuilder delegationBuilder;

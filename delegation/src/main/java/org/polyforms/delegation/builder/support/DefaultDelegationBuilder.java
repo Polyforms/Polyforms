@@ -3,6 +3,7 @@ package org.polyforms.delegation.builder.support;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -13,8 +14,10 @@ import org.polyforms.delegation.builder.Delegation;
 import org.polyforms.delegation.builder.DelegationBuilder;
 import org.polyforms.delegation.builder.DelegationRegistry;
 import org.polyforms.delegation.builder.ParameterProvider;
+import org.polyforms.delegation.builder.ParameterProvider.At;
 import org.polyforms.delegation.builder.support.Cglib2ProxyFactory.MethodVisitor;
 import org.polyforms.delegation.util.MethodUtils;
+import org.springframework.util.ClassUtils;
 
 public final class DefaultDelegationBuilder implements DelegationBuilder {
     private final ProxyFactory delegatorProxyFactory = new Cglib2ProxyFactory(new DelegatorMethodVisitor());
@@ -153,15 +156,70 @@ public final class DefaultDelegationBuilder implements DelegationBuilder {
             if (delegation.getDelegateeMethod() != null) {
                 throw new IllegalArgumentException("The delegatee method has been set.");
             }
-            if (!parameterProviders.isEmpty()) {
-                setParameterProviders(method);
-            }
-            parameterProviders = null;
             delegation.setDelegateeMethod(method);
+
+            if (parameterProviders.isEmpty()) {
+                parameterProviders = matchParameterTypes(delegation.getDelegatorMethod().getParameterTypes(),
+                        method.getParameterTypes());
+            }
+
+            if (!parameterProviders.isEmpty()) {
+                setParameterProviders();
+            }
+
+            parameterProviders = null;
         }
 
-        private void setParameterProviders(final Method method) {
-            if (parameterProviders.size() != method.getParameterTypes().length) {
+        @SuppressWarnings("unchecked")
+        private List<ParameterProvider<?>> matchParameterTypes(final Class<?>[] delegatorParameterTypes,
+                final Class<?>[] delegateeParameterTypes) {
+            if (delegatorParameterTypes.length == 0 || delegateeParameterTypes.length == 0) {
+                return Collections.EMPTY_LIST;
+            }
+
+            final Map<Class<?>, Integer> delegatorParameterTypeMap = createParameterTypeMap(delegatorParameterTypes);
+            if (delegatorParameterTypeMap.isEmpty()) {
+                return Collections.EMPTY_LIST;
+            }
+
+            final List<ParameterProvider<?>> parameterProviders = new ArrayList<ParameterProvider<?>>();
+            for (final Class<?> delegateeParameter : delegateeParameterTypes) {
+                final ParameterProvider<?> parameterProvider = findMatchedParameter(
+                        ClassUtils.resolvePrimitiveIfNecessary(delegateeParameter), delegatorParameterTypeMap);
+                if (parameterProvider == null) {
+                    return Collections.EMPTY_LIST;
+                }
+                parameterProviders.add(parameterProvider);
+            }
+
+            return parameterProviders;
+        }
+
+        @SuppressWarnings("rawtypes")
+        private ParameterProvider<?> findMatchedParameter(final Class<?> delegateeParameterType,
+                final Map<Class<?>, Integer> delegatorParameterTypeMap) {
+            if (delegatorParameterTypeMap.containsKey(delegateeParameterType)) {
+                return new At(delegatorParameterTypeMap.remove(delegateeParameterType));
+            }
+
+            return null;
+        }
+
+        @SuppressWarnings("unchecked")
+        private Map<Class<?>, Integer> createParameterTypeMap(final Class<?>[] parameterTypes) {
+            final Map<Class<?>, Integer> parameterTypeMap = new HashMap<Class<?>, Integer>();
+            for (int i = 0; i < parameterTypes.length; i++) {
+                final Class<?> parameterType = parameterTypes[i];
+                if (parameterTypeMap.containsKey(parameterType)) {
+                    return Collections.EMPTY_MAP;
+                }
+                parameterTypeMap.put(ClassUtils.resolvePrimitiveIfNecessary(parameterType), i);
+            }
+            return parameterTypeMap;
+        }
+
+        private void setParameterProviders() {
+            if (parameterProviders.size() != delegation.getDelegateeMethod().getParameterTypes().length) {
                 throw new IllegalArgumentException("Unmatched parameter providers and parameter types of method.");
             }
             for (final ParameterProvider<?> parameterProvider : parameterProviders) {

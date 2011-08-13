@@ -2,6 +2,9 @@ package org.polyforms.repository.jpa.support;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Named;
@@ -11,8 +14,7 @@ import javax.persistence.Query;
 import org.polyforms.repository.jpa.QueryParameterBinder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
-import org.springframework.core.ParameterNameDiscoverer;
+import org.springframework.util.ClassUtils;
 
 /**
  * Implementation of {@link QueryParameterBinder} for JPA 2.0.
@@ -23,7 +25,6 @@ import org.springframework.core.ParameterNameDiscoverer;
 @Named
 public class Jpa2QueryParameterBinder implements QueryParameterBinder {
     private static final Logger LOGGER = LoggerFactory.getLogger(Jpa2QueryParameterBinder.class);
-    private final ParameterNameDiscoverer parameterNameDiscoverer = new LocalVariableTableParameterNameDiscoverer();
 
     /**
      * {@inheritDoc}
@@ -35,14 +36,47 @@ public class Jpa2QueryParameterBinder implements QueryParameterBinder {
             return;
         }
 
-        if (isPositionalParameters(jpaParameters)) {
-            LOGGER.debug("Bind positional parameters for {}.", method);
-            setPositionalParameters(query, jpaParameters, arguments);
-        } else {
-            LOGGER.debug("Bind named parameters for {}.", method);
-            final String[] parameterNames = getParameterNames(method, jpaParameters);
-            setNamedParameters(query, parameterNames, arguments);
+        if (!bindByType(query, arguments, jpaParameters)) {
+            if (isPositionalParameters(jpaParameters)) {
+                LOGGER.debug("Bind positional parameters for {}.", method);
+                setPositionalParameters(query, jpaParameters, arguments);
+            } else {
+                LOGGER.debug("Bind named parameters for {}.", method);
+                final String[] parameterNames = getParameterNames(jpaParameters);
+                setNamedParameters(query, parameterNames, arguments);
+            }
         }
+    }
+
+    private boolean bindByType(final Query query, final Object[] arguments, final Set<Parameter<?>> parameters) {
+        Map<Class<?>, Parameter<?>> parameterTypeMap = createParameterTypeMap(parameters);
+        if (parameterTypeMap.isEmpty()) {
+            return false;
+        }
+
+        for (Object argument : arguments) {
+            Parameter<?> parameter = parameterTypeMap.get(ClassUtils.resolvePrimitiveIfNecessary(argument.getClass()));
+            final Integer position = parameter.getPosition();
+            if (position != null) {
+                query.setParameter(parameter.getPosition(), argument);
+            } else {
+                query.setParameter(parameter.getName(), argument);
+            }
+        }
+        return true;
+    }
+
+    @SuppressWarnings("unchecked")
+    private Map<Class<?>, Parameter<?>> createParameterTypeMap(final Set<Parameter<?>> parameters) {
+        Map<Class<?>, Parameter<?>> parameterTypeMap = new HashMap<Class<?>, Parameter<?>>();
+        for (Parameter<?> parameter : parameters) {
+            Class<?> parameterType = ClassUtils.resolvePrimitiveIfNecessary(parameter.getParameterType());
+            if (parameterTypeMap.containsKey(parameterType)) {
+                return Collections.EMPTY_MAP;
+            }
+            parameterTypeMap.put(parameterType, parameter);
+        }
+        return parameterTypeMap;
     }
 
     private boolean isPositionalParameters(final Set<Parameter<?>> jpaParameters) {
@@ -63,17 +97,13 @@ public class Jpa2QueryParameterBinder implements QueryParameterBinder {
         }
     }
 
-    private String[] getParameterNames(final Method method, final Set<Parameter<?>> jpaParameters) {
-        String[] parameterNames = parameterNameDiscoverer.getParameterNames(method);
-        if (parameterNames == null) {
-            LOGGER.debug("Cannot get parameter names from method signature for {}.", method);
-            parameterNames = new String[jpaParameters.size()];
-            int i = 0;
-            for (final Parameter<?> jpaParameter : jpaParameters) {
-                parameterNames[i++] = jpaParameter.getName();
-            }
-            Arrays.sort(parameterNames);
+    private String[] getParameterNames(final Set<Parameter<?>> jpaParameters) {
+        final String[] parameterNames = new String[jpaParameters.size()];
+        int i = 0;
+        for (final Parameter<?> jpaParameter : jpaParameters) {
+            parameterNames[i++] = jpaParameter.getName();
         }
+        Arrays.sort(parameterNames);
         return parameterNames;
     }
 }

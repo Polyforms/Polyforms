@@ -48,8 +48,8 @@ public final class DelegationRegisterProcessor implements BeanFactoryPostProcess
         DelegationBuilderHolder.set(delegationBuilder);
         for (final DelegationRegister register : delegationRegisters) {
             LOGGER.info("Register delegations from register {}", register.getClass().getName());
-            final Object source = delegationBuilder.delegateFrom(GenericTypeResolver.resolveTypeArgument(register.getClass(),
-                    DelegationRegister.class));
+            final Object source = delegationBuilder.delegateFrom(GenericTypeResolver.resolveTypeArgument(
+                    register.getClass(), DelegationRegister.class));
             register.register(source);
             delegationBuilder.registerDelegations();
         }

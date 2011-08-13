@@ -63,6 +63,11 @@ public class DelegationServiceIT {
         Assert.assertEquals(4, annotationDelegator.length(string));
     }
 
+    @Test
+    public void parameterByType() {
+        Assert.assertEquals("test2", delegator.byType(2, "test"));
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void delegationWithLessParameters() {
         delegator.hello();
@@ -135,6 +140,7 @@ public class DelegationServiceIT {
                     map(DelegateException.class, MockException.class);
                     delegate(delegator.length()).voidMethod();
                     delegate(delegator.hello());
+                    delegate(delegator.byType(0, null)).join(null, 0);
                 }
             });
         }
@@ -155,6 +161,8 @@ public class DelegationServiceIT {
         void voidMethod(StringWrapper string);
 
         int length();
+
+        String byType(int order, String name);
 
         void exception() throws DelegateException;
 
@@ -217,6 +225,10 @@ public class DelegationServiceIT {
         }
 
         public void voidMethod() {
+        }
+
+        public String join(final String name, final Integer number) {
+            return name + number;
         }
 
         public void exception() throws IllegalArgumentException, MockException {

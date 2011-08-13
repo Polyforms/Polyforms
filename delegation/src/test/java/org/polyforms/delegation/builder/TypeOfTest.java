@@ -1,9 +1,9 @@
-package org.polyforms.delegation;
+package org.polyforms.delegation.builder;
 
 import junit.framework.Assert;
 
 import org.junit.Test;
-import org.polyforms.delegation.builder.ParameterProvider;
+import org.polyforms.delegation.builder.ParameterProvider.TypeOf;
 
 public class TypeOfTest {
     @Test

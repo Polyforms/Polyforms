@@ -78,6 +78,51 @@ public class DefaultDelegationBuilderTest {
         EasyMock.verify(delegationRegistry);
     }
 
+    @Test
+    public void delegateWithParameterMatching() throws NoSuchMethodException {
+        final Method delegatorMethod = DomainDelegator.class.getMethod("parameterMatch", new Class<?>[] {
+                DomainObject.class, int.class, String.class });
+        delegationRegistry.register(new SimpleDelegation(DomainDelegator.class, delegatorMethod));
+        EasyMock.replay(delegationRegistry);
+
+        final DomainDelegator domainDelegator = delegationBuilder.delegateFrom(DomainDelegator.class);
+        domainDelegator.parameterMatch(null, 0, null);
+        final DomainObject domainObject = delegationBuilder.delegate();
+        domainObject.join(null, 0);
+        delegationBuilder.registerDelegations();
+        EasyMock.verify(delegationRegistry);
+    }
+
+    @Test
+    public void delegateWithDuplicateParameterTypes() throws NoSuchMethodException {
+        final Method delegatorMethod = DomainDelegator.class.getMethod("parameterNotMatch", new Class<?>[] {
+                DomainObject.class, String.class, String.class });
+        delegationRegistry.register(new SimpleDelegation(DomainDelegator.class, delegatorMethod));
+        EasyMock.replay(delegationRegistry);
+
+        final DomainDelegator domainDelegator = delegationBuilder.delegateFrom(DomainDelegator.class);
+        domainDelegator.parameterNotMatch(null, null, null);
+        final DomainObject domainObject = delegationBuilder.delegate();
+        domainObject.join(null, 0);
+        delegationBuilder.registerDelegations();
+        EasyMock.verify(delegationRegistry);
+    }
+
+    @Test
+    public void delegateWithParameterNotMatching() throws NoSuchMethodException {
+        final Method delegatorMethod = DomainDelegator.class.getMethod("parameterNotMatch", new Class<?>[] {
+                DomainObject.class, long.class, String.class });
+        delegationRegistry.register(new SimpleDelegation(DomainDelegator.class, delegatorMethod));
+        EasyMock.replay(delegationRegistry);
+
+        final DomainDelegator domainDelegator = delegationBuilder.delegateFrom(DomainDelegator.class);
+        domainDelegator.parameterNotMatch(null, 0, null);
+        final DomainObject domainObject = delegationBuilder.delegate();
+        domainObject.join(null, 0);
+        delegationBuilder.registerDelegations();
+        EasyMock.verify(delegationRegistry);
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void invokeDelegatorMethodTwice() {
         final DomainDelegator domainDelegator = delegationBuilder.delegateFrom(DomainDelegator.class);
@@ -130,11 +175,19 @@ public class DefaultDelegationBuilderTest {
         public abstract int get(DomainObject domainObject);
 
         public abstract void set(DomainObject domainObject, String string);
+
+        public abstract void parameterMatch(DomainObject domainObject, int order, String name);
+
+        public abstract void parameterNotMatch(DomainObject domainObject, String order, String name);
+
+        public abstract void parameterNotMatch(DomainObject domainObject, long order, String name);
     }
 
     public interface DomainObject {
         int get();
 
         void set(String string);
+
+        void join(String name, int number);
     }
 }
