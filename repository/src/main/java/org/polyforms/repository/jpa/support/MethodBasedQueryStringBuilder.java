@@ -4,6 +4,8 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.util.StringUtils;
+
 class MethodBasedQueryStringBuilder implements QueryResolver {
     private static final String ENTITY_CLASS_PLACE_HOLDER = "{ENTITY_CLASS_HOLDER}";
     private static final String ORDER_BY = "OrderBy";
@@ -23,17 +25,17 @@ class MethodBasedQueryStringBuilder implements QueryResolver {
     }
 
     public String getQuery(final Class<?> entityClass, final Method method) {
-        final String methodName = method.getName();
+        final String methodName = StringUtils.capitalize(method.getName());
         if (!queryStringCache.containsKey(methodName)) {
             final String[] parts = split(methodName);
 
             final IndexHolder indexHolder = new IndexHolder();
             final StringBuffer jpql = new StringBuffer();
             appendSelectClause(jpql, parts[0]);
-            if (!parts[1].isEmpty()) {
+            if (StringUtils.hasText(parts[1])) {
                 appendWhereClause(indexHolder, parts[1], jpql);
             }
-            if (!parts[2].isEmpty()) {
+            if (StringUtils.hasText(parts[2])) {
                 appendOrderClause(jpql, parts[2], indexHolder);
             }
             queryStringCache.put(methodName, jpql.toString());

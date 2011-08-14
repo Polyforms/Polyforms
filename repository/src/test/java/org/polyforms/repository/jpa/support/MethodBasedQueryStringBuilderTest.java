@@ -16,9 +16,9 @@ public class MethodBasedQueryStringBuilderTest {
     }
 
     @Test
-    public void getByName() throws NoSuchMethodException {
+    public void byName() throws NoSuchMethodException {
         Assert.assertEquals("SELECT e FROM Object e WHERE e.name = ?1 ",
-                queryResolver.getQuery(Object.class, getMethod("getByName")));
+                queryResolver.getQuery(Object.class, getMethod("byName")));
     }
 
     @Test
@@ -40,9 +40,9 @@ public class MethodBasedQueryStringBuilderTest {
     }
 
     @Test
-    public void getOrderById() throws NoSuchMethodException {
+    public void orderById() throws NoSuchMethodException {
         Assert.assertEquals("SELECT e FROM Object e ORDER BY e.id ",
-                queryResolver.getQuery(Object.class, getMethod("getOrderById")));
+                queryResolver.getQuery(Object.class, getMethod("orderById")));
     }
 
     private Method getMethod(final String methodName) throws NoSuchMethodException {
@@ -50,7 +50,7 @@ public class MethodBasedQueryStringBuilderTest {
     }
 
     interface MockInterface {
-        void getByName();
+        void byName();
 
         void getByNameBetween();
 
@@ -58,6 +58,6 @@ public class MethodBasedQueryStringBuilderTest {
 
         void getByNameOrderById();
 
-        void getOrderById();
+        void orderById();
     }
 }
