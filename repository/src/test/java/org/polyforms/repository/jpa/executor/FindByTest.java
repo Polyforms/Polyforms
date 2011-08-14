@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.polyforms.repository.jpa.PaginationProvider;
 import org.polyforms.repository.jpa.QueryBuilder;
 import org.polyforms.repository.jpa.QueryParameterBinder;
+import org.polyforms.repository.spi.EntityClassResolver;
 
 public class FindByTest {
     private final List<Object> entities = Collections.singletonList(new Object());
@@ -21,8 +22,8 @@ public class FindByTest {
     @Before
     public void setUp() {
         paginationProvider = EasyMock.createMock(PaginationProvider.class);
-        executor = new FindBy(EasyMock.createMock(QueryBuilder.class), EasyMock.createMock(QueryParameterBinder.class),
-                paginationProvider);
+        executor = new FindBy(EasyMock.createMock(EntityClassResolver.class), EasyMock.createMock(QueryBuilder.class),
+                EasyMock.createMock(QueryParameterBinder.class), paginationProvider);
     }
 
     @Test

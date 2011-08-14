@@ -6,6 +6,7 @@ import javax.persistence.Query;
 
 import org.polyforms.repository.jpa.QueryBuilder;
 import org.polyforms.repository.jpa.QueryParameterBinder;
+import org.polyforms.repository.spi.EntityClassResolver;
 import org.polyforms.repository.spi.Executor;
 
 /**
@@ -15,10 +16,13 @@ import org.polyforms.repository.spi.Executor;
  * @since 1.0
  */
 public abstract class QueryExecutor implements Executor {
+    private final EntityClassResolver entityClassResolver;
     private final QueryBuilder queryBuilder;
     private final QueryParameterBinder queryParameterBinder;
 
-    protected QueryExecutor(final QueryBuilder queryBuilder, final QueryParameterBinder queryParameterBinder) {
+    protected QueryExecutor(final EntityClassResolver entityClassResolver, final QueryBuilder queryBuilder,
+            final QueryParameterBinder queryParameterBinder) {
+        this.entityClassResolver = entityClassResolver;
         this.queryBuilder = queryBuilder;
         this.queryParameterBinder = queryParameterBinder;
     }
@@ -27,7 +31,8 @@ public abstract class QueryExecutor implements Executor {
      * {@inheritDoc}
      */
     public final Object execute(final Object target, final Method method, final Object... arguments) {
-        final Query query = queryBuilder.build(method);
+        final Class<?> entityClass = entityClassResolver.resolve(target.getClass());
+        final Query query = queryBuilder.build(entityClass, method);
         queryParameterBinder.bind(query, method, arguments);
         return getResult(query);
     }

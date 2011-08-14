@@ -7,6 +7,7 @@ import javax.persistence.Query;
 import org.polyforms.repository.jpa.PaginationProvider;
 import org.polyforms.repository.jpa.QueryBuilder;
 import org.polyforms.repository.jpa.QueryParameterBinder;
+import org.polyforms.repository.spi.EntityClassResolver;
 
 /**
  * Implementation of find method which returns list of matching entities.
@@ -22,9 +23,9 @@ public final class FindBy extends QueryExecutor {
      * Create an instance with {@link PaginationProvider}.
      */
     @Inject
-    public FindBy(final QueryBuilder queryBuilder, final QueryParameterBinder queryParameterBinder,
-            final PaginationProvider paginationProvider) {
-        super(queryBuilder, queryParameterBinder);
+    public FindBy(final EntityClassResolver entityClassResolver, final QueryBuilder queryBuilder,
+            final QueryParameterBinder queryParameterBinder, final PaginationProvider paginationProvider) {
+        super(entityClassResolver, queryBuilder, queryParameterBinder);
         this.paginationProvider = paginationProvider;
     }
 

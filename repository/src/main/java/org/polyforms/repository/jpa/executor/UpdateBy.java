@@ -6,6 +6,7 @@ import javax.persistence.Query;
 
 import org.polyforms.repository.jpa.QueryBuilder;
 import org.polyforms.repository.jpa.QueryParameterBinder;
+import org.polyforms.repository.spi.EntityClassResolver;
 
 /**
  * Implementation of method which updates or removes entities.
@@ -19,8 +20,9 @@ public final class UpdateBy extends QueryExecutor {
      * Create an instance with {@link QueryBuilder} and {@link QueryParameterBinder}.
      */
     @Inject
-    public UpdateBy(final QueryBuilder queryBuilder, final QueryParameterBinder queryParameterBinder) {
-        super(queryBuilder, queryParameterBinder);
+    public UpdateBy(final EntityClassResolver entityClassResolver, final QueryBuilder queryBuilder,
+            final QueryParameterBinder queryParameterBinder) {
+        super(entityClassResolver, queryBuilder, queryParameterBinder);
     }
 
     @Override

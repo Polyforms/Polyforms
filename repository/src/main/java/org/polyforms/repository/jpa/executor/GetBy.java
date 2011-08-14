@@ -7,6 +7,7 @@ import javax.persistence.Query;
 
 import org.polyforms.repository.jpa.QueryBuilder;
 import org.polyforms.repository.jpa.QueryParameterBinder;
+import org.polyforms.repository.spi.EntityClassResolver;
 
 /**
  * Implementation of get method which returns one matching entity or null if no matching.
@@ -20,8 +21,9 @@ public final class GetBy extends QueryExecutor {
      * Create an instance with {@link QueryBuilder} and {@link QueryParameterBinder}.
      */
     @Inject
-    public GetBy(final QueryBuilder queryBuilder, final QueryParameterBinder queryParameterBinder) {
-        super(queryBuilder, queryParameterBinder);
+    public GetBy(final EntityClassResolver entityClassResolver, final QueryBuilder queryBuilder,
+            final QueryParameterBinder queryParameterBinder) {
+        super(entityClassResolver, queryBuilder, queryParameterBinder);
     }
 
     /**

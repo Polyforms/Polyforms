@@ -14,10 +14,11 @@ public interface QueryBuilder {
     /**
      * Build {@link Query} from specified method.
      * 
+     * @param targetClass class of entity
      * @param method to create a query
      * @return Query built from method.
      * 
      * @throws IllegalArgumentException if cannot build
      */
-    Query build(Method method);
+    Query build(Class<?> entityClass, Method method);
 }

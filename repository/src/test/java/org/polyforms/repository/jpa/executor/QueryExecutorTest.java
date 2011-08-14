@@ -12,23 +12,25 @@ import org.junit.Before;
 import org.junit.Test;
 import org.polyforms.repository.jpa.QueryBuilder;
 import org.polyforms.repository.jpa.QueryParameterBinder;
+import org.polyforms.repository.spi.EntityClassResolver;
 import org.polyforms.repository.spi.Executor;
 
 public class QueryExecutorTest {
     private final List<Object> entities = Collections.singletonList(new Object());
     private Query query;
-
+    private EntityClassResolver entityClassResolver;
     private QueryBuilder queryBuilder;
     private QueryParameterBinder queryParameterBinder;
     private Executor executor;
 
     @Before
     public void setUp() {
+        entityClassResolver = EasyMock.createMock(EntityClassResolver.class);
         queryBuilder = EasyMock.createMock(QueryBuilder.class);
         queryParameterBinder = EasyMock.createMock(QueryParameterBinder.class);
 
         query = EasyMock.createMock(Query.class);
-        executor = new QueryExecutor(queryBuilder, queryParameterBinder) {
+        executor = new QueryExecutor(entityClassResolver, queryBuilder, queryParameterBinder) {
             @Override
             protected Object getResult(final Query query) {
                 return entities;
@@ -42,12 +44,14 @@ public class QueryExecutorTest {
         final Method method = null;
         final Object[] arguments = null;
 
-        queryBuilder.build(method);
+        entityClassResolver.resolve(Object.class);
+        EasyMock.expectLastCall().andReturn(Object.class);
+        queryBuilder.build(Object.class, method);
         EasyMock.expectLastCall().andReturn(query);
         queryParameterBinder.bind(query, method, arguments);
-        EasyMock.replay(queryBuilder, queryParameterBinder);
+        EasyMock.replay(entityClassResolver, queryBuilder, queryParameterBinder);
 
         Assert.assertSame(entities, executor.execute(repository, method, arguments));
-        EasyMock.verify(queryBuilder, queryParameterBinder);
+        EasyMock.verify(entityClassResolver, queryBuilder, queryParameterBinder);
     }
 }

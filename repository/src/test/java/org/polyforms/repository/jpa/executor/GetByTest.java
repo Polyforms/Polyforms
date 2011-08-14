@@ -9,13 +9,15 @@ import org.junit.Before;
 import org.junit.Test;
 import org.polyforms.repository.jpa.QueryBuilder;
 import org.polyforms.repository.jpa.QueryParameterBinder;
+import org.polyforms.repository.spi.EntityClassResolver;
 
 public class GetByTest {
     private QueryExecutor executor;
 
     @Before
     public void setUp() {
-        executor = new GetBy(EasyMock.createMock(QueryBuilder.class), EasyMock.createMock(QueryParameterBinder.class));
+        executor = new GetBy(EasyMock.createMock(EntityClassResolver.class), EasyMock.createMock(QueryBuilder.class),
+                EasyMock.createMock(QueryParameterBinder.class));
     }
 
     @Test

@@ -10,21 +10,19 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.polyforms.repository.jpa.QueryBuilder;
-import org.polyforms.repository.jpa.QueryNameResolver;
 import org.springframework.test.util.ReflectionTestUtils;
 
 public class NamedQueryBuilderTest {
     private QueryBuilder queryBuilder;
     private EntityManager entityManager;
-    private QueryNameResolver queryNameResolver;
+    private QueryResolver queryNameResolver;
 
     @Before
     public void setUp() {
-        queryNameResolver = EasyMock.createMock(QueryNameResolver.class);
-        queryBuilder = new NamedQueryBuilder(queryNameResolver);
-
         entityManager = EasyMock.createMock(EntityManager.class);
-        ReflectionTestUtils.setField(queryBuilder, "entityManager", entityManager);
+        queryBuilder = new NamedQueryBuilder(entityManager);
+        queryNameResolver = EasyMock.createMock(QueryResolver.class);
+        ReflectionTestUtils.setField(queryBuilder, "queryNameResolver", queryNameResolver);
     }
 
     @Test
@@ -33,28 +31,13 @@ public class NamedQueryBuilderTest {
         final String queryName = "Mock.getByName";
         final Query query = EasyMock.createMock(Query.class);
 
-        queryNameResolver.getQueryName(method);
+        queryNameResolver.getQuery(null, method);
         EasyMock.expectLastCall().andReturn(queryName);
         entityManager.createNamedQuery(queryName);
         EasyMock.expectLastCall().andReturn(query);
         EasyMock.replay(queryNameResolver, entityManager);
 
-        Assert.assertSame(query, queryBuilder.build(method));
-        EasyMock.verify(queryNameResolver, entityManager);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void cannotBuild() {
-        final Method method = null;
-        final String queryName = "Mock.getByName";
-
-        queryNameResolver.getQueryName(method);
-        EasyMock.expectLastCall().andReturn(queryName);
-        entityManager.createNamedQuery(queryName);
-        EasyMock.expectLastCall().andThrow(new IllegalArgumentException());
-        EasyMock.replay(queryNameResolver, entityManager);
-
-        queryBuilder.build(method);
+        Assert.assertSame(query, queryBuilder.build(null, method));
         EasyMock.verify(queryNameResolver, entityManager);
     }
 }
