@@ -31,7 +31,7 @@ public class NamedParameterBinderTest {
         parameters.add(parameter);
 
         parameter.getParameterType();
-        EasyMock.expectLastCall().andReturn(Object.class);
+        EasyMock.expectLastCall().andReturn(String.class);
         parameter.getName();
         EasyMock.expectLastCall().andReturn("name");
         query.setParameter("name", "tony");

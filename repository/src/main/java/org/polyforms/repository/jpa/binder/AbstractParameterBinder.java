@@ -19,7 +19,7 @@ abstract class AbstractParameterBinder<T> implements ParameterBinder<T>, Paramet
         addParameterMatcher(new TypedParameterMatcher<T>(this));
     }
 
-    protected void addParameterMatcher(final ParameterMatcher<T> parameterMatcher) {
+    protected final void addParameterMatcher(final ParameterMatcher<T> parameterMatcher) {
         this.parameterMatchers.add(parameterMatcher);
     }
 
