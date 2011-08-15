@@ -16,7 +16,7 @@ public interface MockEntityRepository extends ReadOnlyRepository<MockEntity, Lon
 
     MockEntity getByName(String name);
 
-    List<MockEntity> findByName(String name);
+    List<MockEntity> findEntitiesByName(String name);
 
     void updateNameByCode(String code, String name);
 

@@ -17,7 +17,9 @@ import org.polyforms.delegation.builder.ParameterProvider;
 import org.polyforms.delegation.builder.ParameterProvider.At;
 import org.polyforms.delegation.builder.support.Cglib2ProxyFactory.MethodVisitor;
 import org.polyforms.delegation.util.MethodUtils;
+import org.springframework.core.GenericTypeResolver;
 import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
+import org.springframework.core.MethodParameter;
 import org.springframework.core.ParameterNameDiscoverer;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
@@ -166,9 +168,9 @@ public final class DefaultDelegationBuilder implements DelegationBuilder {
                         parameterNameDiscoverer.getParameterNames(delegation.getDelegateeMethod()));
             }
             if (parameterProviders.isEmpty()) {
-                parameterProviders = this.<Class<?>> matchParameters(resolvePrimitiveIfNecessary(delegation
-                        .getDelegatorMethod().getParameterTypes()), resolvePrimitiveIfNecessary(method
-                        .getParameterTypes()));
+                parameterProviders = this.<Class<?>> matchParameters(
+                        resolveGenericTypeIfNecessary(delegation.getDelegatorType(), delegation.getDelegatorMethod()),
+                        resolveGenericTypeIfNecessary(delegation.getDelegateeType(), method));
             }
 
             if (!parameterProviders.isEmpty()) {
@@ -178,12 +180,13 @@ public final class DefaultDelegationBuilder implements DelegationBuilder {
             parameterProviders = null;
         }
 
-        private Class<?>[] resolvePrimitiveIfNecessary(final Class<?>[] parameterTypes) {
-            final Class<?>[] resolvedParameterTypes = new Class<?>[parameterTypes.length];
-            for (int i = 0; i < parameterTypes.length; i++) {
-                resolvedParameterTypes[i] = ClassUtils.resolvePrimitiveIfNecessary(parameterTypes[i]);
+        private Class<?>[] resolveGenericTypeIfNecessary(final Class<?> targetClass, Method method) {
+            final Class<?>[] genericTypes = new Class<?>[method.getParameterTypes().length];
+            for (int i = 0; i < genericTypes.length; i++) {
+                genericTypes[i] = ClassUtils.resolvePrimitiveIfNecessary(GenericTypeResolver.resolveParameterType(
+                        new MethodParameter(method, i), targetClass));
             }
-            return resolvedParameterTypes;
+            return genericTypes;
         }
 
         @SuppressWarnings("unchecked")

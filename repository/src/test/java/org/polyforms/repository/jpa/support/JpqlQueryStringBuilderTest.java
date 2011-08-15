@@ -7,12 +7,15 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 public class JpqlQueryStringBuilderTest {
-    private QueryResolver queryResolver = new JpqlQueryStringBuilder();
+    private final QueryResolver queryResolver = new JpqlQueryStringBuilder();
 
     @Test
     public void byName() throws NoSuchMethodException {
         Assert.assertEquals("SELECT e FROM Object e WHERE e.name = ?1 ",
                 queryResolver.getQuery(Object.class, getMethod("byName")));
+        // Just for testing cache
+        Assert.assertEquals("SELECT e FROM String e WHERE e.name = ?1 ",
+                queryResolver.getQuery(String.class, getMethod("byName")));
     }
 
     @Test
@@ -28,9 +31,9 @@ public class JpqlQueryStringBuilderTest {
     }
 
     @Test
-    public void getDistinctByNameAndCode() throws NoSuchMethodException {
-        Assert.assertEquals("SELECT DISTINCT e FROM Object e WHERE e.name = ?1 AND e.code = ?2 ",
-                queryResolver.getQuery(Object.class, getMethod("getDistinctByNameAndCode")));
+    public void getDistinctByFirstNameAndCodeIn() throws NoSuchMethodException {
+        Assert.assertEquals("SELECT DISTINCT e FROM Object e WHERE e.firstName = ?1 AND e.code IN ?2 ",
+                queryResolver.getQuery(Object.class, getMethod("getDistinctByFirstNameAndCodeIn")));
     }
 
     @Test
@@ -56,7 +59,7 @@ public class JpqlQueryStringBuilderTest {
 
         void getByNameBetween();
 
-        void getDistinctByNameAndCode();
+        void getDistinctByFirstNameAndCodeIn();
 
         void getByNameOrderByIdDesc();
 

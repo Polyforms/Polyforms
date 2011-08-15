@@ -13,10 +13,9 @@ class JpqlQueryStringBuilder implements QueryResolver {
     private static final int NUMBER_OF_PARTS = 3;
     private static final String EMPTY_STRING = "";
     private static final String ENTITY_CLASS_PLACE_HOLDER = "{ENTITY_CLASS_HOLDER}";
-    private static final String DISTINCT = "Distinct";
     private static final String ORDER_BY = "OrderBy";
     private static final String BY = "By";
-    private Map<String, String> queryStringCache = new HashMap<String, String>();
+    private final Map<String, String> queryStringCache = new HashMap<String, String>();
     private final String regex;
 
     public JpqlQueryStringBuilder() {
@@ -70,8 +69,8 @@ class JpqlQueryStringBuilder implements QueryResolver {
 
     private void appendSelectClause(final JpqlStringBuffer jpql, final String selectClause) {
         jpql.appendToken("SELECT");
-        if (selectClause.contains(DISTINCT)) {
-            jpql.appendToken(DISTINCT.toUpperCase());
+        if (selectClause.contains(KeyWord.Distinct.name())) {
+            jpql.appendKeyWord(KeyWord.Distinct, false);
         }
         jpql.appendToken("e FROM");
         jpql.appendToken(ENTITY_CLASS_PLACE_HOLDER);
@@ -138,13 +137,13 @@ class JpqlStringBuffer {
     }
 
     public void newProperty(final String property) {
-        this.lastProperty = property;
+        lastProperty = property;
         newProperty = true;
     }
 
     public void appendProperty() {
         jpql.append("e.");
-        appendToken(lastProperty.toLowerCase(Locale.getDefault()));
+        appendToken(StringUtils.uncapitalize(lastProperty));
     }
 
     public void appendToken(final String token) {
@@ -166,7 +165,7 @@ class IndexHolder {
 }
 
 enum KeyWord {
-    And, Or, Not, Between("BETWEEN {} AND {}"), Is, Null("NULL"), Empty("EMPTY"), Member("MEMBER"), Of, LessThan(
+    Distinct, And, Or, Not, Between("BETWEEN {} AND {}"), Is, Null("NULL"), Empty("EMPTY"), Member("MEMBER"), Of, LessThan(
             "< {}", ">= {}"), GreatThan("> {}", "<= {}"), Equal("= {}", "<> {}"), Like("LIKE {}"), In("IN {}"), Asc, Desc;
 
     public static final List<KeyWord> LOGICAL_OPERATORS = new ArrayList<KeyWord>();
@@ -210,6 +209,8 @@ enum KeyWord {
     }
 
     private KeyWord() {
+        token = name().toUpperCase(Locale.getDefault());
+        notToken = token;
     }
 
     public String getToken(final boolean not, final IndexHolder indexHoder) {
@@ -236,16 +237,10 @@ enum KeyWord {
     }
 
     private String getToken() {
-        if (token == null) {
-            token = name().toUpperCase();
-        }
         return token;
     }
 
     private String getNotToken() {
-        if (notToken == null) {
-            notToken = name().toUpperCase();
-        }
         return notToken;
     }
 }

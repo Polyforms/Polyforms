@@ -28,7 +28,7 @@ public final class NameBasedExecutorFinder implements ExecutorFinder {
     private static final Logger LOGGER = LoggerFactory.getLogger(NameBasedExecutorFinder.class);
     private static final String WILDCARD_SUFFIX = "By";
     private final Map<String, Executor> executors = new HashMap<String, Executor>();
-    private final Map<String, Executor> wildcardExecutor = new HashMap<String, Executor>();
+    private final Map<String, Executor> wildcardExecutors = new HashMap<String, Executor>();
     private final Map<String, Set<String>> aliasCache = new HashMap<String, Set<String>>();
     private final Set<ExecutorAlias> executorAliases;
 
@@ -44,7 +44,7 @@ public final class NameBasedExecutorFinder implements ExecutorFinder {
             final String name = StringUtils.uncapitalize(executorName);
             if (name.endsWith(WILDCARD_SUFFIX)) {
                 LOGGER.info("Add wildcard executor {}.", executorName);
-                mapExecutor(wildcardExecutor, name.substring(0, name.length() - WILDCARD_SUFFIX.length()), executor);
+                mapExecutor(wildcardExecutors, name.substring(0, name.length() - WILDCARD_SUFFIX.length()), executor);
             } else {
                 LOGGER.info("Add executor {}.", executorName);
                 mapExecutor(this.executors, name, executor);
@@ -90,7 +90,7 @@ public final class NameBasedExecutorFinder implements ExecutorFinder {
     }
 
     private Executor getWildcardExecutor(final String methodName) {
-        for (final Entry<String, Executor> entry : wildcardExecutor.entrySet()) {
+        for (final Entry<String, Executor> entry : wildcardExecutors.entrySet()) {
             if (methodName.startsWith(entry.getKey()) && methodName.length() > entry.getKey().length()) {
                 return entry.getValue();
             }

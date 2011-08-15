@@ -127,9 +127,9 @@
 
 	<properties>
 		<hsqldb.version>2.2.4</hsqldb.version>
-		<jpa.version>2.0.0</jpa.version>
-		<hibernate.version>3.6.5.Final</hibernate.version>
+		<jpa.version>2.0.3</jpa.version>
+		<hibernate.version>3.6.6.Final</hibernate.version>
 		<eclipselink.version>2.3.0</eclipselink.version>
-		<openjpa.version>2.1.0</openjpa.version>
+		<openjpa.version>2.1.1</openjpa.version>
 	</properties>
 </project>

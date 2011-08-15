@@ -11,6 +11,6 @@ public abstract class FindRepositoryIT extends RepositoryIT {
 
     @Test
     public void findEntities() {
-        Assert.assertEquals(2, mockEntityRepository.findByName("name").size());
+        Assert.assertEquals(2, mockEntityRepository.findEntitiesByName("name").size());
     }
 }

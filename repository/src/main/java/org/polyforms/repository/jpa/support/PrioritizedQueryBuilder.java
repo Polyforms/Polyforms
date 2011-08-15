@@ -17,7 +17,7 @@ public class PrioritizedQueryBuilder implements QueryBuilder {
     @PersistenceContext
     private EntityManager entityManager;
 
-    private List<QueryBuilder> getqueryBuilders() {
+    protected List<QueryBuilder> getqueryBuilders() {
         synchronized (queryBuilders) {
             if (queryBuilders.isEmpty()) {
                 queryBuilders.add(new NamedQueryBuilder(entityManager));
