@@ -8,7 +8,7 @@ import javax.persistence.Query;
 import org.polyforms.repository.jpa.QueryBuilder;
 
 class JpqlQueryBuilder implements QueryBuilder {
-    private final QueryResolver queryStringbuilder = new MethodBasedQueryStringBuilder();
+    private final QueryResolver queryStringbuilder = new JpqlQueryStringBuilder();
     private final EntityManager entityManager;
 
     public JpqlQueryBuilder(final EntityManager entityManager) {

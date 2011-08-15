@@ -4,7 +4,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.Query;
 
-import org.polyforms.repository.jpa.PaginationProvider;
 import org.polyforms.repository.jpa.QueryBuilder;
 import org.polyforms.repository.jpa.QueryParameterBinder;
 import org.polyforms.repository.spi.EntityClassResolver;
@@ -17,16 +16,13 @@ import org.polyforms.repository.spi.EntityClassResolver;
  */
 @Named
 public final class FindBy extends QueryExecutor {
-    private final PaginationProvider paginationProvider;
-
     /**
-     * Create an instance with {@link PaginationProvider}.
+     * Create an instance with {@link EntityClassResolver}.
      */
     @Inject
     public FindBy(final EntityClassResolver entityClassResolver, final QueryBuilder queryBuilder,
-            final QueryParameterBinder queryParameterBinder, final PaginationProvider paginationProvider) {
+            final QueryParameterBinder queryParameterBinder) {
         super(entityClassResolver, queryBuilder, queryParameterBinder);
-        this.paginationProvider = paginationProvider;
     }
 
     /**
@@ -34,8 +30,6 @@ public final class FindBy extends QueryExecutor {
      */
     @Override
     protected Object getResult(final Query query) {
-        query.setFirstResult(paginationProvider.getFirstResult());
-        query.setMaxResults(paginationProvider.getMaxResults());
         return query.getResultList();
     }
 }

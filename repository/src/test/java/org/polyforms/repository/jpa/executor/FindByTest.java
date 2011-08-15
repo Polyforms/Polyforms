@@ -9,40 +9,29 @@ import org.easymock.EasyMock;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.polyforms.repository.jpa.PaginationProvider;
 import org.polyforms.repository.jpa.QueryBuilder;
 import org.polyforms.repository.jpa.QueryParameterBinder;
 import org.polyforms.repository.spi.EntityClassResolver;
 
 public class FindByTest {
     private final List<Object> entities = Collections.singletonList(new Object());
-    private PaginationProvider paginationProvider;
     private QueryExecutor executor;
 
     @Before
     public void setUp() {
-        paginationProvider = EasyMock.createMock(PaginationProvider.class);
         executor = new FindBy(EasyMock.createMock(EntityClassResolver.class), EasyMock.createMock(QueryBuilder.class),
-                EasyMock.createMock(QueryParameterBinder.class), paginationProvider);
+                EasyMock.createMock(QueryParameterBinder.class));
     }
 
     @Test
     public void find() {
         final Query query = EasyMock.createMock(Query.class);
 
-        paginationProvider.getFirstResult();
-        EasyMock.expectLastCall().andReturn(0);
-        query.setFirstResult(0);
-        EasyMock.expectLastCall().andReturn(query);
-        paginationProvider.getMaxResults();
-        EasyMock.expectLastCall().andReturn(10);
-        query.setMaxResults(10);
-        EasyMock.expectLastCall().andReturn(query);
         query.getResultList();
         EasyMock.expectLastCall().andReturn(entities);
-        EasyMock.replay(query, paginationProvider);
+        EasyMock.replay(query);
 
         Assert.assertSame(entities, executor.getResult(query));
-        EasyMock.verify(query, paginationProvider);
+        EasyMock.verify(query);
     }
 }

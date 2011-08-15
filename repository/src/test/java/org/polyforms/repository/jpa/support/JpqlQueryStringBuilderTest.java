@@ -4,21 +4,21 @@ import java.lang.reflect.Method;
 
 import junit.framework.Assert;
 
-import org.junit.Before;
 import org.junit.Test;
 
-public class MethodBasedQueryStringBuilderTest {
-    private QueryResolver queryResolver;
-
-    @Before
-    public void setUp() {
-        queryResolver = new MethodBasedQueryStringBuilder();
-    }
+public class JpqlQueryStringBuilderTest {
+    private QueryResolver queryResolver = new JpqlQueryStringBuilder();
 
     @Test
     public void byName() throws NoSuchMethodException {
         Assert.assertEquals("SELECT e FROM Object e WHERE e.name = ?1 ",
                 queryResolver.getQuery(Object.class, getMethod("byName")));
+    }
+
+    @Test
+    public void orderById() throws NoSuchMethodException {
+        Assert.assertEquals("SELECT e FROM Object e ORDER BY e.id ",
+                queryResolver.getQuery(Object.class, getMethod("orderById")));
     }
 
     @Test
@@ -34,15 +34,15 @@ public class MethodBasedQueryStringBuilderTest {
     }
 
     @Test
-    public void getByNameOrderById() throws NoSuchMethodException {
-        Assert.assertEquals("SELECT e FROM Object e WHERE e.name = ?1 ORDER BY e.id ",
-                queryResolver.getQuery(Object.class, getMethod("getByNameOrderById")));
+    public void getByNameOrderByIdDesc() throws NoSuchMethodException {
+        Assert.assertEquals("SELECT e FROM Object e WHERE e.name = ?1 ORDER BY e.id DESC ",
+                queryResolver.getQuery(Object.class, getMethod("getByNameOrderByIdDesc")));
     }
 
     @Test
-    public void orderById() throws NoSuchMethodException {
-        Assert.assertEquals("SELECT e FROM Object e ORDER BY e.id ",
-                queryResolver.getQuery(Object.class, getMethod("orderById")));
+    public void findByAgeIsNotNullOrNotGreatThan() throws NoSuchMethodException {
+        Assert.assertEquals("SELECT e FROM Object e WHERE e.age IS NOT NULL OR e.age <= ?1 ",
+                queryResolver.getQuery(Object.class, getMethod("findByAgeIsNotNullOrNotGreatThan")));
     }
 
     private Method getMethod(final String methodName) throws NoSuchMethodException {
@@ -52,12 +52,14 @@ public class MethodBasedQueryStringBuilderTest {
     interface MockInterface {
         void byName();
 
+        void orderById();
+
         void getByNameBetween();
 
         void getDistinctByNameAndCode();
 
-        void getByNameOrderById();
+        void getByNameOrderByIdDesc();
 
-        void orderById();
+        void findByAgeIsNotNullOrNotGreatThan();
     }
 }

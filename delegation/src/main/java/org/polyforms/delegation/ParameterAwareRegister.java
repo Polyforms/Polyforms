@@ -8,7 +8,7 @@ import org.polyforms.delegation.builder.ParameterProvider.Constant;
 import org.polyforms.delegation.builder.ParameterProvider.TypeOf;
 import org.polyforms.delegation.util.DefaultValue;
 
-class ParameterAwareRegister<S> implements DelegationRegister<S> {
+abstract class ParameterAwareRegister<S> implements DelegationRegister<S> {
     /**
      * {@inheritDoc}
      */
