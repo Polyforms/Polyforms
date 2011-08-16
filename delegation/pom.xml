@@ -34,11 +34,6 @@
 			<artifactId>modelmapper</artifactId>
 			<version>${modelmapper.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>org.polyforms</groupId>
-			<artifactId>polyforms-di</artifactId>
-			<version>${project.version}</version>
-		</dependency>
 
 		<!-- Optional -->
 		<dependency>
@@ -60,6 +55,12 @@
 		</dependency>
 
 		<!-- Integration Test -->
+		<dependency>
+			<groupId>org.polyforms</groupId>
+			<artifactId>polyforms-di</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>

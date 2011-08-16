@@ -180,7 +180,7 @@ public final class DefaultDelegationBuilder implements DelegationBuilder {
             parameterProviders = null;
         }
 
-        private Class<?>[] resolveGenericTypeIfNecessary(final Class<?> targetClass, Method method) {
+        private Class<?>[] resolveGenericTypeIfNecessary(final Class<?> targetClass, final Method method) {
             final Class<?>[] genericTypes = new Class<?>[method.getParameterTypes().length];
             for (int i = 0; i < genericTypes.length; i++) {
                 genericTypes[i] = ClassUtils.resolvePrimitiveIfNecessary(GenericTypeResolver.resolveParameterType(

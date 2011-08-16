@@ -7,10 +7,10 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.polyforms.delegation.builder.BeanContainer;
 import org.polyforms.delegation.builder.Delegation;
 import org.polyforms.delegation.builder.ParameterProvider;
 import org.polyforms.delegation.util.DefaultValue;
-import org.polyforms.di.BeanContainer;
 import org.springframework.core.GenericTypeResolver;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.convert.ConversionService;

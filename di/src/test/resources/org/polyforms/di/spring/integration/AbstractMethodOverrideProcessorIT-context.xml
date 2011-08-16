@@ -17,4 +17,8 @@
 	<bean id="abstractBean" abstract="true"
 		class="org.polyforms.di.spring.integration.AbstractMethodOverrideProcessorIT$MockAbstractObject" />		
 	<bean parent="abstractBean"/>
+	
+	<!-- Should not override FactoryBean -->
+	<bean id="conversionService"
+		class="org.springframework.context.support.ConversionServiceFactoryBean" />
 </beans>

@@ -1,7 +1,7 @@
 package org.polyforms.di.spring;
 
 import org.junit.Test;
-import org.polyforms.di.spring.AbstractMethodOverrider.UnsupportedMethodReplacer;
+import org.polyforms.di.spring.AbstractMethodOverrideProcessor.UnsupportedMethodReplacer;
 
 public class UnsupportedMethodReplacerTest {
     @Test(expected = UnsupportedOperationException.class)

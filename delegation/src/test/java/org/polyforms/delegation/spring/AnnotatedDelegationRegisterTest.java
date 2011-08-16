@@ -6,7 +6,7 @@ import org.junit.Test;
 import org.polyforms.delegation.Delegate;
 import org.polyforms.delegation.builder.DelegationBuilder;
 import org.polyforms.delegation.spring.DelegationRegisterProcessor.AnnotatedDelegationRegister;
-import org.polyforms.di.spring.util.BeanFactoryVisitor.BeanClassVisitor;
+import org.polyforms.delegation.spring.DelegationRegisterProcessor.BeanClassVisitor;
 
 public class AnnotatedDelegationRegisterTest {
     private DelegationBuilder delegationBuilder;
@@ -20,7 +20,7 @@ public class AnnotatedDelegationRegisterTest {
 
     @Test
     public void visitNotAnnotatedClass() {
-        beanClassVisitor.visit(null, null, String.class);
+        beanClassVisitor.visit(String.class);
     }
 
     @Test
@@ -32,7 +32,7 @@ public class AnnotatedDelegationRegisterTest {
         delegationBuilder.registerDelegations();
         EasyMock.replay(delegationBuilder);
 
-        beanClassVisitor.visit(null, null, AnnotatedClass.class);
+        beanClassVisitor.visit(AnnotatedClass.class);
         EasyMock.verify(delegationBuilder);
     }
 
@@ -45,7 +45,7 @@ public class AnnotatedDelegationRegisterTest {
         delegationBuilder.registerDelegations();
         EasyMock.replay(delegationBuilder);
 
-        beanClassVisitor.visit(null, null, AnnotatedMethod.class);
+        beanClassVisitor.visit(AnnotatedMethod.class);
         EasyMock.verify(delegationBuilder);
     }
 

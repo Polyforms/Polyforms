@@ -7,11 +7,11 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.polyforms.delegation.builder.BeanContainer;
 import org.polyforms.delegation.builder.Delegation;
 import org.polyforms.delegation.builder.ParameterProvider;
 import org.polyforms.delegation.support.DelegationExecutorTest.Delegatee.MockException;
 import org.polyforms.delegation.support.DelegationExecutorTest.Delegator.DelegateException;
-import org.polyforms.di.BeanContainer;
 import org.springframework.core.convert.ConversionService;
 
 public class DelegationExecutorTest {

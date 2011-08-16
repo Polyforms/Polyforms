@@ -3,9 +3,6 @@ package org.polyforms.di.spring;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
-import org.polyforms.di.spring.util.BeanFactoryVisitor;
-import org.polyforms.di.spring.util.BeanFactoryVisitor.BeanClassVisitor;
-import org.polyforms.di.spring.util.support.GenericBeanFactoryVisitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
@@ -14,6 +11,7 @@ import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.MethodOverrides;
 import org.springframework.beans.factory.support.MethodReplacer;
 import org.springframework.beans.factory.support.ReplaceOverride;
+import org.springframework.util.ClassUtils;
 
 /**
  * {@link BeanFactoryPostProcessor} to add method overrides for instantiation interfaces or abstract classes, and all
@@ -32,33 +30,55 @@ import org.springframework.beans.factory.support.ReplaceOverride;
  * @since 1.0
  */
 public final class AbstractMethodOverrideProcessor implements BeanFactoryPostProcessor {
-    private final BeanFactoryVisitor beanFactoryVisitor = new GenericBeanFactoryVisitor();
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractMethodOverrideProcessor.class);
+    private static final String UNSUPPORTED_METHOD_REPLACER_NAME = "__UNSUPPORTED_METHOD_REPLACER";
 
     /**
      * {@inheritDoc}
      */
     public void postProcessBeanFactory(final ConfigurableListableBeanFactory beanFactory) {
-        beanFactoryVisitor.visit(beanFactory, new AbstractMethodOverrider(beanFactory));
-    }
-}
-
-final class AbstractMethodOverrider implements BeanClassVisitor {
-    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractMethodOverrider.class);
-    private static final String UNSUPPORTED_METHOD_REPLACER_NAME = "__UNSUPPORTED_METHOD_REPLACER";
-    private final ConfigurableListableBeanFactory beanFactory;
-
-    protected AbstractMethodOverrider(final ConfigurableListableBeanFactory beanFactory) {
-        this.beanFactory = beanFactory;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void visit(final String beanName, final AbstractBeanDefinition beanDefinition, final Class<?> clazz) {
-        if (Modifier.isAbstract(clazz.getModifiers())) {
-            registerMethodReplacerIfNecessary(beanFactory);
-            addMethodOverrides(beanDefinition, clazz);
+        for (final String beanName : beanFactory.getBeanDefinitionNames()) {
+            final AbstractBeanDefinition beanDefinition = (AbstractBeanDefinition) beanFactory
+                    .getBeanDefinition(beanName);
+            if (!beanDefinition.isAbstract()) {
+                final Class<?> clazz = resolveBeanClass(beanFactory, beanDefinition);
+                if (clazz != null && Modifier.isAbstract(clazz.getModifiers())) {
+                    registerMethodReplacerIfNecessary(beanFactory);
+                    addMethodOverrides(beanDefinition, clazz);
+                }
+            }
         }
+    }
+
+    private Class<?> resolveBeanClass(final ConfigurableListableBeanFactory beanFactory,
+            final AbstractBeanDefinition beanDefinition) {
+        Class<?> clazz = null;
+        AbstractBeanDefinition currentDefinition = beanDefinition;
+
+        while (true) {
+            try {
+                clazz = currentDefinition.resolveBeanClass(ClassUtils.getDefaultClassLoader());
+            } catch (final ClassNotFoundException e) {
+                break;
+            }
+
+            if (clazz != null) {
+                break;
+            }
+
+            currentDefinition = getParentBeanDefinition(beanFactory, beanDefinition);
+            if (currentDefinition == null) {
+                break;
+            }
+        }
+
+        return clazz;
+    }
+
+    private AbstractBeanDefinition getParentBeanDefinition(final ConfigurableListableBeanFactory beanFactory,
+            final AbstractBeanDefinition beanDefinition) {
+        final String parentName = beanDefinition.getParentName();
+        return parentName == null ? null : (AbstractBeanDefinition) beanFactory.getBeanDefinition(parentName);
     }
 
     private synchronized void registerMethodReplacerIfNecessary(final ConfigurableListableBeanFactory beanFactory) {
