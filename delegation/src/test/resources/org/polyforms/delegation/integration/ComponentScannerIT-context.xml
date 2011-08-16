@@ -6,8 +6,6 @@
 		http://www.polyforms.org/schema
 		http://www.polyforms.org/schema/polyforms.xsd">
 
-	<import resource="classpath:org/polyforms/delegation/spring/module-context.xml" />
-
 	<bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" />
 	<polyforms:component-scan base-package="org.polyforms.di org.polyforms.delegation" />
 </beans>
