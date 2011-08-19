@@ -118,8 +118,11 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
 				<configuration>
-					<argLine>-javaagent:${settings.localRepository}/org/springframework/spring-instrument/${spring.version}/spring-instrument-${spring.version}.jar
-						-javaagent:${settings.localRepository}/org/apache/openjpa/openjpa/${openjpa.version}/openjpa-${openjpa.version}.jar</argLine>
+					<argLine>-javaagent:${settings.localRepository}/org/springframework/spring-instrument/${spring.version}/spring-instrument-${spring.version}.jar</argLine>
+					<includes>
+						<include>**/hibernate/*IT.java</include>
+						<include>**/eclipselink/*IT.java</include>
+					</includes>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -132,4 +135,29 @@
 		<eclipselink.version>2.3.0</eclipselink.version>
 		<openjpa.version>2.1.1</openjpa.version>
 	</properties>
+
+	<profiles>
+		<profile>
+			<activation>
+				<jdk>[1.6,)</jdk>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-failsafe-plugin</artifactId>
+						<configuration>
+							<argLine>-javaagent:${settings.localRepository}/org/springframework/spring-instrument/${spring.version}/spring-instrument-${spring.version}.jar
+								-javaagent:${settings.localRepository}/org/apache/openjpa/openjpa/${openjpa.version}/openjpa-${openjpa.version}.jar</argLine>
+							<includes>
+								<include>**/hibernate/*IT.java</include>
+								<include>**/eclipselink/*IT.java</include>
+								<include>**/openjpa/*IT.java</include>
+							</includes>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>
