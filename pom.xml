@@ -117,8 +117,6 @@
 						<updateDependencies>false</updateDependencies>
 						<scmCommentPrefix>[Release]</scmCommentPrefix>
 						<tagNameFormat>v@{project.version}</tagNameFormat>
-						<preparationGoals>clean verify</preparationGoals>
-						<goals>deploy</goals>
 					</configuration>
 				</plugin>
 			</plugins>
@@ -197,13 +195,13 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<basedir.copy>${project.basedir}</basedir.copy>
 		<aopalliance.version>1.0</aopalliance.version>
 		<inject.version>1</inject.version>
 		<junit.version>4.8.2</junit.version>
 		<easymock.version>3.0</easymock.version>
 		<spring.version>3.0.5.RELEASE</spring.version>
 		<slf4j.version>1.6.1</slf4j.version>
-		<basedir.copy>${project.basedir}</basedir.copy>
 	</properties>
 
 	<profiles>
