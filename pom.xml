@@ -211,7 +211,7 @@
 
 	<profiles>
 		<profile>
-			<id>sonar</id>
+			<id>jacoco</id>
 			<dependencies>
 				<dependency>
 					<groupId>org.jacoco</groupId>
@@ -224,8 +224,13 @@
 				<jacoco.version>0.5.3.201107060350</jacoco.version>
 				<jacoco.agent.path>${settings.localRepository}/org/jacoco/org.jacoco.agent/${jacoco.version}/org.jacoco.agent-${jacoco.version}-runtime.jar</jacoco.agent.path>
 				<jacoco.file.path>${project.build.directory}/jacoco.result</jacoco.file.path>
-				<sonar.jacoco.itReportPath>${jacoco.file.path}</sonar.jacoco.itReportPath>
 				<parent.javaagent>-javaagent:${jacoco.agent.path}=destfile=${jacoco.file.path}</parent.javaagent>
+			</properties>
+		</profile>
+		<profile>
+			<id>sonar</id>
+			<properties>
+				<sonar.jacoco.itReportPath>${project.build.directory}/jacoco.result</sonar.jacoco.itReportPath>
 			</properties>
 		</profile>
 		<profile>
