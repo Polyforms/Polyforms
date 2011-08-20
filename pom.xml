@@ -99,8 +99,7 @@
 				<configuration>
 					<statementContexts>
 						<neverGetHere>
-							throw new IllegalStateException\("Should never get
-							here"\);
+							throw new IllegalStateException\("Should never get here"\);
 						</neverGetHere>
 					</statementContexts>
 					<contextFilters>neverGetHere</contextFilters>
