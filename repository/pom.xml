@@ -134,7 +134,7 @@
 		<hibernate.version>3.6.6.Final</hibernate.version>
 		<eclipselink.version>2.3.0</eclipselink.version>
 		<openjpa.version>2.1.1</openjpa.version>
-		<javaagent>-javaagent:${settings.localRepository}/org/springframework/spring-instrument/${spring.version}/spring-instrument-${spring.version}.jar</javaagent>
+		<javaagent>${parent.javaagent} -javaagent:${settings.localRepository}/org/springframework/spring-instrument/${spring.version}/spring-instrument-${spring.version}.jar</javaagent>
 	</properties>
 
 	<profiles>
@@ -143,7 +143,7 @@
 				<jdk>[1.6,)</jdk>
 			</activation>
 			<properties>
-				<javaagent>-javaagent:${settings.localRepository}/org/springframework/spring-instrument/${spring.version}/spring-instrument-${spring.version}.jar
+				<javaagent>${parent.javaagent} -javaagent:${settings.localRepository}/org/springframework/spring-instrument/${spring.version}/spring-instrument-${spring.version}.jar
 					-javaagent:${settings.localRepository}/org/apache/openjpa/openjpa/${openjpa.version}/openjpa-${openjpa.version}.jar</javaagent>
 			</properties>
 			<build>

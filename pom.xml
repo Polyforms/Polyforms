@@ -205,7 +205,8 @@
 		<easymock.version>3.0</easymock.version>
 		<spring.version>3.0.5.RELEASE</spring.version>
 		<slf4j.version>1.6.1</slf4j.version>
-		<javaagent></javaagent>
+		<parent.javaagent></parent.javaagent>
+		<javaagent>${parent.javaagent}</javaagent>
 	</properties>
 
 	<profiles>
@@ -224,7 +225,7 @@
 				<jacoco.agent.path>${settings.localRepository}/org/jacoco/org.jacoco.agent/${jacoco.version}/org.jacoco.agent-${jacoco.version}-runtime.jar</jacoco.agent.path>
 				<jacoco.file.path>${project.build.directory}/jacoco.result</jacoco.file.path>
 				<sonar.jacoco.itReportPath>${jacoco.file.path}</sonar.jacoco.itReportPath>
-				<javaagent>-javaagent:${jacoco.agent.path}=destfile=${jacoco.file.path}</javaagent>
+				<parent.javaagent>-javaagent:${jacoco.agent.path}=destfile=${jacoco.file.path}</parent.javaagent>
 			</properties>
 		</profile>
 		<profile>
