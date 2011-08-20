@@ -41,6 +41,7 @@
 			<groupId>org.eclipse.persistence</groupId>
 			<artifactId>javax.persistence</artifactId>
 			<version>${jpa.version}</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<!-- Optional -->
