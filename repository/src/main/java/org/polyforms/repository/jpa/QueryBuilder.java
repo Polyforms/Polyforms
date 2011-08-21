@@ -14,7 +14,7 @@ public interface QueryBuilder {
     /**
      * Build {@link Query} from specified method.
      * 
-     * @param targetClass class of entity
+     * @param entityClass class of entity
      * @param method to create a query
      * @return Query built from method.
      * 

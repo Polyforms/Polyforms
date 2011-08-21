@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 /**
- * Strategy of finding {@link Executor} inheriting {@link NameBasedExecutor} for specific method.
+ * Strategy of finding {@link Executor} for specific method.
  * 
  * @author Kuisong Tong
  * @since 1.0

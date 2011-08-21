@@ -120,7 +120,7 @@ public class ModelMapperFactoryBean implements FactoryBean<ModelMapper> {
     }
 
     /**
-     * @see org.modelmapper.config.Configuration#addConverter(ConditionalConverter)
+     * @see org.modelmapper.config.Configuration#getConverters()
      */
     public void setConverters(final List<ConditionalConverter<?, ?>> converters) {
         modelMapper.getConfiguration().getConverters().addAll(converters);

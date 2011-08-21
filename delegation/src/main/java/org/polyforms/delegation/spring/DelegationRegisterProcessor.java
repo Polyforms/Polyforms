@@ -25,8 +25,8 @@ import org.springframework.core.GenericTypeResolver;
 import org.springframework.stereotype.Component;
 
 /**
- * {@link BeanDefinitionRegistryPostProcessor} which executing {@link DelegationBuilderFactory} to bind delegator and
- * delegatee and register delegator as a bean if necessary.
+ * {@link BeanDefinitionRegistryPostProcessor} which executing {@link DelegationBuilder} to bind delegator and delegatee
+ * and register delegator as a bean if necessary.
  * 
  * @author Kuisong Tong
  * @since 1.0
