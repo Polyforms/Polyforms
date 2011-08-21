@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.polyforms</groupId>
@@ -35,6 +36,10 @@
 				<role>Founder</role>
 				<role>Architect</role>
 			</roles>
+			<properties>
+				<linkedin>kuisong</linkedin>
+				<twitter>kuisong</twitter>
+			</properties>
 		</developer>
 	</developers>
 
@@ -49,21 +54,23 @@
 	</scm>
 	<ciManagement>
 		<system>Jenkins</system>
-		<url>http://ci.polyforms.org/job/Polyforms/</url>
+		<url>http://ci.polyforms.org/view/Polyforms-pipeline/</url>
+		<notifiers>
+			<notifier>
+				<type>mail</type>
+				<sendOnError>true</sendOnError>
+				<sendOnFailure>true</sendOnFailure>
+				<sendOnSuccess>false</sendOnSuccess>
+				<sendOnWarning>false</sendOnWarning>
+				<configuration>
+					<address>system@polyforms.org</address>
+				</configuration>
+			</notifier>
+		</notifiers>
 	</ciManagement>
 
 	<build>
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3.2</version>
-				<configuration>
-					<encoding>UTF-8</encoding>
-					<source>1.5</source>
-					<target>1.5</target>
-				</configuration>
-			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
@@ -86,30 +93,40 @@
 					<argLine>${javaagent}</argLine>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-checkstyle-plugin</artifactId>
-				<version>2.7</version>
-				<configuration>
-					<suppressionsLocation>${basedir}/setting/checkstyle-suppressions.xml</suppressionsLocation>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>com.atlassian.maven.plugins</groupId>
-				<artifactId>maven-clover2-plugin</artifactId>
-				<version>3.1.0</version>
-				<configuration>
-					<statementContexts>
-						<neverGetHere>
-							throw new IllegalStateException\("Should never get here"\);
-						</neverGetHere>
-					</statementContexts>
-					<contextFilters>neverGetHere</contextFilters>
-				</configuration>
-			</plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>2.3.2</version>
+					<configuration>
+						<encoding>UTF-8</encoding>
+						<source>1.5</source>
+						<target>1.5</target>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-checkstyle-plugin</artifactId>
+					<version>2.7</version>
+					<configuration>
+						<suppressionsLocation>${basedir}/setting/checkstyle-suppressions.xml</suppressionsLocation>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>com.atlassian.maven.plugins</groupId>
+					<artifactId>maven-clover2-plugin</artifactId>
+					<version>3.1.0</version>
+					<configuration>
+						<statementContexts>
+							<neverGetHere>
+								throw new IllegalStateException\("Should never get here"\);
+							</neverGetHere>
+						</statementContexts>
+						<contextFilters>neverGetHere</contextFilters>
+					</configuration>
+				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-release-plugin</artifactId>
@@ -126,6 +143,7 @@
 	</build>
 
 	<distributionManagement>
+		<downloadUrl>http://repo1.maven.org/maven2/org/polyforms/</downloadUrl>
 		<snapshotRepository>
 			<id>sonatype-nexus-snapshots</id>
 			<name>Sonatype Nexus Snapshots</name>
@@ -197,16 +215,16 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding> 
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<basedir.copy>${project.basedir}</basedir.copy>
+		<parent.javaagent />
+		<javaagent>${parent.javaagent}</javaagent>
 		<aopalliance.version>1.0</aopalliance.version>
 		<inject.version>1</inject.version>
 		<junit.version>4.8.2</junit.version>
 		<easymock.version>3.0</easymock.version>
 		<spring.version>3.0.5.RELEASE</spring.version>
 		<slf4j.version>1.6.1</slf4j.version>
-		<parent.javaagent />
-		<javaagent>${parent.javaagent}</javaagent>
 	</properties>
 
 	<profiles>

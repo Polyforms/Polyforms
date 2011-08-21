@@ -128,12 +128,12 @@
 	</build>
 
 	<properties>
+		<javaagent>${parent.javaagent} -javaagent:${settings.localRepository}/org/springframework/spring-instrument/${spring.version}/spring-instrument-${spring.version}.jar</javaagent>
 		<hsqldb.version>2.2.4</hsqldb.version>
 		<jpa.version>2.0.3</jpa.version>
 		<hibernate.version>3.6.6.Final</hibernate.version>
 		<eclipselink.version>2.3.0</eclipselink.version>
 		<openjpa.version>2.1.1</openjpa.version>
-		<javaagent>${parent.javaagent} -javaagent:${settings.localRepository}/org/springframework/spring-instrument/${spring.version}/spring-instrument-${spring.version}.jar</javaagent>
 	</properties>
 
 	<profiles>
@@ -141,10 +141,6 @@
 			<activation>
 				<jdk>[1.6,)</jdk>
 			</activation>
-			<properties>
-				<javaagent>${parent.javaagent} -javaagent:${settings.localRepository}/org/springframework/spring-instrument/${spring.version}/spring-instrument-${spring.version}.jar
-					-javaagent:${settings.localRepository}/org/apache/openjpa/openjpa/${openjpa.version}/openjpa-${openjpa.version}.jar</javaagent>
-			</properties>
 			<build>
 				<plugins>
 					<plugin>
@@ -160,6 +156,10 @@
 					</plugin>
 				</plugins>
 			</build>
+			<properties>
+				<javaagent>${parent.javaagent} -javaagent:${settings.localRepository}/org/springframework/spring-instrument/${spring.version}/spring-instrument-${spring.version}.jar
+					-javaagent:${settings.localRepository}/org/apache/openjpa/openjpa/${openjpa.version}/openjpa-${openjpa.version}.jar</javaagent>
+			</properties>
 		</profile>
 	</profiles>
 </project>
