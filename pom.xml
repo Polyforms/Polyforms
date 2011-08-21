@@ -57,11 +57,6 @@
 		<url>http://ci.polyforms.org/view/Polyforms-pipeline/</url>
 		<notifiers>
 			<notifier>
-				<type>mail</type>
-				<sendOnError>true</sendOnError>
-				<sendOnFailure>true</sendOnFailure>
-				<sendOnSuccess>false</sendOnSuccess>
-				<sendOnWarning>false</sendOnWarning>
 				<configuration>
 					<address>system@polyforms.org</address>
 				</configuration>
@@ -81,6 +76,9 @@
 						<goals>
 							<goal>integration-test</goal>
 						</goals>
+						<configuration>
+							<argLine>${javaagent}</argLine>
+						</configuration>
 					</execution>
 					<execution>
 						<id>verify</id>
@@ -89,9 +87,6 @@
 						</goals>
 					</execution>
 				</executions>
-				<configuration>
-					<argLine>${javaagent}</argLine>
-				</configuration>
 			</plugin>
 		</plugins>
 		<pluginManagement>
