@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.polyforms.delegation.Delegate;
+import org.polyforms.delegation.DelegateTo;
 import org.polyforms.delegation.builder.DelegationBuilder;
 import org.polyforms.delegation.builder.DelegationBuilderHolder;
 import org.polyforms.delegation.builder.DelegationRegister;
@@ -128,7 +128,7 @@ public final class DelegationRegisterProcessor implements BeanDefinitionRegistry
          * {@inheritDoc}
          */
         public void visit(final Class<?> clazz) {
-            final boolean annotationPresent = clazz.isAnnotationPresent(Delegate.class);
+            final boolean annotationPresent = clazz.isAnnotationPresent(DelegateTo.class);
             final Set<Method> annotatedMethods = getAnnotatedMethods(clazz.getMethods());
             if (!annotationPresent && annotatedMethods.isEmpty()) {
                 return;
@@ -150,7 +150,7 @@ public final class DelegationRegisterProcessor implements BeanDefinitionRegistry
         private Set<Method> getAnnotatedMethods(final Method[] methods) {
             final Set<Method> annotatedMethods = new HashSet<Method>();
             for (final Method method : methods) {
-                if (method.isAnnotationPresent(Delegate.class)) {
+                if (method.isAnnotationPresent(DelegateTo.class)) {
                     annotatedMethods.add(method);
                 }
             }

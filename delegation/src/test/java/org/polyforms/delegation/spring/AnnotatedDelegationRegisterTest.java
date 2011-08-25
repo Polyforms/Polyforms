@@ -3,7 +3,7 @@ package org.polyforms.delegation.spring;
 import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
-import org.polyforms.delegation.Delegate;
+import org.polyforms.delegation.DelegateTo;
 import org.polyforms.delegation.builder.DelegationBuilder;
 import org.polyforms.delegation.spring.DelegationRegisterProcessor.AnnotatedDelegationRegister;
 import org.polyforms.delegation.spring.DelegationRegisterProcessor.BeanClassVisitor;
@@ -49,12 +49,12 @@ public class AnnotatedDelegationRegisterTest {
         EasyMock.verify(delegationBuilder);
     }
 
-    @Delegate
+    @DelegateTo
     static class AnnotatedClass {
     }
 
     static class AnnotatedMethod {
-        @Delegate
+        @DelegateTo
         public void mockMethod() {
         }
     }

@@ -5,7 +5,7 @@ import java.util.Locale;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.polyforms.delegation.Delegate;
+import org.polyforms.delegation.DelegateTo;
 import org.polyforms.delegation.DelegationService;
 import org.polyforms.delegation.DelegatorRegister;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -200,7 +200,7 @@ public class DelegationServiceIT {
     public static interface AnnotationDelegator {
         String echo(String string);
 
-        @Delegate
+        @DelegateTo
         int length(StringWrapper string);
     }
 
