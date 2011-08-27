@@ -51,7 +51,7 @@ public abstract class DelegatorRegister<S> extends ParameterAwareRegister<S> {
         }
 
         protected final T delegate() {
-            return getBuilder().delegate();
+            return getBuilder().<T> delegate();
         }
 
         protected final T delegate(final Object delegator) {
