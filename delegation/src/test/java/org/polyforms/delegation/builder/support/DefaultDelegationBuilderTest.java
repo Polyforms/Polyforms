@@ -70,10 +70,10 @@ public class DefaultDelegationBuilderTest {
         EasyMock.replay(delegationRegistry);
 
         final DomainDelegator domainDelegator = delegationBuilder.delegateFrom(DomainDelegator.class);
-        Assert.assertNotNull(delegationBuilder.delegateTo(DomainObject.class));
+        delegationBuilder.delegateTo(DomainObject.class);
         delegationBuilder.withName("domainObject");
         Assert.assertEquals(0, domainDelegator.get(null));
-        Assert.assertNull(delegationBuilder.delegate());
+        Assert.assertNotNull(delegationBuilder.delegate());
         delegationBuilder.registerDelegations();
         EasyMock.verify(delegationRegistry);
     }

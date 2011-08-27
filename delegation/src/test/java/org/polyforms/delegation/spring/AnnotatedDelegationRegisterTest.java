@@ -27,6 +27,7 @@ public class AnnotatedDelegationRegisterTest {
     public void visitAnnotatedClass() {
         delegationBuilder.delegateFrom(AnnotatedClass.class);
         EasyMock.expectLastCall().andReturn(new AnnotatedClass());
+        delegationBuilder.withName("");
         delegationBuilder.delegate();
         EasyMock.expectLastCall().andReturn(null);
         delegationBuilder.registerDelegations();
@@ -40,8 +41,12 @@ public class AnnotatedDelegationRegisterTest {
     public void visitAnnotatedMethod() {
         delegationBuilder.delegateFrom(AnnotatedMethod.class);
         EasyMock.expectLastCall().andReturn(new AnnotatedMethod());
+        delegationBuilder.delegateTo(AnnotatedClass.class);
+        EasyMock.expectLastCall().times(2);
+        delegationBuilder.withName("");
+        EasyMock.expectLastCall().times(2);
         delegationBuilder.delegate();
-        EasyMock.expectLastCall().andReturn(null);
+        EasyMock.expectLastCall().andReturn(new AnnotatedClass()).times(2);
         delegationBuilder.registerDelegations();
         EasyMock.replay(delegationBuilder);
 
@@ -51,11 +56,17 @@ public class AnnotatedDelegationRegisterTest {
 
     @DelegateTo
     static class AnnotatedClass {
+        public void mockMethod() {
+        }
     }
 
     static class AnnotatedMethod {
-        @DelegateTo
+        @DelegateTo(AnnotatedClass.class)
         public void mockMethod() {
+        }
+
+        @DelegateTo(value = AnnotatedClass.class, methodName = "mockMethod")
+        public void mockMethod2() {
         }
     }
 }

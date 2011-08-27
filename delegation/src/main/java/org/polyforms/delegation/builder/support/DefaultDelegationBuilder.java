@@ -51,10 +51,9 @@ public final class DefaultDelegationBuilder implements DelegationBuilder {
         return delegatorProxyFactory.getProxy(delegatorType);
     }
 
-    public <T> T delegateTo(final Class<T> delegateeType) {
+    public void delegateTo(final Class<?> delegateeType) {
         this.delegateeType = delegateeType;
         resetDelegation();
-        return delegateeProxyFactory.getProxy(delegateeType);
     }
 
     private void resetDelegatee() {
@@ -92,7 +91,7 @@ public final class DefaultDelegationBuilder implements DelegationBuilder {
         delegatorMethod = null;
         parameterProviders = new ArrayList<ParameterProvider<?>>();
 
-        return delegateeType != null ? null : (T) delegateeProxyFactory.getProxy(delegation.getDelegateeType());
+        return (T) delegateeProxyFactory.getProxy(delegation.getDelegateeType());
     }
 
     private void registerAllAbstractMethods() {

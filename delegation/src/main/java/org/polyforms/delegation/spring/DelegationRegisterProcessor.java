@@ -12,6 +12,7 @@ import org.polyforms.delegation.builder.DelegationBuilderHolder;
 import org.polyforms.delegation.builder.DelegationRegister;
 import org.polyforms.delegation.builder.DelegationRegistry;
 import org.polyforms.delegation.builder.support.DefaultDelegationBuilder;
+import org.polyforms.delegation.util.MethodUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -23,6 +24,7 @@ import org.springframework.beans.factory.support.DefaultBeanNameGenerator;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.core.GenericTypeResolver;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 /**
  * {@link BeanDefinitionRegistryPostProcessor} which executing {@link DelegationBuilder} to bind delegator and delegatee
@@ -137,6 +139,8 @@ public final class DelegationRegisterProcessor implements BeanDefinitionRegistry
             final Object source = delegationBuilder.delegateFrom(clazz);
 
             if (annotationPresent) {
+                final DelegateTo delegateTo = clazz.getAnnotation(DelegateTo.class);
+                setDelegateeTypeIfNecessary(delegateTo);
                 delegationBuilder.delegate();
             }
 
@@ -145,6 +149,14 @@ public final class DelegationRegisterProcessor implements BeanDefinitionRegistry
             }
 
             delegationBuilder.registerDelegations();
+        }
+
+        private void setDelegateeTypeIfNecessary(final DelegateTo delegateTo) {
+            final Class<?> delegateeType = delegateTo.value();
+            if (delegateeType != Void.class) {
+                delegationBuilder.delegateTo(delegateeType);
+            }
+            delegationBuilder.withName(delegateTo.name());
         }
 
         private Set<Method> getAnnotatedMethods(final Method[] methods) {
@@ -158,15 +170,24 @@ public final class DelegationRegisterProcessor implements BeanDefinitionRegistry
         }
 
         private void registerDelegate(final Object source, final Method method) {
-            final Object[] arguments = new Object[method.getParameterTypes().length];
+            final DelegateTo delegateTo = method.getAnnotation(DelegateTo.class);
+            setDelegateeTypeIfNecessary(delegateTo);
+
             try {
-                method.invoke(source, arguments);
+                method.invoke(source, new Object[method.getParameterTypes().length]);
+                final Object delegatee = delegationBuilder.delegate();
+                final Method delegateeMethod = MethodUtils.findMostSpecificMethod(delegatee.getClass(),
+                        normalizeMethodName(delegateTo.methodName(), method), delegateTo.parameterTypes());
+                delegateeMethod.invoke(delegatee, new Object[delegateeMethod.getParameterTypes().length]);
             } catch (final IllegalAccessException e) {
                 throw new IllegalStateException("Should never get here");
             } catch (final InvocationTargetException e) {
                 throw new IllegalStateException("Should never get here");
             }
-            delegationBuilder.delegate();
+        }
+
+        private String normalizeMethodName(final String methodName, final Method method) {
+            return StringUtils.hasText(methodName) ? methodName : method.getName();
         }
     }
 

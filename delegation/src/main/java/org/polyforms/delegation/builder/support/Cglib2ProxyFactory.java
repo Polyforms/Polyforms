@@ -2,6 +2,8 @@ package org.polyforms.delegation.builder.support;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.HashMap;
+import java.util.Map;
 
 import net.sf.cglib.proxy.Callback;
 import net.sf.cglib.proxy.CallbackFilter;
@@ -23,6 +25,7 @@ final class Cglib2ProxyFactory implements ProxyFactory {
                     : 0;
         }
     };
+    private final Map<Class<?>, Object> proxyCache = new HashMap<Class<?>, Object>();
     private final MethodInterceptor methodIntercepter;
     private final InvocationHandler invocationHandler;
 
@@ -44,16 +47,21 @@ final class Cglib2ProxyFactory implements ProxyFactory {
         return DefaultValue.get(method.getReturnType());
     }
 
+    @SuppressWarnings("unchecked")
     public <T> T getProxy(final Class<T> proxyClass) {
         if (proxyClass == null || Modifier.isFinal(proxyClass.getModifiers())) {
             return null;
         }
-
-        if (proxyClass.isInterface()) {
-            return proxyForInterface(proxyClass);
-        } else {
-            return proxyForClass(proxyClass);
+        if (!proxyCache.containsKey(proxyClass)) {
+            T proxy;
+            if (proxyClass.isInterface()) {
+                proxy = proxyForInterface(proxyClass);
+            } else {
+                proxy = proxyForClass(proxyClass);
+            }
+            proxyCache.put(proxyClass, proxy);
         }
+        return (T) proxyCache.get(proxyClass);
     }
 
     @SuppressWarnings("unchecked")

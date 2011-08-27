@@ -38,8 +38,6 @@ public abstract class DelegatorRegister<S> extends ParameterAwareRegister<S> {
     }
 
     protected abstract class DelegateeRegister<T> extends ParameterAwareRegister<S> {
-        private final T target;
-
         protected DelegateeRegister(final String name) {
             this();
             getBuilder().withName(name);
@@ -49,12 +47,11 @@ public abstract class DelegatorRegister<S> extends ParameterAwareRegister<S> {
             super();
             final Class<T> delegateeType = (Class<T>) GenericTypeResolver.resolveTypeArgument(this.getClass(),
                     DelegateeRegister.class);
-            target = getBuilder().delegateTo(delegateeType);
+            getBuilder().delegateTo(delegateeType);
         }
 
         protected final T delegate() {
-            getBuilder().delegate();
-            return target;
+            return getBuilder().delegate();
         }
 
         protected final T delegate(final Object delegator) {

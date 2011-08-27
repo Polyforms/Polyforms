@@ -47,13 +47,11 @@ public class DelegatorRegisterTest {
         final DomainObject domainObject = new DomainObject();
         delegationBuilder.withName("domain");
         delegationBuilder.delegateTo(DomainObject.class);
-        EasyMock.expectLastCall().andReturn(domainObject);
         delegationBuilder.delegateFrom(MockInterface.class);
         EasyMock.expectLastCall().andReturn(mockInterface);
         delegationBuilder.delegate();
         EasyMock.expectLastCall().andReturn(domainObject);
         delegationBuilder.delegateTo(String.class);
-        EasyMock.expectLastCall().andReturn(null);
         EasyMock.replay(delegationBuilder);
 
         new DelegatorRegister<MockInterface>() {
