@@ -32,6 +32,11 @@ public class GenericEntityClassResolverTest {
         entityClassResolver.resolve(Object.class);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void createInstanceWithNegativePosition() {
+        new GenericEntityClassResolver(null, -1);
+    }
+
     public static interface MockRepository extends Repository<Object> {
     }
 }

@@ -52,6 +52,7 @@ public class GenericEntityClassResolver implements EntityClassResolver {
      * @param position the position of entity class in specified interface
      */
     public GenericEntityClassResolver(final Class<?> genericInterface, final int position) {
+        Assert.isTrue(position >= 0, "The position of type parameters starts from 0");
         this.genericInterface = genericInterface;
         this.position = position;
     }

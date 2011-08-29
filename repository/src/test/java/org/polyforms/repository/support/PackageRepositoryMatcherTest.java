@@ -5,25 +5,21 @@ import org.junit.Before;
 import org.junit.Test;
 import org.polyforms.repository.spi.RepositoryMatcher;
 
-public class AnnotatedRepositoryMatcherTest {
+public class PackageRepositoryMatcherTest {
     private RepositoryMatcher repositoryMatcher;
 
     @Before
     public void setUp() {
-        repositoryMatcher = new AnnotatedRepositoryMatcher(Deprecated.class);
+        repositoryMatcher = new PackageRepositoryMatcher(new String[] { "org.polyforms.repository" });
     }
 
     @Test
     public void matches() {
-        Assert.assertTrue(repositoryMatcher.matches(Repository.class));
+        Assert.assertTrue(repositoryMatcher.matches(PackageRepositoryMatcher.class));
     }
 
     @Test
     public void notMatches() {
         Assert.assertFalse(repositoryMatcher.matches(String.class));
-    }
-
-    @Deprecated
-    public interface Repository {
     }
 }
