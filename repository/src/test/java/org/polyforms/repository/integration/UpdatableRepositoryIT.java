@@ -6,7 +6,7 @@ import javax.persistence.PersistenceContext;
 import org.junit.Assert;
 import org.junit.Test;
 import org.polyforms.repository.integration.mock.MockEntity;
-import org.polyforms.repository.integration.mock.MockEntityRepository;
+import org.polyforms.repository.integration.mock.UpdatableRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public abstract class UpdatableRepositoryIT extends RepositoryIT {
@@ -14,7 +14,7 @@ public abstract class UpdatableRepositoryIT extends RepositoryIT {
     private EntityManager entityManager;
 
     @Autowired
-    private MockEntityRepository mockEntityRepository;
+    private UpdatableRepository mockEntityRepository;
 
     @Test
     public void addEntity() {

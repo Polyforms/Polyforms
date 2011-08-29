@@ -2,12 +2,12 @@ package org.polyforms.repository.integration;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.polyforms.repository.integration.mock.MockEntityRepository;
+import org.polyforms.repository.integration.mock.ReadOnlyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public abstract class ReadOnlyRepositoryIT extends RepositoryIT {
     @Autowired
-    private MockEntityRepository mockEntityRepository;
+    private ReadOnlyRepository mockEntityRepository;
 
     @Test
     public void getEntity() {

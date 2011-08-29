@@ -2,12 +2,10 @@ package org.polyforms.repository.integration.mock;
 
 import java.util.List;
 
-import org.polyforms.repository.ReadOnlyRepository;
-import org.polyforms.repository.UpdatableRepository;
 import org.springframework.stereotype.Component;
 
 @Component
-public interface MockEntityRepository extends ReadOnlyRepository<MockEntity, Long>, UpdatableRepository<MockEntity> {
+public interface MockEntityRepository extends Repository<MockEntity> {
     MockEntity loadByCodeAndName(String code, String name);
 
     MockEntity loadByName(String name);

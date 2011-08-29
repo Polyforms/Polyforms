@@ -7,8 +7,8 @@ import javax.persistence.PersistenceContext;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.polyforms.repository.UpdatableRepository;
 import org.polyforms.repository.integration.mock.MockEntity;
+import org.polyforms.repository.integration.mock.Repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -50,7 +50,8 @@ public abstract class UndelegatedRepositoryIT extends RepositoryIT {
     }
 }
 
-interface OverridedRepository extends UpdatableRepository<MockEntity> {
+interface OverridedRepository extends Repository<MockEntity> {
+    void remove(final MockEntity... entities);
 }
 
 @Component
@@ -65,7 +66,9 @@ class OverridedRepositoryImpl implements OverridedRepository {
 }
 
 @Component
-interface UnsupportedRepository extends UpdatableRepository<MockEntity> {
+interface UnsupportedRepository extends Repository<MockEntity> {
+    void save(final MockEntity... entities);
+
     void unsupportedMethod();
 
     List<MockEntity> findByNothing();
