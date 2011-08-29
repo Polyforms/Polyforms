@@ -11,41 +11,46 @@ public class JpqlQueryStringBuilderTest {
 
     @Test
     public void byName() throws NoSuchMethodException {
-        Assert.assertEquals("SELECT e FROM Object e WHERE e.name = ?1 ",
-                queryResolver.getQuery(Object.class, getMethod("byName")));
+        Assert.assertEquals("SELECT e FROM EntityClass e WHERE e.name = ?1 ",
+                queryResolver.getQuery(EntityClass.class, getMethod("byName")));
         // Just for testing cache
-        Assert.assertEquals("SELECT e FROM String e WHERE e.name = ?1 ",
-                queryResolver.getQuery(String.class, getMethod("byName")));
+        Assert.assertEquals("SELECT e FROM EntityClass e WHERE e.name = ?1 ",
+                queryResolver.getQuery(EntityClass.class, getMethod("byName")));
     }
 
     @Test
     public void orderById() throws NoSuchMethodException {
-        Assert.assertEquals("SELECT e FROM Object e ORDER BY e.id ",
-                queryResolver.getQuery(Object.class, getMethod("orderById")));
+        Assert.assertEquals("SELECT e FROM EntityClass e ORDER BY e.id ",
+                queryResolver.getQuery(EntityClass.class, getMethod("orderById")));
     }
 
     @Test
-    public void getByNameBetween() throws NoSuchMethodException {
-        Assert.assertEquals("SELECT e FROM Object e WHERE e.name BETWEEN ?1 AND ?2 ",
-                queryResolver.getQuery(Object.class, getMethod("getByNameBetween")));
+    public void getByUser_NameBetween() throws NoSuchMethodException {
+        Assert.assertEquals("SELECT e FROM EntityClass e WHERE e.user.name BETWEEN ?1 AND ?2 ",
+                queryResolver.getQuery(EntityClass.class, getMethod("getByUser_NameBetween")));
     }
 
     @Test
-    public void getDistinctByFirstNameAndCodeIn() throws NoSuchMethodException {
-        Assert.assertEquals("SELECT DISTINCT e FROM Object e WHERE e.firstName = ?1 AND e.code IN ?2 ",
-                queryResolver.getQuery(Object.class, getMethod("getDistinctByFirstNameAndCodeIn")));
+    public void getDistinctByNameAndCodeIn() throws NoSuchMethodException {
+        Assert.assertEquals("SELECT DISTINCT e FROM EntityClass e WHERE e.name = ?1 AND e.code IN ?2 ",
+                queryResolver.getQuery(EntityClass.class, getMethod("getDistinctByNameAndCodeIn")));
     }
 
     @Test
-    public void getByNameOrderByIdDesc() throws NoSuchMethodException {
-        Assert.assertEquals("SELECT e FROM Object e WHERE e.name = ?1 ORDER BY e.id DESC ",
-                queryResolver.getQuery(Object.class, getMethod("getByNameOrderByIdDesc")));
+    public void getByUserNameOrderByIdDesc() throws NoSuchMethodException {
+        Assert.assertEquals("SELECT e FROM EntityClass e WHERE e.userName = ?1 ORDER BY e.id DESC ",
+                queryResolver.getQuery(EntityClass.class, getMethod("getByUserNameOrderByIdDesc")));
     }
 
     @Test
-    public void findByAgeIsNotNullOrNotGreatThan() throws NoSuchMethodException {
-        Assert.assertEquals("SELECT e FROM Object e WHERE e.age IS NOT NULL OR e.age <= ?1 ",
-                queryResolver.getQuery(Object.class, getMethod("findByAgeIsNotNullOrNotGreatThan")));
+    public void findByUserAgeIsNotNullOrNotGreatThan() throws NoSuchMethodException {
+        Assert.assertEquals("SELECT e FROM EntityClass e WHERE e.user.age IS NOT NULL OR e.user.age <= ?1 ",
+                queryResolver.getQuery(EntityClass.class, getMethod("findByUserAgeIsNotNullOrNotGreatThan")));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void getByUserFirstName() throws NoSuchMethodException {
+        queryResolver.getQuery(EntityClass.class, getMethod("getByUserFirstName"));
     }
 
     private Method getMethod(final String methodName) throws NoSuchMethodException {
@@ -57,12 +62,33 @@ public class JpqlQueryStringBuilderTest {
 
         void orderById();
 
-        void getByNameBetween();
+        void getByUser_NameBetween();
 
-        void getDistinctByFirstNameAndCodeIn();
+        void getDistinctByNameAndCodeIn();
 
-        void getByNameOrderByIdDesc();
+        void getByUserNameOrderByIdDesc();
 
-        void findByAgeIsNotNullOrNotGreatThan();
+        void findByUserAgeIsNotNullOrNotGreatThan();
+
+        void getByUserFirstName();
+    }
+
+    @SuppressWarnings("unused")
+    private static class EntityClass {
+        private Integer id;
+
+        private User user;
+
+        private String code;
+
+        private String name;
+
+        private String userName;
+    }
+
+    @SuppressWarnings("unused")
+    private static class User {
+        private String name;
+        private String age;
     }
 }

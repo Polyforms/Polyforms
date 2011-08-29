@@ -1,12 +1,16 @@
 package org.polyforms.repository.jpa.support;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.regex.Pattern;
 
+import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 
 class JpqlQueryStringBuilder implements QueryResolver {
@@ -16,7 +20,7 @@ class JpqlQueryStringBuilder implements QueryResolver {
     private static final String ORDER_BY = "OrderBy";
     private static final String BY = "By";
     private final Map<String, String> queryStringCache = new HashMap<String, String>();
-    private final String regex;
+    private final Pattern pattern;
 
     public JpqlQueryStringBuilder() {
         final StringBuffer keyWords = new StringBuffer();
@@ -26,7 +30,7 @@ class JpqlQueryStringBuilder implements QueryResolver {
             }
             keyWords.append(keyWord.name());
         }
-        regex = String.format("(?<=[a-z])((?<=%1$s)|(?=%1$s))", keyWords.toString());
+        pattern = Pattern.compile(String.format("(?<=[a-z])((?<=%1$s)|(?=%1$s))", keyWords.toString()));
     }
 
     public String getQuery(final Class<?> entityClass, final Method method) {
@@ -34,7 +38,7 @@ class JpqlQueryStringBuilder implements QueryResolver {
         if (!queryStringCache.containsKey(methodName)) {
             final String[] parts = split(methodName);
 
-            final JpqlStringBuffer jpql = new JpqlStringBuffer();
+            final JpqlStringBuffer jpql = new JpqlStringBuffer(entityClass);
             appendSelectClause(jpql, parts[0]);
             if (StringUtils.hasText(parts[1])) {
                 appendWhereClause(jpql, parts[1]);
@@ -80,7 +84,7 @@ class JpqlQueryStringBuilder implements QueryResolver {
     private void appendWhereClause(final JpqlStringBuffer jpql, final String whereClause) {
         jpql.appendToken("WHERE");
         boolean not = false;
-        for (final String token : whereClause.split(regex)) {
+        for (final String token : pattern.split(whereClause)) {
             try {
                 final KeyWord keyWord = KeyWord.valueOf(token);
                 if (KeyWord.Not == keyWord) {
@@ -106,7 +110,7 @@ class JpqlQueryStringBuilder implements QueryResolver {
 
     private void appendOrderClause(final JpqlStringBuffer jpql, final String orderClause) {
         jpql.appendToken("ORDER BY");
-        for (final String token : orderClause.split(regex)) {
+        for (final String token : pattern.split(orderClause)) {
             try {
                 jpql.appendKeyWord(KeyWord.valueOf(token), false);
             } catch (final IllegalArgumentException e) {
@@ -119,10 +123,17 @@ class JpqlQueryStringBuilder implements QueryResolver {
 }
 
 class JpqlStringBuffer {
+    private static final Pattern CAMEL_CASE = Pattern
+            .compile("(?<=[A-Z])(?=[A-Z][a-z])|(?<=[^A-Z])(?=[A-Z])|(?<=[A-Za-z])(?=[^A-Za-z])");
     private final IndexHolder indexHolder = new IndexHolder();
     private final StringBuffer jpql = new StringBuffer();
+    private final Class<?> entityClass;
     private boolean newProperty;
     private String lastProperty;
+
+    public JpqlStringBuffer(final Class<?> entityClass) {
+        this.entityClass = entityClass;
+    }
 
     public void appendKeyWord(final KeyWord keyWord, final boolean not) {
         appendToken(keyWord.getToken(not, indexHolder));
@@ -142,8 +153,54 @@ class JpqlStringBuffer {
     }
 
     public void appendProperty() {
-        jpql.append("e.");
-        appendToken(StringUtils.uncapitalize(lastProperty));
+        jpql.append("e");
+        for (String property : splitProperty(lastProperty)) {
+            jpql.append(".");
+            jpql.append(StringUtils.uncapitalize(property));
+        }
+        jpql.append(" ");
+    }
+
+    private String[] splitProperty(final String propertyString) {
+        if (propertyString.contains("_")) {
+            return propertyString.split("_");
+        }
+
+        final List<String> properties = findProperties(entityClass, propertyString);
+        if (properties == null) {
+            throw new IllegalArgumentException("Could not parse properties from " + propertyString);
+        }
+        return properties.toArray(new String[0]);
+    }
+
+    private List<String> findProperties(final Class<?> clazz, final String propertyString) {
+        String property = StringUtils.uncapitalize(propertyString);
+
+        Field field = ReflectionUtils.findField(clazz, property);
+        if (field != null) {
+            return Collections.singletonList(property);
+        }
+
+        final String[] tokens = CAMEL_CASE.split(propertyString);
+        int index = tokens.length;
+        do {
+            String token = tokens[--index];
+            property = property.substring(0, propertyString.lastIndexOf(token));
+
+            field = ReflectionUtils.findField(clazz, property);
+            if (field != null) {
+                final List<String> subProperties = findProperties(field.getType(),
+                        propertyString.substring(field.getName().length()));
+                if (subProperties != null) {
+                    final List<String> properties = new ArrayList<String>();
+                    properties.add(field.getName());
+                    properties.addAll(subProperties);
+                    return properties;
+                }
+            }
+        } while (index > 0);
+
+        return null;
     }
 
     public void appendToken(final String token) {
