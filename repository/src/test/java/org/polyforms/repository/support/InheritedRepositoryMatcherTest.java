@@ -10,7 +10,7 @@ public class InheritedRepositoryMatcherTest {
 
     @Before
     public void setUp() {
-        repositoryMatcher = new GenericEntityClassResolver(Number.class);
+        repositoryMatcher = new InheritedRepositoryMatcher(Number.class);
     }
 
     @Test

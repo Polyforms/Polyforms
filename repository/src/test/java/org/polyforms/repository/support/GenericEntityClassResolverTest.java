@@ -11,7 +11,7 @@ public class GenericEntityClassResolverTest {
 
     @Before
     public void setUp() {
-        entityClassResolver = new GenericEntityClassResolver(Repository.class);
+        entityClassResolver = new GenericEntityClassResolver();
     }
 
     @Test
