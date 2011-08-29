@@ -5,7 +5,7 @@
 		http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 	<bean primary="true" class="org.polyforms.repository.support.GenericEntityClassResolver">
-		<property name="genericInterface" value="org.polyforms.repository.integration.EntityRepository" />
+		<constructor-arg  value="org.polyforms.repository.integration.EntityRepository" />
 	</bean>
 
 	<bean primary="true" class="org.polyforms.repository.support.InheritedRepositoryMatcher">

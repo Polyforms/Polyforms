@@ -21,6 +21,12 @@ public class GenericEntityClassResolverTest {
         Assert.assertSame(Object.class, entityClassResolver.resolve(MockRepository.class));
     }
 
+    @Test
+    public void resolveFromSpecifiedClass() {
+        entityClassResolver = new GenericEntityClassResolver(Repository.class);
+        Assert.assertSame(Object.class, entityClassResolver.resolve(MockRepository.class));
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void resolverWithoutEntityClass() {
         entityClassResolver.resolve(Object.class);
