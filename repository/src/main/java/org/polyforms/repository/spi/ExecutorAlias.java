@@ -1,6 +1,6 @@
 package org.polyforms.repository.spi;
 
-import java.util.Set;
+import java.util.Map;
 
 /**
  * Interface for getting alias for executor's name.
@@ -10,10 +10,9 @@ import java.util.Set;
  */
 public interface ExecutorAlias {
     /**
-     * Get alias for specified name.
+     * Alias for specified executor name.
      * 
-     * @param name of executor
-     * @return alias for specified name or empty set if no matching
+     * @return alias mapping with specified name
      */
-    Set<String> getAlias(String name);
+    Map<String, String[]> getAlias();
 }

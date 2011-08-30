@@ -2,6 +2,7 @@ package org.polyforms.repository.spi;
 
 import java.lang.reflect.Method;
 
+
 /**
  * Strategy of finding executor to execute specific method.
  * 

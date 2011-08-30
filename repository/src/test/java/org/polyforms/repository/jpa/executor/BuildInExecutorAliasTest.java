@@ -1,7 +1,5 @@
 package org.polyforms.repository.jpa.executor;
 
-import java.util.Set;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.polyforms.repository.spi.ExecutorAlias;
@@ -11,21 +9,23 @@ public class BuildInExecutorAliasTest {
 
     @Test
     public void saveAlias() {
-        final Set<String> alias = executorAlias.getAlias("save");
-        Assert.assertEquals(2, alias.size());
-        Assert.assertTrue(alias.contains("create"));
-        Assert.assertTrue(alias.contains("persist"));
+        final String[] alias = executorAlias.getAlias().get("save");
+        Assert.assertEquals(2, alias.length);
+        Assert.assertEquals("create", alias[0]);
+        Assert.assertEquals("persist", alias[1]);
+    }
+
+    @Test
+    public void updateAlias() {
+        final String[] alias = executorAlias.getAlias().get("update");
+        Assert.assertEquals(1, alias.length);
+        Assert.assertEquals("merge", alias[0]);
     }
 
     @Test
     public void deleteAlias() {
-        final Set<String> alias = executorAlias.getAlias("delete");
-        Assert.assertEquals(1, alias.size());
-        Assert.assertTrue(alias.contains("remove"));
-    }
-
-    @Test
-    public void notExistAlias() {
-        Assert.assertTrue(executorAlias.getAlias("notExist").isEmpty());
+        final String[] alias = executorAlias.getAlias().get("delete");
+        Assert.assertEquals(1, alias.length);
+        Assert.assertEquals("remove", alias[0]);
     }
 }

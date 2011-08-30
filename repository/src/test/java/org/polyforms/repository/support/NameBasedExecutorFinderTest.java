@@ -1,29 +1,23 @@
 package org.polyforms.repository.support;
 
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.easymock.EasyMock;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.polyforms.repository.ExecutorAliasHolder;
 import org.polyforms.repository.spi.Executor;
-import org.polyforms.repository.spi.ExecutorAlias;
 import org.polyforms.repository.spi.ExecutorFinder;
 
 public class NameBasedExecutorFinderTest {
     private final Executor get = new Get();
     private final Executor getBy = new GetBy();
-    @SuppressWarnings("unchecked")
-    private final ExecutorAlias executorAlias = new ExecutorAlias() {
-        private final HashSet<String> alias = new HashSet<String>(Arrays.asList(new String[] { "load" }));
-
-        public Set<String> getAlias(final String name) {
-            return name.equals("get") ? alias : Collections.EMPTY_SET;
-        }
-    };
+    private ExecutorAliasHolder executorAliasHolder;
     private ExecutorFinder executorFinder;
 
     @Before
@@ -31,7 +25,18 @@ public class NameBasedExecutorFinderTest {
         final Set<Executor> executors = new HashSet<Executor>();
         executors.add(get);
         executors.add(getBy);
-        executorFinder = new NameBasedExecutorFinder(executors, Collections.singleton(executorAlias));
+
+        executorAliasHolder = EasyMock.createMock(ExecutorAliasHolder.class);
+        executorAliasHolder.getAlias("get");
+        EasyMock.expectLastCall().andReturn(Collections.singleton("load")).times(2);
+        EasyMock.replay(executorAliasHolder);
+
+        executorFinder = new NameBasedExecutorFinder(executors, executorAliasHolder);
+    }
+
+    @After
+    public void tearDown() {
+        EasyMock.verify(executorAliasHolder);
     }
 
     @Test

@@ -2,7 +2,6 @@ package org.polyforms.repository.support;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -10,8 +9,8 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.polyforms.repository.ExecutorAliasHolder;
 import org.polyforms.repository.spi.Executor;
-import org.polyforms.repository.spi.ExecutorAlias;
 import org.polyforms.repository.spi.ExecutorFinder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,15 +28,14 @@ public final class NameBasedExecutorFinder implements ExecutorFinder {
     private static final String WILDCARD_SUFFIX = "By";
     private final Map<String, Executor> executors = new HashMap<String, Executor>();
     private final Map<String, Executor> wildcardExecutors = new HashMap<String, Executor>();
-    private final Map<String, Set<String>> aliasCache = new HashMap<String, Set<String>>();
-    private final Set<ExecutorAlias> executorAliases;
+    private final ExecutorAliasHolder executorAliasHolder;
 
     /**
      * Create an instance with {@link Executor}s.
      */
     @Inject
-    public NameBasedExecutorFinder(final Set<Executor> executors, final Set<ExecutorAlias> executorAliases) {
-        this.executorAliases = executorAliases;
+    public NameBasedExecutorFinder(final Set<Executor> executors, final ExecutorAliasHolder executorAliasHolder) {
+        this.executorAliasHolder = executorAliasHolder;
 
         for (final Executor executor : executors) {
             final String executorName = executor.getClass().getSimpleName();
@@ -54,22 +52,10 @@ public final class NameBasedExecutorFinder implements ExecutorFinder {
 
     private void mapExecutor(final Map<String, Executor> executors, final String name, final Executor executor) {
         executors.put(name, executor);
-        for (final String alias : getAlias(name)) {
+        for (final String alias : executorAliasHolder.getAlias(name)) {
             LOGGER.debug("Add alias {} for executor {}.", alias, name);
             executors.put(alias, executor);
         }
-    }
-
-    private Set<String> getAlias(final String name) {
-        if (!aliasCache.containsKey(name)) {
-            final Set<String> alias = new HashSet<String>();
-            for (final ExecutorAlias executorAlias : executorAliases) {
-                alias.addAll(executorAlias.getAlias(name));
-            }
-            aliasCache.put(name, alias);
-        }
-
-        return aliasCache.get(name);
     }
 
     /**

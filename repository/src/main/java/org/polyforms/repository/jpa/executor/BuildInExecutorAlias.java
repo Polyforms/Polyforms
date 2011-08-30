@@ -1,11 +1,8 @@
 package org.polyforms.repository.jpa.executor;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import javax.inject.Named;
 
@@ -19,28 +16,21 @@ import org.polyforms.repository.spi.ExecutorAlias;
  */
 @Named
 public class BuildInExecutorAlias implements ExecutorAlias {
-    private final Map<String, Set<String>> alias = new HashMap<String, Set<String>>();
+    private final Map<String, String[]> alias = new HashMap<String, String[]>();
 
     /**
      * Create a default instance.
      */
     public BuildInExecutorAlias() {
-        alias.put("save", asSet(new String[] { "create", "persist" }));
-        alias.put("delete", asSet(new String[] { "remove" }));
-    }
-
-    private Set<String> asSet(final String[] alias) {
-        return new HashSet<String>(Arrays.asList(alias));
+        alias.put("save", new String[] { "create", "persist" });
+        alias.put("update", new String[] { "merge" });
+        alias.put("delete", new String[] { "remove" });
     }
 
     /**
      * {@inheritDoc}
      */
-    public Set<String> getAlias(final String name) {
-        if (!alias.containsKey(name)) {
-            return Collections.emptySet();
-        }
-
-        return Collections.unmodifiableSet(alias.get(name));
+    public Map<String, String[]> getAlias() {
+        return Collections.unmodifiableMap(alias);
     }
 }
