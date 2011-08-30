@@ -9,7 +9,7 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.polyforms.repository.ExecutorPrefixHolder;
+import org.polyforms.repository.ExecutorPrefix;
 import org.polyforms.repository.spi.Executor;
 import org.polyforms.repository.spi.ExecutorFinder;
 import org.slf4j.Logger;
@@ -27,13 +27,13 @@ public final class NameBasedExecutorFinder implements ExecutorFinder {
     private static final Logger LOGGER = LoggerFactory.getLogger(NameBasedExecutorFinder.class);
     private final Map<String, Executor> executors = new HashMap<String, Executor>();
     private final Map<String, Executor> wildcardExecutors = new HashMap<String, Executor>();
-    private final ExecutorPrefixHolder executorAliasHolder;
+    private final ExecutorPrefix executorAliasHolder;
 
     /**
      * Create an instance with {@link Executor}s.
      */
     @Inject
-    public NameBasedExecutorFinder(final Set<Executor> executors, final ExecutorPrefixHolder executorAliasHolder) {
+    public NameBasedExecutorFinder(final Set<Executor> executors, final ExecutorPrefix executorAliasHolder) {
         this.executorAliasHolder = executorAliasHolder;
 
         for (final Executor executor : executors) {

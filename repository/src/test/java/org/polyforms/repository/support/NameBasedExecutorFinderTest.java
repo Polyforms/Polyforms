@@ -9,14 +9,14 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.polyforms.repository.ExecutorPrefixHolder;
+import org.polyforms.repository.ExecutorPrefix;
 import org.polyforms.repository.spi.Executor;
 import org.polyforms.repository.spi.ExecutorFinder;
 
 public class NameBasedExecutorFinderTest {
     private final Executor get = new Get();
     private final Executor getBy = new GetBy();
-    private ExecutorPrefixHolder executorPrefixHolder;
+    private ExecutorPrefix executorPrefixHolder;
     private ExecutorFinder executorFinder;
     private Set<String> executorPrefix;
 
@@ -30,7 +30,7 @@ public class NameBasedExecutorFinderTest {
         executors.add(get);
         executors.add(getBy);
 
-        executorPrefixHolder = EasyMock.createMock(ExecutorPrefixHolder.class);
+        executorPrefixHolder = EasyMock.createMock(ExecutorPrefix.class);
         executorPrefixHolder.isWildcard("get");
         EasyMock.expectLastCall().andReturn(false);
         executorPrefixHolder.getPrefix("get");

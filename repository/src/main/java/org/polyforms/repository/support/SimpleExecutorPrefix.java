@@ -1,6 +1,5 @@
 package org.polyforms.repository.support;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -10,23 +9,25 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.polyforms.repository.ExecutorPrefixHolder;
-import org.polyforms.repository.spi.ExecutorPrefix;
+import org.polyforms.repository.ExecutorPrefix;
+import org.polyforms.repository.spi.ExecutorAlias;
 
 @Named
-public class SimpleExecutorPrefixHolder implements ExecutorPrefixHolder {
+public class SimpleExecutorPrefix implements ExecutorPrefix {
     private static final String WILDCARD_SUFFIX = "By";
     private final Map<String, Set<String>> prefix = new HashMap<String, Set<String>>();
 
     @Inject
-    public SimpleExecutorPrefixHolder(final Set<ExecutorPrefix> executorPrefixes) {
-        for (final ExecutorPrefix executorPrefix : executorPrefixes) {
-            final Map<String, String[]> partPrefix = executorPrefix.getPrefix();
-            for (final String name : partPrefix.keySet()) {
+    public SimpleExecutorPrefix(final Set<ExecutorAlias> executorAliases) {
+        for (final ExecutorAlias executorAlias : executorAliases) {
+            final Map<String, String[]> partAlias = executorAlias.getAlias();
+            for (final String name : partAlias.keySet()) {
                 if (!prefix.containsKey(name)) {
                     addExecutorPrefix(name);
                 }
-                prefix.get(name).addAll(asSet(partPrefix.get(name)));
+                for (final String alias : partAlias.get(name)) {
+                    prefix.get(name).add(alias);
+                }
             }
         }
     }
@@ -35,10 +36,6 @@ public class SimpleExecutorPrefixHolder implements ExecutorPrefixHolder {
         final HashSet<String> prefixSet = new HashSet<String>();
         prefixSet.add(name);
         prefix.put(name, prefixSet);
-    }
-
-    private Set<String> asSet(final String[] alias) {
-        return new HashSet<String>(Arrays.asList(alias));
     }
 
     public Set<String> getPrefix(final String name) {
