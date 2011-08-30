@@ -154,7 +154,7 @@ class JpqlStringBuffer {
 
     public void appendProperty() {
         jpql.append("e");
-        for (String property : splitProperty(lastProperty)) {
+        for (final String property : splitProperty(lastProperty)) {
             jpql.append(".");
             jpql.append(StringUtils.uncapitalize(property));
         }
@@ -184,7 +184,7 @@ class JpqlStringBuffer {
         final String[] tokens = CAMEL_CASE.split(propertyString);
         int index = tokens.length;
         do {
-            String token = tokens[--index];
+            final String token = tokens[--index];
             property = property.substring(0, propertyString.lastIndexOf(token));
 
             field = ReflectionUtils.findField(clazz, property);

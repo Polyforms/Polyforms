@@ -14,7 +14,8 @@ public final class PackageRepositoryMatcher implements RepositoryMatcher {
 
     public PackageRepositoryMatcher(final String[] basePackages) {
         Assert.notEmpty(basePackages);
-        this.basePackages = basePackages;
+        this.basePackages = new String[basePackages.length];
+        System.arraycopy(basePackages, 0, this.basePackages, 0, basePackages.length);
     }
 
     /**

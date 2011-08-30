@@ -55,7 +55,7 @@ public class GenericsUtilsTest {
         Assert.assertNull(GenericsUtils.resolveTypeArguments(TestGenericBean.class));
     }
 
-    private static abstract class TestBean {
+    private static abstract class TestBean implements Appendable {
     }
 
     private static interface TestGenericInterface<T, T2> {
