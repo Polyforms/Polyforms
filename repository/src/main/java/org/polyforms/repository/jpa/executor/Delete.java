@@ -15,7 +15,7 @@ import org.polyforms.repository.spi.Executor;
  * @since 1.0
  */
 @Named
-public final class Remove implements Executor {
+public final class Delete implements Executor {
     @PersistenceContext
     private EntityManager entityManager;
 

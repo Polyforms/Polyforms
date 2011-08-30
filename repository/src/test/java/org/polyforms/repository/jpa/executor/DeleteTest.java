@@ -10,7 +10,7 @@ import org.junit.Test;
 import org.polyforms.repository.spi.Executor;
 import org.springframework.test.util.ReflectionTestUtils;
 
-public class RemoveTest {
+public class DeleteTest {
     private final Object repository = new Object();
 
     private EntityManager entityManager;
@@ -18,7 +18,7 @@ public class RemoveTest {
 
     @Before
     public void setUp() {
-        executor = new Remove();
+        executor = new Delete();
 
         entityManager = EasyMock.createMock(EntityManager.class);
         ReflectionTestUtils.setField(executor, "entityManager", entityManager);

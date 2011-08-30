@@ -26,8 +26,7 @@ public class BuildInExecutorAlias implements ExecutorAlias {
      */
     public BuildInExecutorAlias() {
         alias.put("save", asSet(new String[] { "create", "persist" }));
-        alias.put("remove", asSet(new String[] { "delete" }));
-        alias.put("update", asSet(new String[] { "delete", "remove" }));
+        alias.put("delete", asSet(new String[] { "remove" }));
     }
 
     private Set<String> asSet(final String[] alias) {

@@ -9,24 +9,27 @@ import org.polyforms.repository.jpa.QueryParameterBinder;
 import org.polyforms.repository.spi.EntityClassResolver;
 
 /**
- * Implementation of method which updates entities.
+ * Implementation of find method which returns count of matching entities.
  * 
  * @author Kuisong Tong
  * @since 1.0
  */
 @Named
-public final class UpdateBy extends QueryExecutor {
+public final class CountBy extends QueryExecutor {
     /**
-     * Create an instance with {@link QueryBuilder} and {@link QueryParameterBinder}.
+     * Create an instance with {@link EntityClassResolver}.
      */
     @Inject
-    public UpdateBy(final EntityClassResolver entityClassResolver, final QueryBuilder queryBuilder,
+    public CountBy(final EntityClassResolver entityClassResolver, final QueryBuilder queryBuilder,
             final QueryParameterBinder queryParameterBinder) {
         super(entityClassResolver, queryBuilder, queryParameterBinder);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected Object getResult(final Query query) {
-        return query.executeUpdate();
+        return query.getResultList();
     }
 }

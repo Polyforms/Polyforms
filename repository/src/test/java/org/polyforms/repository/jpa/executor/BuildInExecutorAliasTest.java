@@ -18,17 +18,9 @@ public class BuildInExecutorAliasTest {
     }
 
     @Test
-    public void removeAlias() {
-        final Set<String> alias = executorAlias.getAlias("remove");
+    public void deleteAlias() {
+        final Set<String> alias = executorAlias.getAlias("delete");
         Assert.assertEquals(1, alias.size());
-        Assert.assertTrue(alias.contains("delete"));
-    }
-
-    @Test
-    public void updateAlias() {
-        final Set<String> alias = executorAlias.getAlias("update");
-        Assert.assertEquals(2, alias.size());
-        Assert.assertTrue(alias.contains("delete"));
         Assert.assertTrue(alias.contains("remove"));
     }
 

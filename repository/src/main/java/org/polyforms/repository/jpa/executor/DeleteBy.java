@@ -9,18 +9,18 @@ import org.polyforms.repository.jpa.QueryParameterBinder;
 import org.polyforms.repository.spi.EntityClassResolver;
 
 /**
- * Implementation of method which updates entities.
+ * Implementation of method which delete entities.
  * 
  * @author Kuisong Tong
  * @since 1.0
  */
 @Named
-public final class UpdateBy extends QueryExecutor {
+public final class DeleteBy extends QueryExecutor {
     /**
      * Create an instance with {@link QueryBuilder} and {@link QueryParameterBinder}.
      */
     @Inject
-    public UpdateBy(final EntityClassResolver entityClassResolver, final QueryBuilder queryBuilder,
+    public DeleteBy(final EntityClassResolver entityClassResolver, final QueryBuilder queryBuilder,
             final QueryParameterBinder queryParameterBinder) {
         super(entityClassResolver, queryBuilder, queryParameterBinder);
     }
