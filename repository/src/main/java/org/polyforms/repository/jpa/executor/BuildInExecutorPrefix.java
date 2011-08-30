@@ -6,22 +6,22 @@ import java.util.Map;
 
 import javax.inject.Named;
 
-import org.polyforms.repository.spi.ExecutorAlias;
+import org.polyforms.repository.spi.ExecutorPrefix;
 
 /**
- * Implementation of {@link ExecutorAlias} for build in executors.
+ * Implementation of {@link ExecutorPrefix} for build in executors.
  * 
  * @author Kuisong Tong
  * @since 1.0
  */
 @Named
-public class BuildInExecutorAlias implements ExecutorAlias {
+public class BuildInExecutorPrefix implements ExecutorPrefix {
     private final Map<String, String[]> alias = new HashMap<String, String[]>();
 
     /**
      * Create a default instance.
      */
-    public BuildInExecutorAlias() {
+    public BuildInExecutorPrefix() {
         alias.put("save", new String[] { "create", "persist" });
         alias.put("update", new String[] { "merge" });
         alias.put("delete", new String[] { "remove" });
@@ -30,7 +30,7 @@ public class BuildInExecutorAlias implements ExecutorAlias {
     /**
      * {@inheritDoc}
      */
-    public Map<String, String[]> getAlias() {
+    public Map<String, String[]> getPrefix() {
         return Collections.unmodifiableMap(alias);
     }
 }

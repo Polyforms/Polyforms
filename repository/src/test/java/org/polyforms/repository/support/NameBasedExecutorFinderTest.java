@@ -1,7 +1,6 @@
 package org.polyforms.repository.support;
 
 import java.lang.reflect.Method;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -10,33 +9,44 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.polyforms.repository.ExecutorAliasHolder;
+import org.polyforms.repository.ExecutorPrefixHolder;
 import org.polyforms.repository.spi.Executor;
 import org.polyforms.repository.spi.ExecutorFinder;
 
 public class NameBasedExecutorFinderTest {
     private final Executor get = new Get();
     private final Executor getBy = new GetBy();
-    private ExecutorAliasHolder executorAliasHolder;
+    private ExecutorPrefixHolder executorPrefixHolder;
     private ExecutorFinder executorFinder;
+    private Set<String> executorPrefix;
 
     @Before
     public void setUp() {
+        executorPrefix = new HashSet<String>();
+        executorPrefix.add("get");
+        executorPrefix.add("load");
+
         final Set<Executor> executors = new HashSet<Executor>();
         executors.add(get);
         executors.add(getBy);
 
-        executorAliasHolder = EasyMock.createMock(ExecutorAliasHolder.class);
-        executorAliasHolder.getAlias("get");
-        EasyMock.expectLastCall().andReturn(Collections.singleton("load")).times(2);
-        EasyMock.replay(executorAliasHolder);
+        executorPrefixHolder = EasyMock.createMock(ExecutorPrefixHolder.class);
+        executorPrefixHolder.isWildcard("get");
+        EasyMock.expectLastCall().andReturn(false);
+        executorPrefixHolder.getPrefix("get");
+        EasyMock.expectLastCall().andReturn(executorPrefix);
+        executorPrefixHolder.isWildcard("getBy");
+        EasyMock.expectLastCall().andReturn(true);
+        executorPrefixHolder.getPrefix("getBy");
+        EasyMock.expectLastCall().andReturn(executorPrefix);
+        EasyMock.replay(executorPrefixHolder);
 
-        executorFinder = new NameBasedExecutorFinder(executors, executorAliasHolder);
+        executorFinder = new NameBasedExecutorFinder(executors, executorPrefixHolder);
     }
 
     @After
     public void tearDown() {
-        EasyMock.verify(executorAliasHolder);
+        EasyMock.verify(executorPrefixHolder);
     }
 
     @Test

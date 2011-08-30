@@ -9,7 +9,7 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.polyforms.repository.ExecutorAliasHolder;
+import org.polyforms.repository.ExecutorPrefixHolder;
 import org.polyforms.repository.spi.Executor;
 import org.polyforms.repository.spi.ExecutorFinder;
 import org.slf4j.Logger;
@@ -25,24 +25,23 @@ import org.springframework.util.StringUtils;
 @Named
 public final class NameBasedExecutorFinder implements ExecutorFinder {
     private static final Logger LOGGER = LoggerFactory.getLogger(NameBasedExecutorFinder.class);
-    private static final String WILDCARD_SUFFIX = "By";
     private final Map<String, Executor> executors = new HashMap<String, Executor>();
     private final Map<String, Executor> wildcardExecutors = new HashMap<String, Executor>();
-    private final ExecutorAliasHolder executorAliasHolder;
+    private final ExecutorPrefixHolder executorAliasHolder;
 
     /**
      * Create an instance with {@link Executor}s.
      */
     @Inject
-    public NameBasedExecutorFinder(final Set<Executor> executors, final ExecutorAliasHolder executorAliasHolder) {
+    public NameBasedExecutorFinder(final Set<Executor> executors, final ExecutorPrefixHolder executorAliasHolder) {
         this.executorAliasHolder = executorAliasHolder;
 
         for (final Executor executor : executors) {
             final String executorName = executor.getClass().getSimpleName();
             final String name = StringUtils.uncapitalize(executorName);
-            if (name.endsWith(WILDCARD_SUFFIX)) {
+            if (executorAliasHolder.isWildcard(name)) {
                 LOGGER.info("Add wildcard executor {}.", executorName);
-                mapExecutor(wildcardExecutors, name.substring(0, name.length() - WILDCARD_SUFFIX.length()), executor);
+                mapExecutor(wildcardExecutors, name, executor);
             } else {
                 LOGGER.info("Add executor {}.", executorName);
                 mapExecutor(this.executors, name, executor);
@@ -51,10 +50,9 @@ public final class NameBasedExecutorFinder implements ExecutorFinder {
     }
 
     private void mapExecutor(final Map<String, Executor> executors, final String name, final Executor executor) {
-        executors.put(name, executor);
-        for (final String alias : executorAliasHolder.getAlias(name)) {
-            LOGGER.debug("Add alias {} for executor {}.", alias, name);
-            executors.put(alias, executor);
+        for (final String prefix : executorAliasHolder.getPrefix(name)) {
+            LOGGER.debug("Add alias {} for executor {}.", prefix, name);
+            executors.put(prefix, executor);
         }
     }
 

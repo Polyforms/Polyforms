@@ -8,33 +8,36 @@ import java.util.Set;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.polyforms.repository.ExecutorAliasHolder;
-import org.polyforms.repository.spi.ExecutorAlias;
+import org.polyforms.repository.ExecutorPrefixHolder;
+import org.polyforms.repository.spi.ExecutorPrefix;
 
 public class SimpleExecutorAliasHolderTest {
-    private final ExecutorAlias executorAlias = new ExecutorAlias() {
-        public Map<String, String[]> getAlias() {
-            final Map<String, String[]> alias = new HashMap<String, String[]>();
-            alias.put("get", new String[] { "load" });
-            return alias;
+    private final ExecutorPrefix executorPrefix = new ExecutorPrefix() {
+        public Map<String, String[]> getPrefix() {
+            final Map<String, String[]> prefix = new HashMap<String, String[]>();
+            prefix.put("get", new String[] { "load" });
+            return prefix;
         }
     };
-    private ExecutorAliasHolder executorAliasHolder;
+    private ExecutorPrefixHolder executorPrefixHolder;
 
     @Before
     public void setUp() {
-        executorAliasHolder = new SimpleExecutorAliasHolder(Collections.singleton(executorAlias));
+        executorPrefixHolder = new SimpleExecutorPrefixHolder(Collections.singleton(executorPrefix));
     }
 
     @Test
-    public void getAlias() {
-        final Set<String> alias = executorAliasHolder.getAlias("get");
-        Assert.assertEquals(1, alias.size());
-        Assert.assertTrue(alias.contains("load"));
+    public void getPrefix() {
+        final Set<String> prefix = executorPrefixHolder.getPrefix("get");
+        Assert.assertEquals(2, prefix.size());
+        Assert.assertTrue(prefix.contains("get"));
+        Assert.assertTrue(prefix.contains("load"));
     }
 
     @Test
-    public void getNotExistAlias() {
-        Assert.assertTrue(executorAliasHolder.getAlias("notExist").isEmpty());
+    public void getNotExistPrefix() {
+        final Set<String> prefix = executorPrefixHolder.getPrefix("notExist");
+        Assert.assertEquals(1, prefix.size());
+        Assert.assertTrue(prefix.contains("notExist"));
     }
 }
