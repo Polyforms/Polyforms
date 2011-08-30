@@ -19,7 +19,7 @@ class JpqlQueryStringBuilder implements QueryResolver {
     private static final String ENTITY_CLASS_PLACE_HOLDER = "{ENTITY_CLASS_HOLDER}";
     private static final String ORDER_BY = "OrderBy";
     private static final String BY = "By";
-    private final Map<String, String> queryStringCache = new HashMap<String, String>();
+    private final Map<Method, String> queryStringCache = new HashMap<Method, String>();
     private final Pattern pattern;
 
     public JpqlQueryStringBuilder() {
@@ -46,10 +46,10 @@ class JpqlQueryStringBuilder implements QueryResolver {
             if (StringUtils.hasText(parts[2])) {
                 appendOrderClause(jpql, parts[2]);
             }
-            queryStringCache.put(methodName, jpql.getJpql());
+            queryStringCache.put(method, jpql.getJpql());
         }
 
-        return queryStringCache.get(methodName).replace(ENTITY_CLASS_PLACE_HOLDER, entityClass.getSimpleName());
+        return queryStringCache.get(method).replace(ENTITY_CLASS_PLACE_HOLDER, entityClass.getSimpleName());
     }
 
     private String[] split(final String methodName) {

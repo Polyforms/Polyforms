@@ -41,7 +41,7 @@ public abstract class UndelegatedRepositoryIT extends RepositoryIT {
 
     @Test(expected = UnsupportedOperationException.class)
     public void uncompletedMethodName() {
-        unsupportedRepository.update();
+        unsupportedRepository.count();
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -73,7 +73,7 @@ interface UnsupportedRepository extends Repository<MockEntity> {
 
     List<MockEntity> findByNothing();
 
-    List<MockEntity> update();
+    long count();
 }
 
 @Component
