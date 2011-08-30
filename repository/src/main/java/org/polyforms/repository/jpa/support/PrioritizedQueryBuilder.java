@@ -10,6 +10,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import org.polyforms.repository.jpa.QueryBuilder;
+import org.polyforms.repository.spi.Executor;
 
 @Named
 public class PrioritizedQueryBuilder implements QueryBuilder {
@@ -27,10 +28,10 @@ public class PrioritizedQueryBuilder implements QueryBuilder {
         return queryBuilders;
     }
 
-    public Query build(final Class<?> entityClass, final Method method) {
+    public Query build(final Executor executor, final Class<?> entityClass, final Method method) {
         for (final QueryBuilder queryBuilder : getqueryBuilders()) {
             try {
-                return queryBuilder.build(entityClass, method);
+                return queryBuilder.build(executor, entityClass, method);
             } catch (final IllegalArgumentException e) {
                 // Ignore to build with next query builder
             }

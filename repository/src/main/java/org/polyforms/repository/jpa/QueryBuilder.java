@@ -4,6 +4,8 @@ import java.lang.reflect.Method;
 
 import javax.persistence.Query;
 
+import org.polyforms.repository.spi.Executor;
+
 /**
  * Strategy of build query for specific method.
  * 
@@ -20,5 +22,5 @@ public interface QueryBuilder {
      * 
      * @throws IllegalArgumentException if cannot build
      */
-    Query build(Class<?> entityClass, Method method);
+    Query build(Executor executor, Class<?> entityClass, Method method);
 }

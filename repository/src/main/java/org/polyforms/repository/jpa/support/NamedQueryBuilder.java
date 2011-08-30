@@ -6,6 +6,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 import org.polyforms.repository.jpa.QueryBuilder;
+import org.polyforms.repository.spi.Executor;
 
 /**
  * Implementation of {@link QueryBuilder} for NamedQuery.
@@ -24,7 +25,7 @@ class NamedQueryBuilder implements QueryBuilder {
     /**
      * {@inheritDoc}
      */
-    public Query build(final Class<?> entityClass, final Method method) {
+    public Query build(final Executor executor, final Class<?> entityClass, final Method method) {
         final String queryName = queryNameResolver.getQuery(entityClass, method);
         return entityManager.createNamedQuery(queryName);
     }

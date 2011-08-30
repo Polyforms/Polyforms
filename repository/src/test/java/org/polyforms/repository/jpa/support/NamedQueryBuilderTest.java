@@ -37,7 +37,7 @@ public class NamedQueryBuilderTest {
         EasyMock.expectLastCall().andReturn(query);
         EasyMock.replay(queryNameResolver, entityManager);
 
-        Assert.assertSame(query, queryBuilder.build(null, method));
+        Assert.assertSame(query, queryBuilder.build(null, null, method));
         EasyMock.verify(queryNameResolver, entityManager);
     }
 }

@@ -32,7 +32,7 @@ public abstract class QueryExecutor implements Executor {
      */
     public final Object execute(final Object target, final Method method, final Object... arguments) {
         final Class<?> entityClass = entityClassResolver.resolve(target.getClass());
-        final Query query = queryBuilder.build(entityClass, method);
+        final Query query = queryBuilder.build(this, entityClass, method);
         queryParameterBinder.bind(query, method, arguments);
         return getResult(query);
     }

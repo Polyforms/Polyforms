@@ -34,7 +34,7 @@ public class JpqlQueryBuilderTest {
         EasyMock.expectLastCall().andReturn(query);
         EasyMock.replay(queryStringbuilder, entityManager);
 
-        Assert.assertSame(query, queryBuilder.build(null, null));
+        Assert.assertSame(query, queryBuilder.build(null, null, null));
         EasyMock.verify(queryStringbuilder, entityManager);
     }
 }

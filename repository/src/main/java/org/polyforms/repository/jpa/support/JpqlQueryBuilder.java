@@ -6,6 +6,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 import org.polyforms.repository.jpa.QueryBuilder;
+import org.polyforms.repository.spi.Executor;
 
 class JpqlQueryBuilder implements QueryBuilder {
     private final QueryResolver queryStringbuilder = new JpqlQueryStringBuilder();
@@ -18,7 +19,7 @@ class JpqlQueryBuilder implements QueryBuilder {
     /**
      * {@inheritDoc}
      */
-    public Query build(final Class<?> entityClass, final Method method) {
+    public Query build(final Executor executor, final Class<?> entityClass, final Method method) {
         final String queryString = queryStringbuilder.getQuery(entityClass, method);
         return entityManager.createQuery(queryString);
     }

@@ -35,21 +35,21 @@ public class PrioritizedQueryBuilderTest {
     @Test
     public void build() {
         final Query query = EasyMock.createMock(Query.class);
-        queryBuilder.build(null, null);
+        queryBuilder.build(null, null, null);
         EasyMock.expectLastCall().andReturn(query);
         EasyMock.replay(queryBuilder);
 
-        Assert.assertSame(query, prioritizedQueryBuilder.build(null, null));
+        Assert.assertSame(query, prioritizedQueryBuilder.build(null, null, null));
         EasyMock.verify(queryBuilder);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void cannotBuild() {
-        queryBuilder.build(null, null);
+        queryBuilder.build(null, null, null);
         EasyMock.expectLastCall().andThrow(new IllegalArgumentException());
         EasyMock.replay(queryBuilder);
 
-        prioritizedQueryBuilder.build(null, null);
+        prioritizedQueryBuilder.build(null, null, null);
         EasyMock.verify(queryBuilder);
     }
 }

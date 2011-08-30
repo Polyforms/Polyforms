@@ -46,7 +46,7 @@ public class QueryExecutorTest {
 
         entityClassResolver.resolve(Object.class);
         EasyMock.expectLastCall().andReturn(Object.class);
-        queryBuilder.build(Object.class, method);
+        queryBuilder.build(executor, Object.class, method);
         EasyMock.expectLastCall().andReturn(query);
         queryParameterBinder.bind(query, method, arguments);
         EasyMock.replay(entityClassResolver, queryBuilder, queryParameterBinder);
