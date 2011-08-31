@@ -30,6 +30,6 @@ public final class CountBy extends QueryExecutor {
      */
     @Override
     protected Object getResult(final Query query) {
-        return query.getResultList();
+        return query.getSingleResult();
     }
 }

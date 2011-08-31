@@ -9,10 +9,10 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.polyforms.repository.ExecutorPrefix;
-import org.polyforms.repository.spi.ExecutorAlias;
+import org.polyforms.repository.spi.ExecutorPrefixAlias;
 
 public class SimpleExecutorPrefixTest {
-    private final ExecutorAlias executorAlias = new ExecutorAlias() {
+    private final ExecutorPrefixAlias executorAlias = new ExecutorPrefixAlias() {
         public Map<String, String[]> getAlias() {
             final Map<String, String[]> prefix = new HashMap<String, String[]>();
             prefix.put("get", new String[] { "load" });
@@ -32,6 +32,11 @@ public class SimpleExecutorPrefixTest {
         Assert.assertEquals(2, prefix.size());
         Assert.assertTrue(prefix.contains("get"));
         Assert.assertTrue(prefix.contains("load"));
+    }
+
+    @Test
+    public void convertToPrefix() {
+        Assert.assertEquals("get", executorPrefix.convertToPrefix("getBy"));
     }
 
     @Test

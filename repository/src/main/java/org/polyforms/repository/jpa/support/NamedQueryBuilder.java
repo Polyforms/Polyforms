@@ -2,11 +2,12 @@ package org.polyforms.repository.jpa.support;
 
 import java.lang.reflect.Method;
 
+import javax.inject.Named;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import org.polyforms.repository.jpa.QueryBuilder;
-import org.polyforms.repository.spi.Executor;
 
 /**
  * Implementation of {@link QueryBuilder} for NamedQuery.
@@ -14,19 +15,19 @@ import org.polyforms.repository.spi.Executor;
  * @author Kuisong Tong
  * @since 1.0
  */
-class NamedQueryBuilder implements QueryBuilder {
-    private final QueryResolver queryNameResolver = new EntityClassPrefixingQueryNameResolver();
-    private final EntityManager entityManager;
-
-    public NamedQueryBuilder(final EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
+@Named
+class NamedQueryBuilder {
+    @PersistenceContext
+    private EntityManager entityManager;
 
     /**
      * {@inheritDoc}
      */
-    public Query build(final Executor executor, final Class<?> entityClass, final Method method) {
-        final String queryName = queryNameResolver.getQuery(entityClass, method);
-        return entityManager.createNamedQuery(queryName);
+    public Query build(final Class<?> entityClass, final Method method) {
+        try {
+            return entityManager.createNamedQuery(entityClass.getSimpleName() + "." + method.getName());
+        } catch (final IllegalArgumentException e) {
+            return null;
+        }
     }
 }

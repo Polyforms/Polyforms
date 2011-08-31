@@ -1,7 +1,6 @@
 package org.polyforms.repository.jpa.support;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -13,16 +12,16 @@ import java.util.regex.Pattern;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 
-class JpqlQueryStringBuilder implements QueryResolver {
+abstract class JpqlQueryStringBuilder {
+    protected static final String ENTITY_CLASS_PLACE_HOLDER = "{ENTITY_CLASS_PLACE_HOLDER}";
+    protected static final Pattern PATTERN;
     private static final int NUMBER_OF_PARTS = 3;
     private static final String EMPTY_STRING = "";
-    private static final String ENTITY_CLASS_PLACE_HOLDER = "{ENTITY_CLASS_HOLDER}";
     private static final String ORDER_BY = "OrderBy";
     private static final String BY = "By";
-    private final Map<Method, String> queryStringCache = new HashMap<Method, String>();
-    private final Pattern pattern;
+    private final Map<String, String> queryStringCache = new HashMap<String, String>();
 
-    public JpqlQueryStringBuilder() {
+    static {
         final StringBuffer keyWords = new StringBuffer();
         for (final KeyWord keyWord : KeyWord.values()) {
             if (keyWords.length() > 0) {
@@ -30,13 +29,12 @@ class JpqlQueryStringBuilder implements QueryResolver {
             }
             keyWords.append(keyWord.name());
         }
-        pattern = Pattern.compile(String.format("(?<=[a-z])((?<=%1$s)|(?=%1$s))", keyWords.toString()));
+        PATTERN = Pattern.compile(String.format("(?<=[a-z])((?<=%1$s)|(?=%1$s))", keyWords.toString()));
     }
 
-    public String getQuery(final Class<?> entityClass, final Method method) {
-        final String methodName = StringUtils.capitalize(method.getName());
-        if (!queryStringCache.containsKey(methodName)) {
-            final String[] parts = split(methodName);
+    public String getQuery(final Class<?> entityClass, final String queryString) {
+        if (!queryStringCache.containsKey(queryString)) {
+            final String[] parts = split(StringUtils.capitalize(queryString));
 
             final JpqlStringBuffer jpql = new JpqlStringBuffer(entityClass);
             appendSelectClause(jpql, parts[0]);
@@ -46,11 +44,13 @@ class JpqlQueryStringBuilder implements QueryResolver {
             if (StringUtils.hasText(parts[2])) {
                 appendOrderClause(jpql, parts[2]);
             }
-            queryStringCache.put(method, jpql.getJpql());
+            queryStringCache.put(queryString, jpql.getJpql());
         }
 
-        return queryStringCache.get(method).replace(ENTITY_CLASS_PLACE_HOLDER, entityClass.getSimpleName());
+        return queryStringCache.get(queryString).replace(ENTITY_CLASS_PLACE_HOLDER, entityClass.getSimpleName());
     }
+
+    protected abstract void appendSelectClause(final JpqlStringBuffer jpql, final String selectClause);
 
     private String[] split(final String methodName) {
         int orderByPosition = methodName.indexOf(ORDER_BY);
@@ -71,20 +71,10 @@ class JpqlQueryStringBuilder implements QueryResolver {
         return parts;
     }
 
-    private void appendSelectClause(final JpqlStringBuffer jpql, final String selectClause) {
-        jpql.appendToken("SELECT");
-        if (selectClause.contains(KeyWord.Distinct.name())) {
-            jpql.appendKeyWord(KeyWord.Distinct, false);
-        }
-        jpql.appendToken("e FROM");
-        jpql.appendToken(ENTITY_CLASS_PLACE_HOLDER);
-        jpql.appendToken("e");
-    }
-
     private void appendWhereClause(final JpqlStringBuffer jpql, final String whereClause) {
         jpql.appendToken("WHERE");
         boolean not = false;
-        for (final String token : pattern.split(whereClause)) {
+        for (final String token : PATTERN.split(whereClause)) {
             try {
                 final KeyWord keyWord = KeyWord.valueOf(token);
                 if (KeyWord.Not == keyWord) {
@@ -110,7 +100,7 @@ class JpqlQueryStringBuilder implements QueryResolver {
 
     private void appendOrderClause(final JpqlStringBuffer jpql, final String orderClause) {
         jpql.appendToken("ORDER BY");
-        for (final String token : pattern.split(orderClause)) {
+        for (final String token : PATTERN.split(orderClause)) {
             try {
                 jpql.appendKeyWord(KeyWord.valueOf(token), false);
             } catch (final IllegalArgumentException e) {
@@ -119,7 +109,6 @@ class JpqlQueryStringBuilder implements QueryResolver {
             }
         }
     }
-
 }
 
 class JpqlStringBuffer {

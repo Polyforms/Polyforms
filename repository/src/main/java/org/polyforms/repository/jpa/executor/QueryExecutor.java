@@ -16,6 +16,10 @@ import org.polyforms.repository.spi.Executor;
  * @since 1.0
  */
 public abstract class QueryExecutor implements Executor {
+    enum QueryType {
+        SELECT, UPDATE, DELETE, COUNT
+    }
+
     private final EntityClassResolver entityClassResolver;
     private final QueryBuilder queryBuilder;
     private final QueryParameterBinder queryParameterBinder;
@@ -32,7 +36,7 @@ public abstract class QueryExecutor implements Executor {
      */
     public final Object execute(final Object target, final Method method, final Object... arguments) {
         final Class<?> entityClass = entityClassResolver.resolve(target.getClass());
-        final Query query = queryBuilder.build(this, entityClass, method);
+        final Query query = queryBuilder.build(this.getClass().getSimpleName(), entityClass, method);
         queryParameterBinder.bind(query, method, arguments);
         return getResult(query);
     }

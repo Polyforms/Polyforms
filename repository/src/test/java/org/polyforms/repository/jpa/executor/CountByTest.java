@@ -15,7 +15,7 @@ public class CountByTest {
 
     @Before
     public void setUp() {
-        executor = new LoadBy(EasyMock.createMock(EntityClassResolver.class), EasyMock.createMock(QueryBuilder.class),
+        executor = new CountBy(EasyMock.createMock(EntityClassResolver.class), EasyMock.createMock(QueryBuilder.class),
                 EasyMock.createMock(QueryParameterBinder.class));
     }
 

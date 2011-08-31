@@ -30,12 +30,7 @@ public class QueryExecutorTest {
         queryParameterBinder = EasyMock.createMock(QueryParameterBinder.class);
 
         query = EasyMock.createMock(Query.class);
-        executor = new QueryExecutor(entityClassResolver, queryBuilder, queryParameterBinder) {
-            @Override
-            protected Object getResult(final Query query) {
-                return entities;
-            }
-        };
+        executor = new MockExecutor(entityClassResolver, queryBuilder, queryParameterBinder);
     }
 
     @Test
@@ -46,12 +41,24 @@ public class QueryExecutorTest {
 
         entityClassResolver.resolve(Object.class);
         EasyMock.expectLastCall().andReturn(Object.class);
-        queryBuilder.build(executor, Object.class, method);
+        queryBuilder.build("MockExecutor", Object.class, method);
         EasyMock.expectLastCall().andReturn(query);
         queryParameterBinder.bind(query, method, arguments);
         EasyMock.replay(entityClassResolver, queryBuilder, queryParameterBinder);
 
         Assert.assertSame(entities, executor.execute(repository, method, arguments));
         EasyMock.verify(entityClassResolver, queryBuilder, queryParameterBinder);
+    }
+
+    private final class MockExecutor extends QueryExecutor {
+        private MockExecutor(final EntityClassResolver entityClassResolver, final QueryBuilder queryBuilder,
+                final QueryParameterBinder queryParameterBinder) {
+            super(entityClassResolver, queryBuilder, queryParameterBinder);
+        }
+
+        @Override
+        protected Object getResult(final Query query) {
+            return entities;
+        }
     }
 }

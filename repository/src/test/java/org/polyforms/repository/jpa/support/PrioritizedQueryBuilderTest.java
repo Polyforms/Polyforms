@@ -1,8 +1,5 @@
 package org.polyforms.repository.jpa.support;
 
-import java.util.Collections;
-import java.util.List;
-
 import javax.persistence.Query;
 
 import org.easymock.EasyMock;
@@ -10,46 +7,40 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.polyforms.repository.jpa.QueryBuilder;
-import org.springframework.test.util.ReflectionTestUtils;
 
 public class PrioritizedQueryBuilderTest {
-    private QueryBuilder queryBuilder;
+    private NamedQueryBuilder namedQueryBuilder;
+    private JpqlQueryBuilder jpqlQueryBuilder;
     private QueryBuilder prioritizedQueryBuilder;
 
     @Before
     public void setUp() {
-        queryBuilder = EasyMock.createMock(QueryBuilder.class);
-        prioritizedQueryBuilder = new PrioritizedQueryBuilder();
-        ReflectionTestUtils.setField(prioritizedQueryBuilder, "queryBuilders", Collections.singletonList(queryBuilder));
+        namedQueryBuilder = EasyMock.createMock(NamedQueryBuilder.class);
+        jpqlQueryBuilder = EasyMock.createMock(JpqlQueryBuilder.class);
+        prioritizedQueryBuilder = new PrioritizedQueryBuilder(namedQueryBuilder, jpqlQueryBuilder);
     }
 
     @Test
-    public void getQueryBuilders() {
-        final PrioritizedQueryBuilder prioritizedQueryBuilder = new PrioritizedQueryBuilder();
-        final List<QueryBuilder> queryBuilders = prioritizedQueryBuilder.getqueryBuilders();
-        Assert.assertEquals(2, queryBuilders.size());
-        Assert.assertTrue(queryBuilders.get(0) instanceof NamedQueryBuilder);
-        Assert.assertTrue(queryBuilders.get(1) instanceof JpqlQueryBuilder);
-    }
-
-    @Test
-    public void build() {
+    public void buildByName() {
         final Query query = EasyMock.createMock(Query.class);
-        queryBuilder.build(null, null, null);
+        namedQueryBuilder.build(null, null);
         EasyMock.expectLastCall().andReturn(query);
-        EasyMock.replay(queryBuilder);
+        EasyMock.replay(namedQueryBuilder);
 
         Assert.assertSame(query, prioritizedQueryBuilder.build(null, null, null));
-        EasyMock.verify(queryBuilder);
+        EasyMock.verify(namedQueryBuilder);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void cannotBuild() {
-        queryBuilder.build(null, null, null);
-        EasyMock.expectLastCall().andThrow(new IllegalArgumentException());
-        EasyMock.replay(queryBuilder);
+    @Test
+    public void buildByJpql() {
+        final Query query = EasyMock.createMock(Query.class);
+        namedQueryBuilder.build(null, null);
+        EasyMock.expectLastCall().andReturn(null);
+        jpqlQueryBuilder.build(null, null, null);
+        EasyMock.expectLastCall().andReturn(query);
+        EasyMock.replay(namedQueryBuilder, jpqlQueryBuilder);
 
-        prioritizedQueryBuilder.build(null, null, null);
-        EasyMock.verify(queryBuilder);
+        Assert.assertSame(query, prioritizedQueryBuilder.build(null, null, null));
+        EasyMock.verify(namedQueryBuilder, jpqlQueryBuilder);
     }
 }

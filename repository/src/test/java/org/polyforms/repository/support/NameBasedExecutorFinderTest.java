@@ -31,13 +31,13 @@ public class NameBasedExecutorFinderTest {
         executors.add(getBy);
 
         executorPrefixHolder = EasyMock.createMock(ExecutorPrefix.class);
-        executorPrefixHolder.isWildcard("get");
+        executorPrefixHolder.isWildcard("Get");
         EasyMock.expectLastCall().andReturn(false);
-        executorPrefixHolder.getPrefix("get");
+        executorPrefixHolder.getPrefix("Get");
         EasyMock.expectLastCall().andReturn(executorPrefix);
-        executorPrefixHolder.isWildcard("getBy");
+        executorPrefixHolder.isWildcard("GetBy");
         EasyMock.expectLastCall().andReturn(true);
-        executorPrefixHolder.getPrefix("getBy");
+        executorPrefixHolder.getPrefix("GetBy");
         EasyMock.expectLastCall().andReturn(executorPrefix);
         EasyMock.replay(executorPrefixHolder);
 

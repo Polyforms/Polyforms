@@ -21,4 +21,6 @@ public interface MockEntityRepository extends Repository<MockEntity> {
     void removeByCode(String code);
 
     void findByQuery(String query, String code);
+
+    long count();
 }

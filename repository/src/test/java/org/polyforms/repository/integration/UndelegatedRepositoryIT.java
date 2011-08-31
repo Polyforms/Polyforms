@@ -39,11 +39,6 @@ public abstract class UndelegatedRepositoryIT extends RepositoryIT {
         unsupportedRepository.unsupportedMethod();
     }
 
-    @Test(expected = UnsupportedOperationException.class)
-    public void uncompletedMethodName() {
-        unsupportedRepository.count();
-    }
-
     @Test(expected = IllegalArgumentException.class)
     public void inExistentQuery() {
         unsupportedRepository.findByNothing();
@@ -72,8 +67,6 @@ interface UnsupportedRepository extends Repository<MockEntity> {
     void unsupportedMethod();
 
     List<MockEntity> findByNothing();
-
-    long count();
 }
 
 @Component

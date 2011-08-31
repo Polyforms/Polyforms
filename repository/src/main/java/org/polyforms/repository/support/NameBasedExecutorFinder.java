@@ -14,7 +14,6 @@ import org.polyforms.repository.spi.Executor;
 import org.polyforms.repository.spi.ExecutorFinder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
 
 /**
  * Strategy of finding {@link Executor} for specific method.
@@ -38,13 +37,12 @@ public final class NameBasedExecutorFinder implements ExecutorFinder {
 
         for (final Executor executor : executors) {
             final String executorName = executor.getClass().getSimpleName();
-            final String name = StringUtils.uncapitalize(executorName);
-            if (executorAliasHolder.isWildcard(name)) {
+            if (executorAliasHolder.isWildcard(executorName)) {
                 LOGGER.info("Add wildcard executor {}.", executorName);
-                mapExecutor(wildcardExecutors, name, executor);
+                mapExecutor(wildcardExecutors, executorName, executor);
             } else {
                 LOGGER.info("Add executor {}.", executorName);
-                mapExecutor(this.executors, name, executor);
+                mapExecutor(this.executors, executorName, executor);
             }
         }
     }
@@ -75,7 +73,7 @@ public final class NameBasedExecutorFinder implements ExecutorFinder {
 
     private Executor getWildcardExecutor(final String methodName) {
         for (final Entry<String, Executor> entry : wildcardExecutors.entrySet()) {
-            if (methodName.startsWith(entry.getKey()) && methodName.length() > entry.getKey().length()) {
+            if (methodName.startsWith(entry.getKey())) {
                 return entry.getValue();
             }
         }
