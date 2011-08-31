@@ -26,7 +26,7 @@ public class CountByTest {
         EasyMock.expectLastCall().andReturn(2L);
         EasyMock.replay(query);
 
-        Assert.assertSame(2L, executor.getResult(query));
+        Assert.assertSame(2L, executor.getResult(null, query));
         EasyMock.verify(query);
     }
 }

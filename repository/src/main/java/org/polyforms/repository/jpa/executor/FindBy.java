@@ -1,7 +1,11 @@
 package org.polyforms.repository.jpa.executor;
 
+import java.lang.reflect.Method;
+import java.util.Collection;
+
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 import org.polyforms.repository.jpa.QueryBuilder;
@@ -29,7 +33,17 @@ public final class FindBy extends QueryExecutor {
      * {@inheritDoc}
      */
     @Override
-    protected Object getResult(final Query query) {
-        return query.getResultList();
+    protected Object getResult(final Method method, final Query query) {
+        final Class<?> type = method.getReturnType();
+
+        if (Collection.class.isAssignableFrom(type)) {
+            return query.getResultList();
+        }
+
+        try {
+            return query.getSingleResult();
+        } catch (final NoResultException e) {
+            return null;
+        }
     }
 }

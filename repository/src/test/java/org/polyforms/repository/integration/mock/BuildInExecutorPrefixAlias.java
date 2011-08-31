@@ -1,4 +1,4 @@
-package org.polyforms.repository.jpa.executor;
+package org.polyforms.repository.integration.mock;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -22,9 +22,8 @@ public class BuildInExecutorPrefixAlias implements ExecutorPrefixAlias {
      * Create a default instance.
      */
     public BuildInExecutorPrefixAlias() {
-        alias.put("save", new String[] { "create", "persist" });
-        alias.put("update", new String[] { "merge" });
         alias.put("delete", new String[] { "remove" });
+        alias.put("find", new String[] { "get" });
     }
 
     /**

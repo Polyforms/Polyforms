@@ -3,6 +3,7 @@ package org.polyforms.repository.jpa.executor;
 import java.util.Collections;
 import java.util.List;
 
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 import org.easymock.EasyMock;
@@ -24,14 +25,46 @@ public class FindByTest {
     }
 
     @Test
-    public void find() {
+    public void find() throws NoSuchMethodException {
         final Query query = EasyMock.createMock(Query.class);
 
         query.getResultList();
         EasyMock.expectLastCall().andReturn(entities);
         EasyMock.replay(query);
 
-        Assert.assertSame(entities, executor.getResult(query));
+        Assert.assertSame(entities,
+                executor.getResult(Repository.class.getMethod("find", new Class<?>[] { Object[].class }), query));
         EasyMock.verify(query);
+    }
+
+    @Test
+    public void get() throws NoSuchMethodException {
+        final Object entity = new Object();
+
+        final Query query = EasyMock.createMock(Query.class);
+        query.getSingleResult();
+        EasyMock.expectLastCall().andReturn(entity);
+        EasyMock.replay(query);
+
+        Assert.assertSame(entity,
+                executor.getResult(Repository.class.getMethod("find", new Class<?>[] { Object.class }), query));
+        EasyMock.verify(query);
+    }
+
+    @Test
+    public void getWithoutResult() throws NoSuchMethodException {
+        final Query query = EasyMock.createMock(Query.class);
+        query.getSingleResult();
+        EasyMock.expectLastCall().andThrow(new NoResultException());
+        EasyMock.replay(query);
+
+        Assert.assertNull(executor.getResult(Repository.class.getMethod("find", new Class<?>[] { Object.class }), query));
+        EasyMock.verify(query);
+    }
+
+    private static interface Repository {
+        Object find(Object id);
+
+        List<Object> find(Object... ids);
     }
 }

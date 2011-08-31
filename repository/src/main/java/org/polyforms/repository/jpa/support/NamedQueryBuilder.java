@@ -7,10 +7,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
-import org.polyforms.repository.jpa.QueryBuilder;
-
 /**
- * Implementation of {@link QueryBuilder} for NamedQuery.
+ * Create Query from JPA NamedQuery. §
  * 
  * @author Kuisong Tong
  * @since 1.0

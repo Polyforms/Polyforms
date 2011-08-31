@@ -34,7 +34,7 @@ public class FindTest {
     }
 
     @Test
-    public void find() throws Exception {
+    public void find() throws NoSuchMethodException {
         final Object mockEntity = new Object();
 
         final List<Object> entities = Collections.singletonList(mockEntity);
@@ -52,12 +52,42 @@ public class FindTest {
         EasyMock.expectLastCall().andReturn(entities);
         EasyMock.replay(entityHelper, entityClassResolver, entityManager, query);
 
-        Assert.assertEquals(entities, executor.execute(repository, null, new Object[] { new Long[] { 1L } }));
+        Assert.assertEquals(entities, executor.execute(repository,
+                Repository.class.getMethod("find", new Class<?>[] { Object[].class }),
+                new Object[] { new Long[] { 1L } }));
         EasyMock.verify(entityHelper, entityClassResolver, entityManager, query);
     }
 
     @Test
-    public void findWithoutArguments() {
-        Assert.assertEquals(Collections.EMPTY_LIST, executor.execute(repository, null, new Object[0]));
+    public void get() throws NoSuchMethodException {
+        final Object mockEntity = new Object();
+
+        entityClassResolver.resolve(Object.class);
+        EasyMock.expectLastCall().andReturn(Object.class);
+        entityManager.find(Object.class, 1L);
+        EasyMock.expectLastCall().andReturn(mockEntity);
+        EasyMock.replay(entityClassResolver, entityManager);
+
+        Assert.assertEquals(mockEntity,
+                executor.execute(repository, Repository.class.getMethod("find", new Class<?>[] { Object.class }), 1L));
+        EasyMock.verify(entityClassResolver, entityManager);
+    }
+
+    @Test
+    public void findWithoutArguments() throws NoSuchMethodException {
+        Assert.assertEquals(Collections.EMPTY_LIST, executor.execute(repository,
+                Repository.class.getMethod("find", new Class<?>[] { Object[].class }), new Object[0]));
+    }
+
+    @Test
+    public void getWithoutArguments() throws NoSuchMethodException {
+        Assert.assertNull(executor.execute(repository,
+                Repository.class.getMethod("find", new Class<?>[] { Object.class }), new Object[0]));
+    }
+
+    private static interface Repository {
+        Object find(Object id);
+
+        List<Object> find(Object... ids);
     }
 }

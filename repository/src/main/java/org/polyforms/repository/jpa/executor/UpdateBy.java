@@ -1,5 +1,7 @@
 package org.polyforms.repository.jpa.executor;
 
+import java.lang.reflect.Method;
+
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.Query;
@@ -26,7 +28,7 @@ public final class UpdateBy extends QueryExecutor {
     }
 
     @Override
-    protected Object getResult(final Query query) {
+    protected Object getResult(final Method method, final Query query) {
         return query.executeUpdate();
     }
 }

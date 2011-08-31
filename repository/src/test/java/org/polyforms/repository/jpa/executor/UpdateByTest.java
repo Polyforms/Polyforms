@@ -26,7 +26,7 @@ public class UpdateByTest {
         EasyMock.expectLastCall().andReturn(2);
         EasyMock.replay(query);
 
-        Assert.assertEquals(2, executor.getResult(query));
+        Assert.assertEquals(2, executor.getResult(null, query));
         EasyMock.verify(query);
     }
 }

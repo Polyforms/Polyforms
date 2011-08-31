@@ -42,15 +42,30 @@ public class Find implements Executor {
      * {@inheritDoc}
      */
     public Object execute(final Object target, final Method method, final Object... arguments) {
-        if (arguments.length == 0) {
-            return Collections.EMPTY_LIST;
+        Object result = method.isVarArgs() ? Collections.EMPTY_LIST : null;
+
+        if (arguments.length > 0) {
+            final Object argument = arguments[0];
+            if (method.isVarArgs()) {
+                result = findByIds(target, argument);
+            } else {
+                result = findById(target, argument);
+            }
         }
 
+        return result;
+    }
+
+    private Object findById(final Object target, final Object argument) {
+        return entityManager.find(entityClassResolver.resolve(target.getClass()), argument);
+    }
+
+    private Object findByIds(final Object target, final Object argument) {
         final Class<?> entityClass = entityClassResolver.resolve(target.getClass());
         final String queryString = String.format(SQL_TEMPLATE, entityClass.getSimpleName(),
                 entityHelper.getIdentifierName(entityClass), PARAMETER_NAME);
         final Query query = entityManager.createQuery(queryString);
-        query.setParameter(PARAMETER_NAME, Arrays.asList((Object[]) arguments[0]));
+        query.setParameter(PARAMETER_NAME, Arrays.asList((Object[]) argument));
         return query.getResultList();
     }
 }

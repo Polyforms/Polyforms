@@ -57,7 +57,7 @@ public class QueryExecutorTest {
         }
 
         @Override
-        protected Object getResult(final Query query) {
+        protected Object getResult(final Method method, final Query query) {
             return entities;
         }
     }

@@ -59,3 +59,11 @@ public class SimpleExecutorPrefix implements ExecutorPrefix {
                 : name);
     }
 }
+
+@Named
+class EmptyExecutorPrefixAlias implements ExecutorPrefixAlias {
+    @SuppressWarnings("unchecked")
+    public Map<String, String[]> getAlias() {
+        return Collections.EMPTY_MAP;
+    }
+}
