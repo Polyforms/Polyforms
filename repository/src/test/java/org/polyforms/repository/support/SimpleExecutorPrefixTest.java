@@ -35,14 +35,24 @@ public class SimpleExecutorPrefixTest {
     }
 
     @Test
-    public void convertToPrefix() {
-        Assert.assertEquals("get", executorPrefix.convertToPrefix("getBy"));
+    public void removePrefix() {
+        Assert.assertEquals("ByName", executorPrefix.removePrefixifAvailable("getByName"));
+    }
+
+    @Test
+    public void notRemovePrefix() {
+        Assert.assertEquals("ByName", executorPrefix.removePrefixifAvailable("ByName"));
     }
 
     @Test
     public void getNotExistPrefix() {
-        final Set<String> prefix = executorPrefix.getPrefix("notExist");
+        final Set<String> prefix = executorPrefix.getPrefix("findBy");
         Assert.assertEquals(1, prefix.size());
-        Assert.assertTrue(prefix.contains("notExist"));
+        Assert.assertTrue(prefix.contains("find"));
+    }
+
+    @Test
+    public void emptyExecutorPrefixAlias() {
+        Assert.assertTrue(new EmptyExecutorPrefixAlias().getAlias().isEmpty());
     }
 }

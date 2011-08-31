@@ -11,15 +11,19 @@ import javax.persistence.Query;
  * @since 1.0
  */
 public interface QueryBuilder {
+    enum QueryType {
+        SELECT, UPDATE, DELETE, COUNT
+    }
+
     /**
      * Build {@link Query} from specified method.
      * 
-     * @param name of executor
+     * @param type of query
      * @param entityClass class of entity
      * @param method to create a query
      * @return Query built from method.
      * 
      * @throws IllegalArgumentException if cannot build
      */
-    Query build(String executorName, Class<?> entityClass, Method method);
+    Query build(QueryType type, Class<?> entityClass, Method method);
 }

@@ -9,6 +9,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import org.polyforms.repository.ExecutorPrefix;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -20,6 +21,7 @@ abstract class JpqlQueryStringBuilder {
     private static final String ORDER_BY = "OrderBy";
     private static final String BY = "By";
     private final Map<String, String> queryStringCache = new HashMap<String, String>();
+    private final ExecutorPrefix executorPrefix;
 
     static {
         final StringBuffer keyWords = new StringBuffer();
@@ -32,9 +34,13 @@ abstract class JpqlQueryStringBuilder {
         PATTERN = Pattern.compile(String.format("(?<=[a-z])((?<=%1$s)|(?=%1$s))", keyWords.toString()));
     }
 
-    public String getQuery(final Class<?> entityClass, final String queryString) {
+    protected JpqlQueryStringBuilder(final ExecutorPrefix executorPrefix) {
+        this.executorPrefix = executorPrefix;
+    }
+
+    protected String getQuery(final Class<?> entityClass, final String queryString) {
         if (!queryStringCache.containsKey(queryString)) {
-            final String[] parts = split(StringUtils.capitalize(queryString));
+            final String[] parts = split(nomalizeQueryString(queryString));
 
             final JpqlStringBuffer jpql = new JpqlStringBuffer(entityClass);
             appendSelectClause(jpql, parts[0]);
@@ -48,6 +54,10 @@ abstract class JpqlQueryStringBuilder {
         }
 
         return queryStringCache.get(queryString).replace(ENTITY_CLASS_PLACE_HOLDER, entityClass.getSimpleName());
+    }
+
+    private String nomalizeQueryString(final String queryString) {
+        return StringUtils.capitalize(executorPrefix.removePrefixifAvailable(queryString));
     }
 
     protected abstract void appendSelectClause(final JpqlStringBuffer jpql, final String selectClause);
@@ -120,28 +130,28 @@ class JpqlStringBuffer {
     private boolean newProperty;
     private String lastProperty;
 
-    public JpqlStringBuffer(final Class<?> entityClass) {
+    protected JpqlStringBuffer(final Class<?> entityClass) {
         this.entityClass = entityClass;
     }
 
-    public void appendKeyWord(final KeyWord keyWord, final boolean not) {
+    protected void appendKeyWord(final KeyWord keyWord, final boolean not) {
         appendToken(keyWord.getToken(not, indexHolder));
         newProperty = false;
     }
 
-    public void appendEqualsIfNecessary() {
+    protected void appendEqualsIfNecessary() {
         if (newProperty) {
             appendProperty();
             appendKeyWord(KeyWord.Equal, false);
         }
     }
 
-    public void newProperty(final String property) {
+    protected void newProperty(final String property) {
         lastProperty = property;
         newProperty = true;
     }
 
-    public void appendProperty() {
+    protected void appendProperty() {
         jpql.append("e");
         for (final String property : splitProperty(lastProperty)) {
             jpql.append(".");
@@ -192,12 +202,12 @@ class JpqlStringBuffer {
         return null;
     }
 
-    public void appendToken(final String token) {
+    protected void appendToken(final String token) {
         jpql.append(token);
         jpql.append(" ");
     }
 
-    public String getJpql() {
+    protected String getJpql() {
         return jpql.toString();
     }
 }
@@ -205,7 +215,7 @@ class JpqlStringBuffer {
 class IndexHolder {
     private int index = 1;
 
-    public int get() {
+    protected int get() {
         return index++;
     }
 }
@@ -259,7 +269,7 @@ enum KeyWord {
         notToken = token;
     }
 
-    public String getToken(final boolean not, final IndexHolder indexHoder) {
+    protected String getToken(final boolean not, final IndexHolder indexHoder) {
         final String result = not ? getNotToken() : getToken();
         return replacePositionalParameters(result, indexHoder);
     }

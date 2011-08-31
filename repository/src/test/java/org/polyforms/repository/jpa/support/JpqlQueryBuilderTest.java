@@ -1,6 +1,5 @@
 package org.polyforms.repository.jpa.support;
 
-import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -12,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.polyforms.repository.ExecutorPrefix;
 import org.polyforms.repository.jpa.EntityHelper;
+import org.polyforms.repository.jpa.QueryBuilder.QueryType;
 import org.springframework.test.util.ReflectionTestUtils;
 
 public class JpqlQueryBuilderTest {
@@ -32,17 +32,15 @@ public class JpqlQueryBuilderTest {
         final String queryString = "DELETE FROM MockEntity e WHERE e.name = ?1 ";
         final Query query = EasyMock.createMock(Query.class);
 
-        executorPrefix.convertToPrefix("Delete");
-        EasyMock.expectLastCall().andReturn("delete");
-        executorPrefix.getPrefix("Delete");
-        EasyMock.expectLastCall().andReturn(Collections.singleton("remove"));
+        executorPrefix.removePrefixifAvailable("deleteByName");
+        EasyMock.expectLastCall().andReturn("ByName");
         entityManager.createQuery(queryString);
         EasyMock.expectLastCall().andReturn(query);
         EasyMock.replay(executorPrefix, entityManager);
 
         Assert.assertSame(
                 query,
-                queryBuilder.build("Delete", MockEntity.class,
+                queryBuilder.build(QueryType.DELETE, MockEntity.class,
                         MockRepository.class.getMethod("deleteByName", new Class<?>[] { String.class })));
         EasyMock.verify(executorPrefix, entityManager);
     }
@@ -52,17 +50,15 @@ public class JpqlQueryBuilderTest {
         final String queryString = "SELECT e FROM MockEntity e WHERE e.name = ?1 ";
         final Query query = EasyMock.createMock(Query.class);
 
-        executorPrefix.convertToPrefix("FindBy");
-        EasyMock.expectLastCall().andReturn("find");
-        executorPrefix.getPrefix("FindBy");
-        EasyMock.expectLastCall().andReturn(Collections.singleton("find"));
+        executorPrefix.removePrefixifAvailable("findByName");
+        EasyMock.expectLastCall().andReturn("ByName");
         entityManager.createQuery(queryString);
         EasyMock.expectLastCall().andReturn(query);
         EasyMock.replay(executorPrefix, entityManager);
 
         Assert.assertSame(
                 query,
-                queryBuilder.build("FindBy", MockEntity.class,
+                queryBuilder.build(QueryType.SELECT, MockEntity.class,
                         MockRepository.class.getMethod("findByName", new Class<?>[] { String.class })));
         EasyMock.verify(executorPrefix, entityManager);
     }

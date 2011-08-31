@@ -19,10 +19,10 @@ public class PrioritizedQueryBuilder implements QueryBuilder {
         this.jpqlQueryBuilder = jpqlQueryBuilder;
     }
 
-    public Query build(final String executorName, final Class<?> entityClass, final Method method) {
+    public Query build(final QueryType type, final Class<?> entityClass, final Method method) {
         Query query = namedQueryBuilder.build(entityClass, method);
         if (query == null) {
-            query = jpqlQueryBuilder.build(executorName, entityClass, method);
+            query = jpqlQueryBuilder.build(type, entityClass, method);
         }
         return query;
     }

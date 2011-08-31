@@ -9,6 +9,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 import org.polyforms.repository.jpa.QueryBuilder;
+import org.polyforms.repository.jpa.QueryBuilder.QueryType;
 import org.polyforms.repository.jpa.QueryParameterBinder;
 import org.polyforms.repository.spi.EntityClassResolver;
 
@@ -45,5 +46,10 @@ public final class FindBy extends QueryExecutor {
         } catch (final NoResultException e) {
             return null;
         }
+    }
+
+    @Override
+    protected QueryType getQueryType() {
+        return QueryType.SELECT;
     }
 }

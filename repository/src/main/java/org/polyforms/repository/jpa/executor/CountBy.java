@@ -7,6 +7,7 @@ import javax.inject.Named;
 import javax.persistence.Query;
 
 import org.polyforms.repository.jpa.QueryBuilder;
+import org.polyforms.repository.jpa.QueryBuilder.QueryType;
 import org.polyforms.repository.jpa.QueryParameterBinder;
 import org.polyforms.repository.spi.EntityClassResolver;
 
@@ -33,5 +34,10 @@ public final class CountBy extends QueryExecutor {
     @Override
     protected Object getResult(final Method method, final Query query) {
         return query.getSingleResult();
+    }
+
+    @Override
+    protected QueryType getQueryType() {
+        return QueryType.COUNT;
     }
 }

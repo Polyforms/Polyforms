@@ -11,6 +11,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.polyforms.repository.jpa.QueryBuilder;
+import org.polyforms.repository.jpa.QueryBuilder.QueryType;
 import org.polyforms.repository.jpa.QueryParameterBinder;
 import org.polyforms.repository.spi.EntityClassResolver;
 import org.polyforms.repository.spi.Executor;
@@ -41,7 +42,7 @@ public class QueryExecutorTest {
 
         entityClassResolver.resolve(Object.class);
         EasyMock.expectLastCall().andReturn(Object.class);
-        queryBuilder.build("MockExecutor", Object.class, method);
+        queryBuilder.build(null, Object.class, method);
         EasyMock.expectLastCall().andReturn(query);
         queryParameterBinder.bind(query, method, arguments);
         EasyMock.replay(entityClassResolver, queryBuilder, queryParameterBinder);
@@ -59,6 +60,11 @@ public class QueryExecutorTest {
         @Override
         protected Object getResult(final Method method, final Query query) {
             return entities;
+        }
+
+        @Override
+        protected QueryType getQueryType() {
+            return null;
         }
     }
 }

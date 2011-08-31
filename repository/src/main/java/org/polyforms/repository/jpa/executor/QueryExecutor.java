@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import javax.persistence.Query;
 
 import org.polyforms.repository.jpa.QueryBuilder;
+import org.polyforms.repository.jpa.QueryBuilder.QueryType;
 import org.polyforms.repository.jpa.QueryParameterBinder;
 import org.polyforms.repository.spi.EntityClassResolver;
 import org.polyforms.repository.spi.Executor;
@@ -16,10 +17,6 @@ import org.polyforms.repository.spi.Executor;
  * @since 1.0
  */
 public abstract class QueryExecutor implements Executor {
-    enum QueryType {
-        SELECT, UPDATE, DELETE, COUNT
-    }
-
     private final EntityClassResolver entityClassResolver;
     private final QueryBuilder queryBuilder;
     private final QueryParameterBinder queryParameterBinder;
@@ -36,10 +33,12 @@ public abstract class QueryExecutor implements Executor {
      */
     public final Object execute(final Object target, final Method method, final Object... arguments) {
         final Class<?> entityClass = entityClassResolver.resolve(target.getClass());
-        final Query query = queryBuilder.build(this.getClass().getSimpleName(), entityClass, method);
+        final Query query = queryBuilder.build(getQueryType(), entityClass, method);
         queryParameterBinder.bind(query, method, arguments);
         return getResult(method, query);
     }
+
+    protected abstract QueryType getQueryType();
 
     protected abstract Object getResult(Method method, Query query);
 }

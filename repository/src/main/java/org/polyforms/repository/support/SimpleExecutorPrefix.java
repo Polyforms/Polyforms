@@ -42,7 +42,8 @@ public class SimpleExecutorPrefix implements ExecutorPrefix {
     }
 
     public Set<String> getPrefix(final String name) {
-        final String executorName = convertToPrefix(name);
+        final String executorName = StringUtils.uncapitalize(isWildcard(name) ? name.substring(0, name.length()
+                - WILDCARD_SUFFIX.length()) : name);
         if (!prefix.containsKey(executorName)) {
             addExecutorPrefix(executorName);
         }
@@ -54,9 +55,15 @@ public class SimpleExecutorPrefix implements ExecutorPrefix {
         return name.endsWith(WILDCARD_SUFFIX);
     }
 
-    public String convertToPrefix(final String name) {
-        return StringUtils.uncapitalize(isWildcard(name) ? name.substring(0, name.length() - WILDCARD_SUFFIX.length())
-                : name);
+    public String removePrefixifAvailable(final String string) {
+        for (final Set<String> alias : prefix.values()) {
+            for (final String candidate : alias) {
+                if (string.startsWith(candidate)) {
+                    return string.substring(candidate.length());
+                }
+            }
+        }
+        return string;
     }
 }
 

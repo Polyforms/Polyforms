@@ -11,6 +11,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.polyforms.repository.jpa.QueryBuilder;
+import org.polyforms.repository.jpa.QueryBuilder.QueryType;
 import org.polyforms.repository.jpa.QueryParameterBinder;
 import org.polyforms.repository.spi.EntityClassResolver;
 
@@ -66,5 +67,10 @@ public class FindByTest {
         Object find(Object id);
 
         List<Object> find(Object... ids);
+    }
+
+    @Test
+    public void getQueryType() {
+        Assert.assertSame(QueryType.SELECT, executor.getQueryType());
     }
 }

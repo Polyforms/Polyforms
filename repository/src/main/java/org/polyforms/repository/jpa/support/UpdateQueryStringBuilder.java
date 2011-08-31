@@ -1,6 +1,12 @@
 package org.polyforms.repository.jpa.support;
 
+import org.polyforms.repository.ExecutorPrefix;
+
 class UpdateQueryStringBuilder extends JpqlQueryStringBuilder {
+    protected UpdateQueryStringBuilder(final ExecutorPrefix executorPrefix) {
+        super(executorPrefix);
+    }
+
     @Override
     protected void appendSelectClause(final JpqlStringBuffer jpql, final String selectClause) {
         jpql.appendToken("UPDATE");

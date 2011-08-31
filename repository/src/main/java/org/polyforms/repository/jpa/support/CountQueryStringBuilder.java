@@ -1,12 +1,14 @@
 package org.polyforms.repository.jpa.support;
 
+import org.polyforms.repository.ExecutorPrefix;
 import org.polyforms.repository.jpa.EntityHelper;
 
 class CountQueryStringBuilder extends JpqlQueryStringBuilder {
     protected static final String ENTITY_ID_PLACE_HOLDER = "{ENTITY_ID_PLACE_HOLDER}";
     private final EntityHelper entityHelper;
 
-    public CountQueryStringBuilder(final EntityHelper entityHelper) {
+    public CountQueryStringBuilder(final ExecutorPrefix executorPrefix, final EntityHelper entityHelper) {
+        super(executorPrefix);
         this.entityHelper = entityHelper;
     }
 
