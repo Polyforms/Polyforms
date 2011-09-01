@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 @Named
 public final class RepositoryInterceptor implements MethodInterceptor {
     private static final Logger LOGGER = LoggerFactory.getLogger(RepositoryInterceptor.class);
-    private final Map<Method, Executor> matchedExecutors = new HashMap<Method, Executor>();
+    private final Map<Method, Executor> matchedExecutorCache = new HashMap<Method, Executor>();
     private final ExecutorFinder executorFinder;
 
     /**
@@ -44,13 +44,13 @@ public final class RepositoryInterceptor implements MethodInterceptor {
     }
 
     private Executor findExecutorWithCache(final Method method) {
-        if (!matchedExecutors.containsKey(method)) {
+        if (!matchedExecutorCache.containsKey(method)) {
             LOGGER.trace("Cache missed when finding executor for method {}.", method);
             final Executor executor = executorFinder.findExecutor(method);
-            matchedExecutors.put(method, executor);
+            matchedExecutorCache.put(method, executor);
         }
 
-        final Executor executor = matchedExecutors.get(method);
+        final Executor executor = matchedExecutorCache.get(method);
         LOGGER.debug("Found executor {} for method {}.", executor, method);
         return executor;
     }

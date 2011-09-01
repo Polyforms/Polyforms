@@ -1,8 +1,8 @@
 package org.polyforms.delegation.support;
 
 import java.lang.reflect.Method;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -21,7 +21,7 @@ import org.springframework.util.ClassUtils;
  */
 @Named
 public final class GenericDelegationService implements DelegationService {
-    private final Map<Delegator, Delegator> delegatorMappingCache = new HashMap<Delegator, Delegator>();
+    private final Map<Delegator, Delegator> delegatorMappingCache = new WeakHashMap<Delegator, Delegator>();
     private final DelegationExecutor delegationExecutor;
     private final DelegationResolver delegationResolver;
 

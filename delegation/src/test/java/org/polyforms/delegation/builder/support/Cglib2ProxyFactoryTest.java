@@ -25,9 +25,6 @@ public class Cglib2ProxyFactoryTest {
         final MockClass mockClass = proxyFactory.getProxy(MockClass.class);
         mockClass.mockMethod();
         EasyMock.verify(methodVisitor);
-
-        // Just for testing cache
-        Assert.assertSame(mockClass, proxyFactory.getProxy(MockClass.class));
     }
 
     @Test

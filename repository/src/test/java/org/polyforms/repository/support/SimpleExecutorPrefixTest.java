@@ -1,7 +1,7 @@
 package org.polyforms.repository.support;
 
-import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -12,26 +12,37 @@ import org.polyforms.repository.ExecutorPrefix;
 import org.polyforms.repository.spi.ExecutorPrefixAlias;
 
 public class SimpleExecutorPrefixTest {
-    private final ExecutorPrefixAlias executorAlias = new ExecutorPrefixAlias() {
-        public Map<String, String[]> getAlias() {
-            final Map<String, String[]> prefix = new HashMap<String, String[]>();
-            prefix.put("get", new String[] { "load" });
-            return prefix;
-        }
-    };
     private ExecutorPrefix executorPrefix;
 
     @Before
     public void setUp() {
-        executorPrefix = new SimpleExecutorPrefix(Collections.singleton(executorAlias));
+        final ExecutorPrefixAlias executorAlias1 = new ExecutorPrefixAlias() {
+            public Map<String, String[]> getAlias() {
+                final Map<String, String[]> prefix = new HashMap<String, String[]>();
+                prefix.put("get", new String[] { "load" });
+                return prefix;
+            }
+        };
+        final ExecutorPrefixAlias executorAlias2 = new ExecutorPrefixAlias() {
+            public Map<String, String[]> getAlias() {
+                final Map<String, String[]> prefix = new HashMap<String, String[]>();
+                prefix.put("get", new String[] { "find" });
+                return prefix;
+            }
+        };
+        final Set<ExecutorPrefixAlias> alias = new HashSet<ExecutorPrefixAlias>();
+        alias.add(executorAlias1);
+        alias.add(executorAlias2);
+        executorPrefix = new SimpleExecutorPrefix(alias);
     }
 
     @Test
     public void getPrefix() {
         final Set<String> prefix = executorPrefix.getPrefix("get");
-        Assert.assertEquals(2, prefix.size());
+        Assert.assertEquals(3, prefix.size());
         Assert.assertTrue(prefix.contains("get"));
         Assert.assertTrue(prefix.contains("load"));
+        Assert.assertTrue(prefix.contains("find"));
     }
 
     @Test
