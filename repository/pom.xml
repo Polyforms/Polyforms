@@ -39,6 +39,11 @@
 			<version>${jpa.version}</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.polyforms</groupId>
+			<artifactId>polyforms-util</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 
 		<!-- Optional -->
 		<dependency>

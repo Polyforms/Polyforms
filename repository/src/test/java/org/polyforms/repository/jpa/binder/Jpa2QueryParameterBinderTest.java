@@ -39,7 +39,7 @@ public class Jpa2QueryParameterBinderTest {
         EasyMock.expectLastCall().andReturn(parameters);
         parameter.getPosition();
         EasyMock.expectLastCall().andReturn(1);
-        positionalParameterBinder.bind(query, method, parameters, arguments);
+        positionalParameterBinder.bind(query, method, arguments);
         EasyMock.replay(query, parameter, positionalParameterBinder);
 
         queryParameterBinder.bind(query, method, arguments);
@@ -63,7 +63,7 @@ public class Jpa2QueryParameterBinderTest {
         EasyMock.expectLastCall().andReturn(parameters);
         parameter.getPosition();
         EasyMock.expectLastCall().andReturn(null);
-        namedParameterBinder.bind(query, method, parameters, arguments);
+        namedParameterBinder.bind(query, method, arguments);
         EasyMock.replay(query, parameter, namedParameterBinder);
 
         queryParameterBinder.bind(query, method, arguments);

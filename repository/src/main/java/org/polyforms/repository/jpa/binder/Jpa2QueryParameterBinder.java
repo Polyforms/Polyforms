@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Implementation of {@link QueryParameterBinder} for JPA 2.0.
+ * The adaptor of {@link ParameterBinder} to {@link QueryParameterBinder}.
  * 
  * @author Kuisong Tong
  * @since 1.0
@@ -34,9 +34,11 @@ public class Jpa2QueryParameterBinder implements QueryParameterBinder {
         }
 
         if (isPositionalParameters(parameters)) {
-            positionalParameterBinder.bind(query, method, parameters, arguments);
+            LOGGER.debug("Binding positional parameters for {}.", method);
+            positionalParameterBinder.bind(query, method, arguments);
         } else {
-            namedParameterBinder.bind(query, method, parameters, arguments);
+            LOGGER.debug("Binding named parameters for {}.", method);
+            namedParameterBinder.bind(query, method, arguments);
         }
     }
 

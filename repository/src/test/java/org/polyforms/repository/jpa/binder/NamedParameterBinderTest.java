@@ -30,6 +30,8 @@ public class NamedParameterBinderTest {
         final Set<Parameter<?>> parameters = new HashSet<Parameter<?>>();
         parameters.add(parameter);
 
+        query.getParameters();
+        EasyMock.expectLastCall().andReturn(parameters).times(2);
         parameter.getParameterType();
         EasyMock.expectLastCall().andReturn(String.class);
         parameter.getName();
@@ -40,9 +42,9 @@ public class NamedParameterBinderTest {
         EasyMock.expectLastCall().andReturn(query);
         EasyMock.replay(query, parameter);
 
-        parameterBinder.bind(query, method, parameters, new Object[] { "tony" });
+        parameterBinder.bind(query, method, new Object[] { "tony" });
         // Just for testing cache
-        parameterBinder.bind(query, method, parameters, new Object[] { "tong" });
+        parameterBinder.bind(query, method, new Object[] { "tong" });
         EasyMock.verify(query, parameter);
     }
 

@@ -9,14 +9,14 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.polyforms.repository.ExecutorPrefix;
+import org.polyforms.repository.ExecutorPrefixHolder;
 import org.polyforms.repository.spi.Executor;
 import org.polyforms.repository.spi.ExecutorFinder;
 
 public class NameBasedExecutorFinderTest {
     private final Executor get = new Get();
     private final Executor getBy = new GetBy();
-    private ExecutorPrefix executorPrefixHolder;
+    private ExecutorPrefixHolder executorPrefixHolder;
     private ExecutorFinder executorFinder;
     private Set<String> executorPrefix;
 
@@ -30,14 +30,14 @@ public class NameBasedExecutorFinderTest {
         executors.add(get);
         executors.add(getBy);
 
-        executorPrefixHolder = EasyMock.createMock(ExecutorPrefix.class);
-        executorPrefixHolder.isWildcard("Get");
+        executorPrefixHolder = EasyMock.createMock(ExecutorPrefixHolder.class);
+        executorPrefixHolder.isPrefix("Get");
         EasyMock.expectLastCall().andReturn(false);
-        executorPrefixHolder.getPrefix("Get");
+        executorPrefixHolder.getAliases("Get");
         EasyMock.expectLastCall().andReturn(executorPrefix);
-        executorPrefixHolder.isWildcard("GetBy");
+        executorPrefixHolder.isPrefix("GetBy");
         EasyMock.expectLastCall().andReturn(true);
-        executorPrefixHolder.getPrefix("GetBy");
+        executorPrefixHolder.getAliases("GetBy");
         EasyMock.expectLastCall().andReturn(executorPrefix);
         EasyMock.replay(executorPrefixHolder);
 

@@ -1,24 +1,24 @@
-package org.polyforms.repository.jpa.support;
+package org.polyforms.repository.jpa.query;
 
 import junit.framework.Assert;
 
 import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
-import org.polyforms.repository.ExecutorPrefix;
+import org.polyforms.repository.ExecutorPrefixHolder;
 import org.polyforms.repository.jpa.EntityHelper;
 
 public class JpqlQueryStringBuilderTest {
-    private ExecutorPrefix executorPrefix;
+    private ExecutorPrefixHolder executorPrefix;
 
     @Before
     public void setUp() {
-        executorPrefix = EasyMock.createMock(ExecutorPrefix.class);
+        executorPrefix = EasyMock.createMock(ExecutorPrefixHolder.class);
     }
 
     @Test
     public void byName() {
-        executorPrefix.removePrefixifAvailable("byName");
+        executorPrefix.removePrefixIfAvailable("byName");
         EasyMock.expectLastCall().andReturn("byName");
         EasyMock.replay(executorPrefix);
 
@@ -33,7 +33,7 @@ public class JpqlQueryStringBuilderTest {
 
     @Test
     public void getDistinctByNameAndCodeIn() {
-        executorPrefix.removePrefixifAvailable("getDistinctByNameAndCodeInOrderByIdDesc");
+        executorPrefix.removePrefixIfAvailable("getDistinctByNameAndCodeInOrderByIdDesc");
         EasyMock.expectLastCall().andReturn("DistinctByNameAndCodeInOrderByIdDesc");
         EasyMock.replay(executorPrefix);
 
@@ -46,7 +46,7 @@ public class JpqlQueryStringBuilderTest {
 
     @Test
     public void orderById() {
-        executorPrefix.removePrefixifAvailable("orderById");
+        executorPrefix.removePrefixIfAvailable("orderById");
         EasyMock.expectLastCall().andReturn("orderById");
         EasyMock.replay(executorPrefix);
 
@@ -60,7 +60,7 @@ public class JpqlQueryStringBuilderTest {
         final EntityHelper entityHelper = EasyMock.createMock(EntityHelper.class);
         entityHelper.getIdentifierName(EntityClass.class);
         EasyMock.expectLastCall().andReturn("id");
-        executorPrefix.removePrefixifAvailable("findByUser_NameBetween");
+        executorPrefix.removePrefixIfAvailable("findByUser_NameBetween");
         EasyMock.expectLastCall().andReturn("ByUser_NameBetween");
         EasyMock.replay(executorPrefix, entityHelper);
 
@@ -75,7 +75,7 @@ public class JpqlQueryStringBuilderTest {
         final EntityHelper entityHelper = EasyMock.createMock(EntityHelper.class);
         entityHelper.getIdentifierName(EntityClass.class);
         EasyMock.expectLastCall().andReturn("id");
-        executorPrefix.removePrefixifAvailable("findDistinctByUserName");
+        executorPrefix.removePrefixIfAvailable("findDistinctByUserName");
         EasyMock.expectLastCall().andReturn("findDistinctByUserName");
         EasyMock.replay(executorPrefix, entityHelper);
 
@@ -87,7 +87,7 @@ public class JpqlQueryStringBuilderTest {
 
     @Test
     public void updateCodeAndNameByUserAgeIsNotNullOrNotGreatThan() {
-        executorPrefix.removePrefixifAvailable("updateCodeAndNameByUserAgeIsNotNullOrNotGreatThan");
+        executorPrefix.removePrefixIfAvailable("updateCodeAndNameByUserAgeIsNotNullOrNotGreatThan");
         EasyMock.expectLastCall().andReturn("CodeAndNameByUserAgeIsNotNullOrNotGreatThan");
         EasyMock.replay(executorPrefix);
 
@@ -100,7 +100,7 @@ public class JpqlQueryStringBuilderTest {
 
     @Test
     public void deleteByName() {
-        executorPrefix.removePrefixifAvailable("deleteByName");
+        executorPrefix.removePrefixIfAvailable("deleteByName");
         EasyMock.expectLastCall().andReturn("ByName");
         EasyMock.replay(executorPrefix);
 
@@ -111,7 +111,7 @@ public class JpqlQueryStringBuilderTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void getByUserFirstName() {
-        executorPrefix.removePrefixifAvailable("getByUserFirstName");
+        executorPrefix.removePrefixIfAvailable("getByUserFirstName");
         EasyMock.expectLastCall().andReturn("ByUserFirstName");
         EasyMock.replay(executorPrefix);
 

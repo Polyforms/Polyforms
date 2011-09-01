@@ -170,6 +170,7 @@
 		<module>repository</module>
 		<module>event</module>
 		<module>delegation</module>
+		<module>util</module>
 	</modules>
 	
 	<dependencies>

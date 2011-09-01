@@ -4,7 +4,7 @@ import org.polyforms.repository.spi.RepositoryMatcher;
 import org.springframework.util.Assert;
 
 /**
- * Strategy of finding repository inheriting Repository.
+ * Strategy of finding Repository by packages.
  * 
  * @author Kuisong Tong
  * @since 1.0
@@ -12,6 +12,9 @@ import org.springframework.util.Assert;
 public final class PackageRepositoryMatcher implements RepositoryMatcher {
     private final String[] basePackages;
 
+    /**
+     * Create an instance with packages belongs Repository.
+     */
     public PackageRepositoryMatcher(final String[] basePackages) {
         Assert.notEmpty(basePackages);
         this.basePackages = new String[basePackages.length];

@@ -3,8 +3,14 @@ package org.polyforms.repository.jpa.binder;
 import javax.persistence.Parameter;
 import javax.persistence.Query;
 
+/**
+ * Binder for named parameters of JPA.
+ * 
+ * @author Kuisong Tong
+ * @since 1.0
+ */
 class NamedParameterBinder extends AbstractParameterBinder<String> {
-    public NamedParameterBinder() {
+    protected NamedParameterBinder() {
         super();
         addParameterMatcher(new NamedParameterMatcher());
     }
@@ -14,6 +20,9 @@ class NamedParameterBinder extends AbstractParameterBinder<String> {
         query.setParameter(key, value);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public String getKey(final Parameter<?> parameter) {
         return parameter.getName();
     }

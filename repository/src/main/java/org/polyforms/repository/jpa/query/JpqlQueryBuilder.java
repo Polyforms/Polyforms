@@ -1,4 +1,4 @@
-package org.polyforms.repository.jpa.support;
+package org.polyforms.repository.jpa.query;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -10,29 +10,39 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
-import org.polyforms.repository.ExecutorPrefix;
+import org.polyforms.repository.ExecutorPrefixHolder;
 import org.polyforms.repository.jpa.EntityHelper;
 import org.polyforms.repository.jpa.QueryBuilder.QueryType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+/**
+ * Create Query by parsing string.
+ * 
+ * @author Kuisong Tong
+ * @since 1.0
+ */
 @Named
 class JpqlQueryBuilder {
+    private static final Logger LOGGER = LoggerFactory.getLogger(JpqlQueryStringBuilder.class);
     private final Map<QueryType, JpqlQueryStringBuilder> queryStringbuilders = new HashMap<QueryType, JpqlQueryStringBuilder>();
     @PersistenceContext
     private EntityManager entityManager;
 
     @Inject
-    public JpqlQueryBuilder(final ExecutorPrefix executorPrefix, final EntityHelper entityHelper) {
+    protected JpqlQueryBuilder(final ExecutorPrefixHolder executorPrefix, final EntityHelper entityHelper) {
         queryStringbuilders.put(QueryType.SELECT, new SelectQueryStringBuilder(executorPrefix));
         queryStringbuilders.put(QueryType.UPDATE, new UpdateQueryStringBuilder(executorPrefix));
         queryStringbuilders.put(QueryType.DELETE, new DeleteQueryStringBuilder(executorPrefix));
         queryStringbuilders.put(QueryType.COUNT, new CountQueryStringBuilder(executorPrefix, entityHelper));
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public Query build(final QueryType type, final Class<?> entityClass, final Method method) {
-        final String queryString = queryStringbuilders.get(type).getQuery(entityClass, method.getName());
+    protected Query build(final QueryType type, final Class<?> entityClass, final Method method) {
+        final String methodName = method.getName();
+        final String queryString = queryStringbuilders.get(type).getQuery(entityClass, methodName);
+        LOGGER.debug("The query string of type {} parsed by {} from {} is {}.", new Object[] { type, methodName,
+                queryString });
+
         return entityManager.createQuery(queryString);
     }
 }

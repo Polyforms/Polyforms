@@ -11,6 +11,10 @@ import javax.persistence.Query;
  * @since 1.0
  */
 public interface QueryBuilder {
+    /**
+     * Type of query built by query builder.
+     * 
+     */
     enum QueryType {
         SELECT, UPDATE, DELETE, COUNT
     }

@@ -1,19 +1,25 @@
-package org.polyforms.repository.jpa.support;
+package org.polyforms.repository.jpa.query;
 
-import org.polyforms.repository.ExecutorPrefix;
+import org.polyforms.repository.ExecutorPrefixHolder;
 import org.polyforms.repository.jpa.EntityHelper;
 
+/**
+ * Helper for creating query string of count statement from string.
+ * 
+ * @author Kuisong Tong
+ * @since 1.0
+ */
 class CountQueryStringBuilder extends JpqlQueryStringBuilder {
     protected static final String ENTITY_ID_PLACE_HOLDER = "{ENTITY_ID_PLACE_HOLDER}";
     private final EntityHelper entityHelper;
 
-    public CountQueryStringBuilder(final ExecutorPrefix executorPrefix, final EntityHelper entityHelper) {
+    protected CountQueryStringBuilder(final ExecutorPrefixHolder executorPrefix, final EntityHelper entityHelper) {
         super(executorPrefix);
         this.entityHelper = entityHelper;
     }
 
     @Override
-    public String getQuery(final Class<?> entityClass, final String queryString) {
+    protected String getQuery(final Class<?> entityClass, final String queryString) {
         final String query = super.getQuery(entityClass, queryString);
         return query.replace(ENTITY_ID_PLACE_HOLDER, entityHelper.getIdentifierName(entityClass));
     }

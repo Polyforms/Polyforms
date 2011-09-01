@@ -40,6 +40,8 @@ public class PositionalParameterBinderTest {
         final Set<Parameter<?>> parameters = new HashSet<Parameter<?>>();
         parameters.add(parameter);
 
+        query.getParameters();
+        EasyMock.expectLastCall().andReturn(parameters).times(2);
         parameter.getParameterType();
         EasyMock.expectLastCall().andReturn(Object.class);
         parameter.getPosition();
@@ -50,9 +52,9 @@ public class PositionalParameterBinderTest {
         EasyMock.expectLastCall().andReturn(query);
         EasyMock.replay(query, parameter);
 
-        parameterBinder.bind(query, method, parameters, new Object[] { "value" });
+        parameterBinder.bind(query, method, new Object[] { "value" });
         // Just for testing cache
-        parameterBinder.bind(query, method, parameters, new Object[] { "code" });
+        parameterBinder.bind(query, method, new Object[] { "code" });
         EasyMock.verify(query, parameter);
     }
 

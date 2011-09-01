@@ -15,12 +15,15 @@ public class AnnotatedRepositoryMatcherTest {
 
     @Test
     public void matches() {
-        Assert.assertTrue(repositoryMatcher.matches(Repository.class));
+        Assert.assertTrue(repositoryMatcher.matches(MockRepository.class));
     }
 
     @Test
     public void notMatches() {
         Assert.assertFalse(repositoryMatcher.matches(String.class));
+    }
+
+    public static class MockRepository implements Repository {
     }
 
     @Deprecated

@@ -1,4 +1,4 @@
-package org.polyforms.repository.jpa.support;
+package org.polyforms.repository.jpa.query;
 
 import java.util.List;
 
@@ -9,19 +9,19 @@ import org.easymock.EasyMock;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.polyforms.repository.ExecutorPrefix;
+import org.polyforms.repository.ExecutorPrefixHolder;
 import org.polyforms.repository.jpa.EntityHelper;
 import org.polyforms.repository.jpa.QueryBuilder.QueryType;
 import org.springframework.test.util.ReflectionTestUtils;
 
 public class JpqlQueryBuilderTest {
     private JpqlQueryBuilder queryBuilder;
-    private ExecutorPrefix executorPrefix;
+    private ExecutorPrefixHolder executorPrefix;
     private EntityManager entityManager;
 
     @Before
     public void setUp() {
-        executorPrefix = EasyMock.createMock(ExecutorPrefix.class);
+        executorPrefix = EasyMock.createMock(ExecutorPrefixHolder.class);
         queryBuilder = new JpqlQueryBuilder(executorPrefix, EasyMock.createMock(EntityHelper.class));
         entityManager = EasyMock.createMock(EntityManager.class);
         ReflectionTestUtils.setField(queryBuilder, "entityManager", entityManager);
@@ -32,7 +32,7 @@ public class JpqlQueryBuilderTest {
         final String queryString = "DELETE FROM MockEntity e WHERE e.name = ?1 ";
         final Query query = EasyMock.createMock(Query.class);
 
-        executorPrefix.removePrefixifAvailable("deleteByName");
+        executorPrefix.removePrefixIfAvailable("deleteByName");
         EasyMock.expectLastCall().andReturn("ByName");
         entityManager.createQuery(queryString);
         EasyMock.expectLastCall().andReturn(query);
@@ -50,7 +50,7 @@ public class JpqlQueryBuilderTest {
         final String queryString = "SELECT e FROM MockEntity e WHERE e.name = ?1 ";
         final Query query = EasyMock.createMock(Query.class);
 
-        executorPrefix.removePrefixifAvailable("findByName");
+        executorPrefix.removePrefixIfAvailable("findByName");
         EasyMock.expectLastCall().andReturn("ByName");
         entityManager.createQuery(queryString);
         EasyMock.expectLastCall().andReturn(query);

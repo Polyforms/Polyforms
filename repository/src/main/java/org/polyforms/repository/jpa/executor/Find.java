@@ -15,7 +15,7 @@ import org.polyforms.repository.spi.EntityClassResolver;
 import org.polyforms.repository.spi.Executor;
 
 /**
- * Implementation of find method which finds entities by identifiers.
+ * Implementation of method which finds entities by identifiers.
  * 
  * @author Kuisong Tong
  * @since 1.0

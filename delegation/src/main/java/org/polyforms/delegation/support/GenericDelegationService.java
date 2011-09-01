@@ -9,7 +9,7 @@ import javax.inject.Named;
 
 import org.polyforms.delegation.DelegationService;
 import org.polyforms.delegation.builder.Delegation;
-import org.polyforms.delegation.util.AopUtils;
+import org.polyforms.util.AopUtils;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 

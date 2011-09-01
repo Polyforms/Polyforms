@@ -17,6 +17,8 @@ import org.slf4j.LoggerFactory;
 /**
  * {@link MethodInterceptor} implementation for methods in Repository.
  * 
+ * The interceptor finds corresponding {@link Executor} and executes it.
+ * 
  * @author Kuisong Tong
  * @since 1.0
  */

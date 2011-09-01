@@ -20,14 +20,14 @@
 			<artifactId>spring-core</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>cglib</groupId>
-			<artifactId>cglib</artifactId>
-			<version>${cglib.version}</version>
-		</dependency>
-		<dependency>
 			<groupId>org.modelmapper</groupId>
 			<artifactId>modelmapper</artifactId>
 			<version>${modelmapper.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.polyforms</groupId>
+			<artifactId>polyforms-util</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 
 		<!-- Optional -->
@@ -53,6 +53,5 @@
 
 	<properties>
 		<modelmapper.version>0.3.5</modelmapper.version>
-		<cglib.version>2.2.2</cglib.version>
 	</properties>
 </project>

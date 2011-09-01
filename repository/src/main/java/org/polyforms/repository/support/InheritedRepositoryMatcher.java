@@ -4,7 +4,7 @@ import org.polyforms.repository.spi.RepositoryMatcher;
 import org.springframework.util.Assert;
 
 /**
- * Strategy of finding repository inheriting Repository.
+ * Strategy of finding Repository by inheriting.
  * 
  * @author Kuisong Tong
  * @since 1.0
@@ -12,6 +12,9 @@ import org.springframework.util.Assert;
 public final class InheritedRepositoryMatcher implements RepositoryMatcher {
     private final Class<?> superInterface;
 
+    /**
+     * Create an instance with super class or interface of Repository.
+     */
     public InheritedRepositoryMatcher(final Class<?> superInterface) {
         Assert.notNull(superInterface);
         this.superInterface = superInterface;

@@ -1,4 +1,4 @@
-package org.polyforms.delegation.util;
+package org.polyforms.util;
 
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.Proxy;

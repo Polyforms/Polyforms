@@ -14,7 +14,7 @@ import org.polyforms.repository.jpa.QueryParameterBinder;
 import org.polyforms.repository.spi.EntityClassResolver;
 
 /**
- * Implementation of find method which returns list of matching entities.
+ * Implementation of method which returns list of matching entities by query.
  * 
  * @author Kuisong Tong
  * @since 1.0
@@ -30,9 +30,6 @@ public final class FindBy extends QueryExecutor {
         super(entityClassResolver, queryBuilder, queryParameterBinder);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected Object getResult(final Method method, final Query query) {
         final Class<?> type = method.getReturnType();

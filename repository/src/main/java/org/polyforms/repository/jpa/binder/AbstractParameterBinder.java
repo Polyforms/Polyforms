@@ -11,7 +11,17 @@ import java.util.Set;
 import javax.persistence.Parameter;
 import javax.persistence.Query;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * Abstract implementation of {@link ParameterBinder} for JPA 2.0 which binds parameters by pairs mathced by matchers.
+ * 
+ * @author Kuisong Tong
+ * @since 1.0
+ */
 abstract class AbstractParameterBinder<T> implements ParameterBinder<T>, ParameterKey<T> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractParameterBinder.class);
     private final List<ParameterMatcher<T>> parameterMatchers = new ArrayList<ParameterMatcher<T>>();
     private final Map<Method, Map<T, Integer>> parameterMatchingCache = new HashMap<Method, Map<T, Integer>>();
 
@@ -23,9 +33,12 @@ abstract class AbstractParameterBinder<T> implements ParameterBinder<T>, Paramet
         this.parameterMatchers.add(parameterMatcher);
     }
 
-    public void bind(final Query query, final Method method, final Set<Parameter<?>> parameters,
-            final Object[] arguments) {
-        final Map<T, Integer> argumentMap = matchParameters(method, parameters);
+    /**
+     * {@inheritDoc}
+     */
+    public void bind(final Query query, final Method method, final Object[] arguments) {
+        final Map<T, Integer> argumentMap = matchParameters(method, query.getParameters());
+        LOGGER.debug("Binding parameters for {} by matching {}.", method, argumentMap);
         for (final Entry<T, Integer> entry : argumentMap.entrySet()) {
             setParameter(query, entry.getKey(), arguments[entry.getValue()]);
         }
@@ -33,9 +46,12 @@ abstract class AbstractParameterBinder<T> implements ParameterBinder<T>, Paramet
 
     private Map<T, Integer> matchParameters(final Method method, final Set<Parameter<?>> parameters) {
         if (!parameterMatchingCache.containsKey(method)) {
+            LOGGER.trace("Cache miss for matching parameters of {}.", method);
+            LOGGER.trace("Matching parameters of {}.", method);
             for (final ParameterMatcher<T> parameterMatcher : parameterMatchers) {
                 final Map<T, Integer> parameterMap = parameterMatcher.match(method, parameters);
                 if (parameterMap != null) {
+                    LOGGER.debug("Parameter matched by {} for {}.", parameterMatcher.getClass().getSimpleName(), method);
                     parameterMatchingCache.put(method, parameterMap);
                     break;
                 }

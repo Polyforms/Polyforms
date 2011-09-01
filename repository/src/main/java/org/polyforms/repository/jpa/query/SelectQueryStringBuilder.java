@@ -1,9 +1,15 @@
-package org.polyforms.repository.jpa.support;
+package org.polyforms.repository.jpa.query;
 
-import org.polyforms.repository.ExecutorPrefix;
+import org.polyforms.repository.ExecutorPrefixHolder;
 
+/**
+ * Helper for creating query string of select statement from string.
+ * 
+ * @author Kuisong Tong
+ * @since 1.0
+ */
 class SelectQueryStringBuilder extends JpqlQueryStringBuilder {
-    protected SelectQueryStringBuilder(final ExecutorPrefix executorPrefix) {
+    protected SelectQueryStringBuilder(final ExecutorPrefixHolder executorPrefix) {
         super(executorPrefix);
     }
 

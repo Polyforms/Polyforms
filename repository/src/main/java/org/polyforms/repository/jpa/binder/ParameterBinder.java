@@ -1,11 +1,22 @@
 package org.polyforms.repository.jpa.binder;
 
 import java.lang.reflect.Method;
-import java.util.Set;
 
-import javax.persistence.Parameter;
 import javax.persistence.Query;
 
+/**
+ * Helper to bind arguments to JAP parameters.
+ * 
+ * @author Kuisong Tong
+ * @since 1.0
+ */
 interface ParameterBinder<T> {
-    void bind(final Query query, final Method method, final Set<Parameter<?>> parameters, final Object[] arguments);
+    /**
+     * Bind arguments to JPA parameters.
+     * 
+     * @param query of JPA
+     * @param method invoked by client
+     * @param arguments passed to invocation
+     */
+    void bind(final Query query, final Method method, final Object[] arguments);
 }

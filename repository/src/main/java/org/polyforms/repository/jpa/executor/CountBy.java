@@ -12,7 +12,7 @@ import org.polyforms.repository.jpa.QueryParameterBinder;
 import org.polyforms.repository.spi.EntityClassResolver;
 
 /**
- * Implementation of find method which returns count of matching entities.
+ * Implementation of method which returns count of matching entities.
  * 
  * @author Kuisong Tong
  * @since 1.0
@@ -20,7 +20,7 @@ import org.polyforms.repository.spi.EntityClassResolver;
 @Named
 public final class CountBy extends QueryExecutor {
     /**
-     * Create an instance with {@link EntityClassResolver}.
+     * Create an instance with {@link EntityClassResolver} and {@link QueryBuilder}.
      */
     @Inject
     public CountBy(final EntityClassResolver entityClassResolver, final QueryBuilder queryBuilder,
@@ -28,9 +28,6 @@ public final class CountBy extends QueryExecutor {
         super(entityClassResolver, queryBuilder, queryParameterBinder);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected Object getResult(final Method method, final Query query) {
         return query.getSingleResult();

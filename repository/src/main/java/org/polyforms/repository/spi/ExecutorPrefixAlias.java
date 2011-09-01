@@ -14,5 +14,5 @@ public interface ExecutorPrefixAlias {
      * 
      * @return alias mapping with specified prefix
      */
-    Map<String, String[]> getAlias();
+    Map<String, String[]> getAliases();
 }

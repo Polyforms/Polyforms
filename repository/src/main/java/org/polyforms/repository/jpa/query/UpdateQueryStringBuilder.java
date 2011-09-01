@@ -1,9 +1,15 @@
-package org.polyforms.repository.jpa.support;
+package org.polyforms.repository.jpa.query;
 
-import org.polyforms.repository.ExecutorPrefix;
+import org.polyforms.repository.ExecutorPrefixHolder;
 
+/**
+ * Helper for creating query string of update statement from string.
+ * 
+ * @author Kuisong Tong
+ * @since 1.0
+ */
 class UpdateQueryStringBuilder extends JpqlQueryStringBuilder {
-    protected UpdateQueryStringBuilder(final ExecutorPrefix executorPrefix) {
+    protected UpdateQueryStringBuilder(final ExecutorPrefixHolder executorPrefix) {
         super(executorPrefix);
     }
 

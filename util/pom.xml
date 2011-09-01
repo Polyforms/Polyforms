@@ -1,0 +1,25 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>polyforms</artifactId>
+		<groupId>org.polyforms</groupId>
+		<version>0.5-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>polyforms-util</artifactId>
+	<name>Polyforms Utility</name>
+	<description>Utility classes for Polyforms.</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>cglib</groupId>
+			<artifactId>cglib</artifactId>
+			<version>${cglib.version}</version>
+		</dependency>
+	</dependencies>
+
+	<properties>
+		<cglib.version>2.2.2</cglib.version>
+	</properties>
+</project>

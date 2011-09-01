@@ -29,7 +29,7 @@ public class BuildInExecutorPrefixAlias implements ExecutorPrefixAlias {
     /**
      * {@inheritDoc}
      */
-    public Map<String, String[]> getAlias() {
+    public Map<String, String[]> getAliases() {
         return Collections.unmodifiableMap(alias);
     }
 }

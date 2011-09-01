@@ -12,7 +12,7 @@ import org.polyforms.repository.jpa.QueryParameterBinder;
 import org.polyforms.repository.spi.EntityClassResolver;
 
 /**
- * Implementation of method which delete entities.
+ * Implementation of method which deletes entities.
  * 
  * @author Kuisong Tong
  * @since 1.0

@@ -1,4 +1,4 @@
-package org.polyforms.delegation.util;
+package org.polyforms.util;
 
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.NoOp;
@@ -6,7 +6,6 @@ import net.sf.cglib.proxy.Proxy;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.springframework.util.ClassUtils;
 
 public class AopUtilsTest {
     @Test(expected = UnsupportedOperationException.class)
@@ -32,7 +31,7 @@ public class AopUtilsTest {
 
     @Test
     public void deproxyForJavaProxy() {
-        final Class<?> javaProxyClass = java.lang.reflect.Proxy.getProxyClass(ClassUtils.getDefaultClassLoader(),
+        final Class<?> javaProxyClass = java.lang.reflect.Proxy.getProxyClass(this.getClass().getClassLoader(),
                 new Class<?>[] { MockInterface.class });
         final Class<?>[] classes = AopUtils.deproxy(javaProxyClass);
         Assert.assertTrue(contains(classes, MockInterface.class));
@@ -40,7 +39,7 @@ public class AopUtilsTest {
 
     @Test
     public void deproxyForCglibProxy() {
-        final Class<?> cglibProxyClass = Proxy.getProxyClass(ClassUtils.getDefaultClassLoader(),
+        final Class<?> cglibProxyClass = Proxy.getProxyClass(this.getClass().getClassLoader(),
                 new Class<?>[] { MockInterface.class });
         final Class<?>[] classes = AopUtils.deproxy(cglibProxyClass);
         Assert.assertTrue(contains(classes, MockInterface.class));

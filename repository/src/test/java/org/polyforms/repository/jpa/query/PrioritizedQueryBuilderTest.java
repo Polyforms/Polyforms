@@ -1,4 +1,4 @@
-package org.polyforms.repository.jpa.support;
+package org.polyforms.repository.jpa.query;
 
 import javax.persistence.Query;
 

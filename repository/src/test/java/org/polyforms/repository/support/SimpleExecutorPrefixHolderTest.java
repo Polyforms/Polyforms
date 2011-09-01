@@ -8,23 +8,23 @@ import java.util.Set;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.polyforms.repository.ExecutorPrefix;
+import org.polyforms.repository.ExecutorPrefixHolder;
 import org.polyforms.repository.spi.ExecutorPrefixAlias;
 
-public class SimpleExecutorPrefixTest {
-    private ExecutorPrefix executorPrefix;
+public class SimpleExecutorPrefixHolderTest {
+    private ExecutorPrefixHolder executorPrefix;
 
     @Before
     public void setUp() {
         final ExecutorPrefixAlias executorAlias1 = new ExecutorPrefixAlias() {
-            public Map<String, String[]> getAlias() {
+            public Map<String, String[]> getAliases() {
                 final Map<String, String[]> prefix = new HashMap<String, String[]>();
                 prefix.put("get", new String[] { "load" });
                 return prefix;
             }
         };
         final ExecutorPrefixAlias executorAlias2 = new ExecutorPrefixAlias() {
-            public Map<String, String[]> getAlias() {
+            public Map<String, String[]> getAliases() {
                 final Map<String, String[]> prefix = new HashMap<String, String[]>();
                 prefix.put("get", new String[] { "find" });
                 return prefix;
@@ -33,12 +33,12 @@ public class SimpleExecutorPrefixTest {
         final Set<ExecutorPrefixAlias> alias = new HashSet<ExecutorPrefixAlias>();
         alias.add(executorAlias1);
         alias.add(executorAlias2);
-        executorPrefix = new SimpleExecutorPrefix(alias);
+        executorPrefix = new SimpleExecutorPrefixHolder(alias);
     }
 
     @Test
     public void getPrefix() {
-        final Set<String> prefix = executorPrefix.getPrefix("get");
+        final Set<String> prefix = executorPrefix.getAliases("get");
         Assert.assertEquals(3, prefix.size());
         Assert.assertTrue(prefix.contains("get"));
         Assert.assertTrue(prefix.contains("load"));
@@ -47,23 +47,23 @@ public class SimpleExecutorPrefixTest {
 
     @Test
     public void removePrefix() {
-        Assert.assertEquals("ByName", executorPrefix.removePrefixifAvailable("getByName"));
+        Assert.assertEquals("ByName", executorPrefix.removePrefixIfAvailable("getByName"));
     }
 
     @Test
     public void notRemovePrefix() {
-        Assert.assertEquals("ByName", executorPrefix.removePrefixifAvailable("ByName"));
+        Assert.assertEquals("ByName", executorPrefix.removePrefixIfAvailable("ByName"));
     }
 
     @Test
     public void getNotExistPrefix() {
-        final Set<String> prefix = executorPrefix.getPrefix("findBy");
+        final Set<String> prefix = executorPrefix.getAliases("findBy");
         Assert.assertEquals(1, prefix.size());
         Assert.assertTrue(prefix.contains("find"));
     }
 
     @Test
     public void emptyExecutorPrefixAlias() {
-        Assert.assertTrue(new EmptyExecutorPrefixAlias().getAlias().isEmpty());
+        Assert.assertTrue(new EmptyExecutorPrefixAlias().getAliases().isEmpty());
     }
 }

@@ -3,7 +3,7 @@ package org.polyforms.repository.jpa.executor;
 import javax.inject.Named;
 
 /**
- * Implementation of save method which persist entities.
+ * Implementation of method which save entities.
  * 
  * @author Kuisong Tong
  * @since 1.0

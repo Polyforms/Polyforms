@@ -1,7 +1,8 @@
-package org.polyforms.repository.jpa.support;
+package org.polyforms.repository.jpa.query;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -9,11 +10,21 @@ import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.regex.Pattern;
 
-import org.polyforms.repository.ExecutorPrefix;
+import org.polyforms.repository.ExecutorPrefixHolder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.util.Assert;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 
+/**
+ * Helper to create JPQL.
+ * 
+ * @author Kuisong Tong
+ * @since 1.0
+ */
 abstract class JpqlQueryStringBuilder {
+    private static final Logger LOGGER = LoggerFactory.getLogger(JpqlQueryStringBuilder.class);
     protected static final String ENTITY_CLASS_PLACE_HOLDER = "{ENTITY_CLASS_PLACE_HOLDER}";
     protected static final Pattern PATTERN;
     private static final int NUMBER_OF_PARTS = 3;
@@ -21,7 +32,7 @@ abstract class JpqlQueryStringBuilder {
     private static final String ORDER_BY = "OrderBy";
     private static final String BY = "By";
     private final Map<String, String> queryStringCache = new WeakHashMap<String, String>();
-    private final ExecutorPrefix executorPrefix;
+    private final ExecutorPrefixHolder executorPrefix;
 
     static {
         final StringBuffer keyWords = new StringBuffer();
@@ -32,15 +43,18 @@ abstract class JpqlQueryStringBuilder {
             keyWords.append(keyWord.name());
         }
         PATTERN = Pattern.compile(String.format("(?<=[a-z])((?<=%1$s)|(?=%1$s))", keyWords.toString()));
+        LOGGER.debug("The PATTERN is {}", PATTERN.pattern());
     }
 
-    protected JpqlQueryStringBuilder(final ExecutorPrefix executorPrefix) {
+    protected JpqlQueryStringBuilder(final ExecutorPrefixHolder executorPrefix) {
         this.executorPrefix = executorPrefix;
     }
 
     protected String getQuery(final Class<?> entityClass, final String queryString) {
         if (!queryStringCache.containsKey(queryString)) {
+            LOGGER.trace("Cache miss for query {}.", queryString);
             final String[] parts = split(nomalizeQueryString(queryString));
+            LOGGER.debug("The parts of {} are {}.", queryString, Arrays.toString(parts));
 
             final JpqlStringBuffer jpql = new JpqlStringBuffer(entityClass);
             appendSelectClause(jpql, parts[0]);
@@ -57,7 +71,7 @@ abstract class JpqlQueryStringBuilder {
     }
 
     private String nomalizeQueryString(final String queryString) {
-        return StringUtils.capitalize(executorPrefix.removePrefixifAvailable(queryString));
+        return StringUtils.capitalize(executorPrefix.removePrefixIfAvailable(queryString));
     }
 
     protected abstract void appendSelectClause(final JpqlStringBuffer jpql, final String selectClause);
@@ -127,7 +141,7 @@ class JpqlStringBuffer {
     private final IndexHolder indexHolder = new IndexHolder();
     private final StringBuffer jpql = new StringBuffer();
     private final Class<?> entityClass;
-    private boolean newProperty;
+    private boolean isNewProperty;
     private String lastProperty;
 
     protected JpqlStringBuffer(final Class<?> entityClass) {
@@ -136,11 +150,11 @@ class JpqlStringBuffer {
 
     protected void appendKeyWord(final KeyWord keyWord, final boolean not) {
         appendToken(keyWord.getToken(not, indexHolder));
-        newProperty = false;
+        isNewProperty = false;
     }
 
     protected void appendEqualsIfNecessary() {
-        if (newProperty) {
+        if (isNewProperty) {
             appendProperty();
             appendKeyWord(KeyWord.Equal, false);
         }
@@ -148,7 +162,7 @@ class JpqlStringBuffer {
 
     protected void newProperty(final String property) {
         lastProperty = property;
-        newProperty = true;
+        isNewProperty = true;
     }
 
     protected void appendProperty() {
@@ -166,9 +180,7 @@ class JpqlStringBuffer {
         }
 
         final List<String> properties = findProperties(entityClass, propertyString);
-        if (properties == null) {
-            throw new IllegalArgumentException("Could not parse properties from " + propertyString);
-        }
+        Assert.notNull(properties, "Could not parse properties from " + propertyString);
         return properties.toArray(new String[0]);
     }
 
@@ -224,9 +236,9 @@ enum KeyWord {
     Distinct, And, Or, Not, Between("BETWEEN {} AND {}"), Is, Null("NULL"), Empty("EMPTY"), Member("MEMBER"), Of, LessThan(
             "< {}", ">= {}"), GreatThan("> {}", "<= {}"), Equal("= {}", "<> {}"), Like("LIKE {}"), In("IN {}"), Asc, Desc;
 
-    public static final List<KeyWord> LOGICAL_OPERATORS = new ArrayList<KeyWord>();
-    public static final List<KeyWord> OPERATORS = new ArrayList<KeyWord>();
-    public static final List<KeyWord> NOT_CONSUMERS = new ArrayList<KeyWord>();
+    protected static final List<KeyWord> LOGICAL_OPERATORS = new ArrayList<KeyWord>();
+    protected static final List<KeyWord> OPERATORS = new ArrayList<KeyWord>();
+    protected static final List<KeyWord> NOT_CONSUMERS = new ArrayList<KeyWord>();
     private static final String POSITIONAL_PARAMETER_PLACE_HOLDER = "{}";
     private String token;
     private String notToken;
