@@ -13,7 +13,6 @@ import org.springframework.aop.support.StaticMethodMatcherPointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ClassUtils;
-import org.springframework.util.ReflectionUtils;
 
 /**
  * {@link org.springframework.aop.Advisor} for methods which are in repository.
@@ -47,8 +46,17 @@ public final class RepositoryAdvisor extends DefaultPointcutAdvisor {
          * {@inheritDoc}
          */
         public boolean matches(final Method method, final Class<?> targetClass) {
-            final Class<?> clazz = deProxy(targetClass, method);
-            final Method specificMethod = ClassUtils.getMostSpecificMethod(method, clazz);
+            for (final Class<?> clazz : AopUtils.deproxy(targetClass)) {
+                final Method specificMethod = ClassUtils.getMostSpecificMethod(method, clazz);
+                if (specificMethod != method) {
+                    return doMatch(clazz, specificMethod);
+                }
+            }
+
+            return doMatch(targetClass, method);
+        }
+
+        private boolean doMatch(final Class<?> clazz, final Method specificMethod) {
             if (!Modifier.isAbstract(specificMethod.getModifiers())) {
                 LOGGER.trace("Skip concret method {}.", specificMethod);
                 return false;
@@ -59,15 +67,6 @@ public final class RepositoryAdvisor extends DefaultPointcutAdvisor {
                 LOGGER.trace("Found repository {}.", clazz);
             }
             return matches;
-        }
-
-        private Class<?> deProxy(final Class<?> targetClass, final Method method) {
-            for (final Class<?> clazz : AopUtils.deproxy(targetClass)) {
-                if (ReflectionUtils.findMethod(clazz, method.getName(), method.getParameterTypes()) != null) {
-                    return clazz;
-                }
-            }
-            return targetClass;
         }
     }
 }
