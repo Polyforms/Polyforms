@@ -15,7 +15,7 @@ import org.polyforms.delegation.builder.DelegationBuilder;
 import org.polyforms.delegation.builder.DelegationRegistry;
 import org.polyforms.delegation.builder.ParameterProvider;
 import org.polyforms.delegation.builder.ParameterProvider.At;
-import org.polyforms.delegation.builder.support.Cglib2ProxyFactory.MethodVisitor;
+import org.polyforms.delegation.builder.support.ProxyFactory.MethodVisitor;
 import org.polyforms.delegation.util.MethodUtils;
 import org.springframework.core.GenericTypeResolver;
 import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
@@ -26,8 +26,8 @@ import org.springframework.util.ClassUtils;
 
 public final class DefaultDelegationBuilder implements DelegationBuilder {
     private final ParameterNameDiscoverer parameterNameDiscoverer = new LocalVariableTableParameterNameDiscoverer();
-    private final ProxyFactory delegatorProxyFactory = new Cglib2ProxyFactory(new DelegatorMethodVisitor());
-    private final ProxyFactory delegateeProxyFactory = new Cglib2ProxyFactory(new DelegateeMethodVisitor());
+    private final ProxyFactory delegatorProxyFactory = new ProxyFactory(new DelegatorMethodVisitor());
+    private final ProxyFactory delegateeProxyFactory = new ProxyFactory(new DelegateeMethodVisitor());
     private final DelegationRegistry delegationRegistry;
     private final Set<SimpleDelegation> delegations = new HashSet<SimpleDelegation>();
     private Map<Class<? extends Throwable>, Class<? extends Throwable>> exceptionTypeMap;
@@ -45,12 +45,18 @@ public final class DefaultDelegationBuilder implements DelegationBuilder {
         this.delegationRegistry = delegationRegistry;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public <S> S delegateFrom(final Class<S> delegatorType) {
         this.delegatorType = delegatorType;
         exceptionTypeMap = new HashMap<Class<? extends Throwable>, Class<? extends Throwable>>();
         return delegatorProxyFactory.getProxy(delegatorType);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void delegateTo(final Class<?> delegateeType) {
         this.delegateeType = delegateeType;
         resetDelegation();
@@ -68,10 +74,16 @@ public final class DefaultDelegationBuilder implements DelegationBuilder {
         delegation = null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void withName(final String name) {
         delegateeName = name;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public <T> T delegate() {
         Assert.notNull(exceptionTypeMap,
                 "The delegatorType is null. The delegatorFrom method must be invoked before delegate method.");
@@ -139,11 +151,17 @@ public final class DefaultDelegationBuilder implements DelegationBuilder {
         delegations.add(delegation);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void parameter(final ParameterProvider<?> parameterProvider) {
         Assert.notNull(parameterProviders, "the parameter must be invoked after delegate.");
         parameterProviders.add(parameterProvider);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void map(final Class<? extends Throwable> sourceType, final Class<? extends Throwable> targetType) {
         Assert.notNull(exceptionTypeMap,
                 "The exceptionTypeMap is null. The delegateFrom method must be invoked before map method.");
@@ -151,6 +169,9 @@ public final class DefaultDelegationBuilder implements DelegationBuilder {
     }
 
     private final class DelegatorMethodVisitor implements MethodVisitor {
+        /**
+         * {@inheritDoc}
+         */
         public void visit(final Method method) {
             Assert.isNull(delegatorMethod, "Invoke source.xxx twice");
             delegatorMethod = method;
@@ -158,6 +179,9 @@ public final class DefaultDelegationBuilder implements DelegationBuilder {
     }
 
     private final class DelegateeMethodVisitor implements MethodVisitor {
+        /**
+         * {@inheritDoc}
+         */
         public void visit(final Method method) {
             Assert.isNull(delegation.getDelegateeMethod(), "The delegatee method has been set.");
             delegation.setDelegateeMethod(method);

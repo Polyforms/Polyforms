@@ -14,10 +14,7 @@ import org.springframework.context.annotation.ComponentScanBeanDefinitionParser;
  * @author Kuisong Tong
  * @since 1.0
  */
-public final class PolyformsComponentScanBeanDefinitionParser extends ComponentScanBeanDefinitionParser {
-    /**
-     * {@inheritDoc}
-     */
+final class PolyformsComponentScanBeanDefinitionParser extends ComponentScanBeanDefinitionParser {
     @Override
     protected ClassPathBeanDefinitionScanner createScanner(final XmlReaderContext readerContext,
             final boolean useDefaultFilters) {

@@ -28,10 +28,16 @@ public final class SimpleDelegationRegistry implements DelegationRegistry, Deleg
         delegations.put(new Delegator(delegation.getDelegatorType(), delegation.getDelegatorMethod()), delegation);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public boolean contains(final Class<?> delegatorType, final Method delegatorMethod) {
         return supports(new Delegator(delegatorType, delegatorMethod));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public Delegation get(final Delegator delegator) {
         return delegations.get(delegator);
     }

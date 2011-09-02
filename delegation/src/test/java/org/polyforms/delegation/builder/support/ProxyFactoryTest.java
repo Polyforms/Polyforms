@@ -5,16 +5,16 @@ import junit.framework.Assert;
 import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
-import org.polyforms.delegation.builder.support.Cglib2ProxyFactory.MethodVisitor;
+import org.polyforms.delegation.builder.support.ProxyFactory.MethodVisitor;
 
-public class Cglib2ProxyFactoryTest {
+public class ProxyFactoryTest {
     private MethodVisitor methodVisitor;
     private ProxyFactory proxyFactory;
 
     @Before
     public void setUp() {
         methodVisitor = EasyMock.createMock(MethodVisitor.class);
-        proxyFactory = new Cglib2ProxyFactory(methodVisitor);
+        proxyFactory = new ProxyFactory(methodVisitor);
     }
 
     @Test

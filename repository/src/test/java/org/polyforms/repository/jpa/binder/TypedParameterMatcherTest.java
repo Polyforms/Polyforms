@@ -13,12 +13,17 @@ import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
 
-public class TypedParameterMatcherTest implements ParameterKey<String> {
+public class TypedParameterMatcherTest {
     private ParameterMatcher<String> parameterMatcher;
 
     @Before
     public void setUp() {
-        parameterMatcher = new TypedParameterMatcher<String>(this);
+        parameterMatcher = new TypedParameterMatcher<String>() {
+            @Override
+            protected String getKey(final Parameter<?> parameter) {
+                return parameter.getName();
+            }
+        };
     }
 
     @Test
@@ -80,9 +85,5 @@ public class TypedParameterMatcherTest implements ParameterKey<String> {
     public void duplicateParameterTypesInMethod() throws NoSuchMethodException {
         Assert.assertNull(parameterMatcher.match(
                 String.class.getMethod("substring", new Class<?>[] { int.class, int.class }), null));
-    }
-
-    public String getKey(final Parameter<?> parameter) {
-        return parameter.getName();
     }
 }

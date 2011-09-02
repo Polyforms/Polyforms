@@ -13,11 +13,9 @@ import javax.persistence.Parameter;
  * @author Kuisong Tong
  * @since 1.0
  */
-class PositionalParameterMatcher implements ParameterMatcher<Integer> {
-    /**
-     * {@inheritDoc}
-     */
-    public Map<Integer, Integer> match(final Method method, final Set<Parameter<?>> parameters) {
+class PositionalParameterMatcher extends ParameterMatcher<Integer> {
+    @Override
+    protected Map<Integer, Integer> match(final Method method, final Set<Parameter<?>> parameters) {
         final Map<Integer, Integer> parameterMap = new HashMap<Integer, Integer>();
         for (final Parameter<?> parameter : parameters) {
             final Integer position = parameter.getPosition();

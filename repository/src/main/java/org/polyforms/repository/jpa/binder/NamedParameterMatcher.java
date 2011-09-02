@@ -22,14 +22,12 @@ import org.springframework.core.ParameterNameDiscoverer;
  * @author Kuisong Tong
  * @since 1.0
  */
-class NamedParameterMatcher implements ParameterMatcher<String> {
+class NamedParameterMatcher extends ParameterMatcher<String> {
     private static final Logger LOGGER = LoggerFactory.getLogger(NamedParameterMatcher.class);
     private final ParameterNameDiscoverer parameterNameDiscoverer = new LocalVariableTableParameterNameDiscoverer();
 
-    /**
-     * {@inheritDoc}
-     */
-    public Map<String, Integer> match(final Method method, final Set<Parameter<?>> parameters) {
+    @Override
+    protected Map<String, Integer> match(final Method method, final Set<Parameter<?>> parameters) {
         final Map<String, Integer> parameterMap = new HashMap<String, Integer>();
         String[] parameterNames = parameterNameDiscoverer.getParameterNames(method);
         if (parameterNames == null) {

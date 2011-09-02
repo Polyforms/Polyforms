@@ -23,30 +23,51 @@ final class SimpleDelegation implements Delegation {
         this.delegatorMethod = delegatorMethod;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public Class<?> getDelegatorType() {
         return delegatorType;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public Method getDelegatorMethod() {
         return delegatorMethod;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public Class<?> getDelegateeType() {
         return delegateeType;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public Method getDelegateeMethod() {
         return delegateeMethod;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public String getDelegateeName() {
         return delegateeName;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public List<ParameterProvider<?>> getParameterProviders() {
         return Collections.unmodifiableList(parameterProviders);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public Class<? extends Throwable> getExceptionType(final Class<? extends Throwable> exceptionType) {
         if (exceptionTypeMap == null) {
             return null;
@@ -76,6 +97,9 @@ final class SimpleDelegation implements Delegation {
     }
 
     @Override
+    /**
+     * {@inheritDoc}
+     */
     public int hashCode() {
         final int prime = 31;
         int result = 1;
@@ -85,6 +109,9 @@ final class SimpleDelegation implements Delegation {
     }
 
     @Override
+    /**
+     * {@inheritDoc}
+     */
     public boolean equals(final Object obj) {
         if (this == obj) {
             return true;

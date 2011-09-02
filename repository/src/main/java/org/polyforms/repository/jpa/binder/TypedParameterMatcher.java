@@ -17,18 +17,11 @@ import org.springframework.util.ClassUtils;
  * @author Kuisong Tong
  * @since 1.0
  */
-class TypedParameterMatcher<T> implements ParameterMatcher<T> {
+abstract class TypedParameterMatcher<T> extends ParameterMatcher<T> {
     private static final Logger LOGGER = LoggerFactory.getLogger(TypedParameterMatcher.class);
-    private final ParameterKey<T> parameterKey;
 
-    protected TypedParameterMatcher(final ParameterKey<T> parameterKey) {
-        this.parameterKey = parameterKey;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public Map<T, Integer> match(final Method method, final Set<Parameter<?>> parameters) {
+    @Override
+    protected Map<T, Integer> match(final Method method, final Set<Parameter<?>> parameters) {
         final Map<Class<?>, Integer> parameterTypeMap = createArgumentMap(method.getParameterTypes());
         if (parameterTypeMap == null) {
             return null;
@@ -42,7 +35,7 @@ class TypedParameterMatcher<T> implements ParameterMatcher<T> {
                 return null;
             }
             final Integer argument = parameterTypeMap.remove(parameterType);
-            parameterMap.put(parameterKey.getKey(parameter), argument);
+            parameterMap.put(getKey(parameter), argument);
         }
         return parameterMap;
     }
@@ -59,14 +52,6 @@ class TypedParameterMatcher<T> implements ParameterMatcher<T> {
         }
         return parameterTypeMap;
     }
-}
 
-interface ParameterKey<T> {
-    /**
-     * Get the key of parameter from JPA {@link Parameter}.
-     * 
-     * @param parameter from JPA query.
-     * @return name or position depends on type of parameter.
-     */
-    T getKey(Parameter<?> parameter);
+    protected abstract T getKey(Parameter<?> parameter);
 }

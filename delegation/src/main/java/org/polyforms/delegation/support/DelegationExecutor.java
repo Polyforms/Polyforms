@@ -28,19 +28,13 @@ class DelegationExecutor {
     private final BeanContainer beanContainer;
     private final ConversionService conversionService;
 
-    /**
-     * Create an instance with {@link ConversionService} and {@link BeanContainer}.
-     */
     @Inject
-    public DelegationExecutor(final BeanContainer beanContainer, final ConversionService conversionService) {
+    protected DelegationExecutor(final BeanContainer beanContainer, final ConversionService conversionService) {
         this.conversionService = conversionService;
         this.beanContainer = beanContainer;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public Object execute(final Delegation delegation, final Object... arguments) throws Throwable {
+    protected Object execute(final Delegation delegation, final Object... arguments) throws Throwable {
         final Class<?> delegateeType = delegation.getDelegateeType();
         final Method delegateeMethod = delegation.getDelegateeMethod();
 

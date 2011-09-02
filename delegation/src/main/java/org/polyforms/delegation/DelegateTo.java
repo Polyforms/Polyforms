@@ -18,6 +18,8 @@ import java.lang.annotation.Target;
 public @interface DelegateTo {
     /**
      * The type of bean which delegatee method in.
+     * 
+     * Default value is Void.class which means delegating to first parameter.
      */
     Class<?> value() default Void.class;
 

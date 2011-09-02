@@ -9,7 +9,7 @@ import javax.persistence.Query;
  * @author Kuisong Tong
  * @since 1.0
  */
-class PositionalParameterBinder extends AbstractParameterBinder<Integer> {
+class PositionalParameterBinder extends ParameterBinder<Integer> {
     protected PositionalParameterBinder() {
         super();
         addParameterMatcher(new PositionalParameterMatcher());
@@ -20,10 +20,8 @@ class PositionalParameterBinder extends AbstractParameterBinder<Integer> {
         query.setParameter(key, value);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public Integer getKey(final Parameter<?> parameter) {
+    @Override
+    protected Integer getKey(final Parameter<?> parameter) {
         return parameter.getPosition();
     }
 }

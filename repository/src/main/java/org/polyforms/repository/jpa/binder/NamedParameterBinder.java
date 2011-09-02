@@ -9,7 +9,7 @@ import javax.persistence.Query;
  * @author Kuisong Tong
  * @since 1.0
  */
-class NamedParameterBinder extends AbstractParameterBinder<String> {
+class NamedParameterBinder extends ParameterBinder<String> {
     protected NamedParameterBinder() {
         super();
         addParameterMatcher(new NamedParameterMatcher());
@@ -20,10 +20,8 @@ class NamedParameterBinder extends AbstractParameterBinder<String> {
         query.setParameter(key, value);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public String getKey(final Parameter<?> parameter) {
+    @Override
+    protected String getKey(final Parameter<?> parameter) {
         return parameter.getName();
     }
 }

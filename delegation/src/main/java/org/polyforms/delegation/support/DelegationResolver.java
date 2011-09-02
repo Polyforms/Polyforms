@@ -11,6 +11,12 @@ import org.polyforms.delegation.builder.Delegation;
  * @since 1.0
  */
 interface DelegationResolver {
+    /**
+     * Retrieve delegation related with specified delegator.
+     * 
+     * @param delegator
+     * @return related delegation or <code>null</code> if not exist.
+     */
     Delegation get(Delegator delegator);
 
     /**
@@ -26,19 +32,22 @@ final class Delegator {
     private final Class<?> type;
     private final Method method;
 
-    public Delegator(final Class<?> type, final Method method) {
+    protected Delegator(final Class<?> type, final Method method) {
         this.type = type;
         this.method = method;
     }
 
-    public Class<?> getType() {
+    protected Class<?> getType() {
         return type;
     }
 
-    public Method getMethod() {
+    protected Method getMethod() {
         return method;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -48,6 +57,9 @@ final class Delegator {
         return result;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean equals(final Object obj) {
         if (this == obj) {

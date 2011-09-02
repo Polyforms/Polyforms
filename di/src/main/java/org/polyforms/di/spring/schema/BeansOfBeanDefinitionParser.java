@@ -15,7 +15,7 @@ import org.w3c.dom.Element;
  * @author Kuisong Tong
  * @since 1.0
  */
-public class BeansOfBeanDefinitionParser extends AbstractSingleBeanDefinitionParser {
+final class BeansOfBeanDefinitionParser extends AbstractSingleBeanDefinitionParser {
     @Override
     protected Class<?> getBeanClass(final Element element) {
         return BeansOfTypeFactoryBean.class;

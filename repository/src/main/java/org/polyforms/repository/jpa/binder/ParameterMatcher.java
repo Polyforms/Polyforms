@@ -12,7 +12,7 @@ import javax.persistence.Parameter;
  * @author Kuisong Tong
  * @since 1.0
  */
-interface ParameterMatcher<T> {
+abstract class ParameterMatcher<T> {
     /**
      * Match parameters of JPA with parameters of method.
      * 
@@ -20,5 +20,5 @@ interface ParameterMatcher<T> {
      * @param parameters of JPA
      * @return the matched parameter map
      */
-    Map<T, Integer> match(Method method, Set<Parameter<?>> parameters);
+    protected abstract Map<T, Integer> match(Method method, Set<Parameter<?>> parameters);
 }
