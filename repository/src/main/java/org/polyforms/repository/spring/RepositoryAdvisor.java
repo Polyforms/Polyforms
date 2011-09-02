@@ -48,7 +48,7 @@ public final class RepositoryAdvisor extends DefaultPointcutAdvisor {
         public boolean matches(final Method method, final Class<?> targetClass) {
             for (final Class<?> clazz : AopUtils.deproxy(targetClass)) {
                 final Method specificMethod = ClassUtils.getMostSpecificMethod(method, clazz);
-                if (specificMethod != method) {
+                if (!specificMethod.equals(method)) {
                     return doMatch(clazz, specificMethod);
                 }
             }
