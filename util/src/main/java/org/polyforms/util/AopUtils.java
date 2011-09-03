@@ -33,7 +33,7 @@ public final class AopUtils {
         return new Class<?>[] { clazz };
     }
 
-    private static abstract class Deproxyer {
+    private abstract static class Deproxyer {
         protected abstract boolean supports(Class<?> clazz);
 
         protected abstract Class<?>[] deproxy(Class<?> clazz);
