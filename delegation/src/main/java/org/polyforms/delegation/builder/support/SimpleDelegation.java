@@ -9,6 +9,12 @@ import java.util.Map;
 import org.polyforms.delegation.builder.Delegation;
 import org.polyforms.delegation.builder.ParameterProvider;
 
+/**
+ * Implementation of {@link Delegation}.
+ * 
+ * @author Kuisong Tong
+ * @since 1.0
+ */
 final class SimpleDelegation implements Delegation {
     private final List<ParameterProvider<?>> parameterProviders = new ArrayList<ParameterProvider<?>>();
     private Map<Class<? extends Throwable>, Class<? extends Throwable>> exceptionTypeMap;
@@ -18,7 +24,7 @@ final class SimpleDelegation implements Delegation {
     private String delegateeName;
     private Method delegateeMethod;
 
-    public SimpleDelegation(final Class<?> delegatorType, final Method delegatorMethod) {
+    protected SimpleDelegation(final Class<?> delegatorType, final Method delegatorMethod) {
         this.delegatorType = delegatorType;
         this.delegatorMethod = delegatorMethod;
     }

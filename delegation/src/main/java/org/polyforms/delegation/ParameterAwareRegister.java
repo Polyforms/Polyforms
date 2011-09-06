@@ -8,6 +8,14 @@ import org.polyforms.delegation.builder.ParameterProvider.Constant;
 import org.polyforms.delegation.builder.ParameterProvider.TypeOf;
 import org.polyforms.delegation.util.DefaultValue;
 
+/**
+ * Abstract implementstion for {@link DelegationRegister} which methods handling {@link ParameterProvider}.
+ * 
+ * @author Kuisong Tong
+ * @since 1.0
+ * 
+ * @param <S> type of delegator
+ */
 abstract class ParameterAwareRegister<S> implements DelegationRegister<S> {
     /**
      * {@inheritDoc}

@@ -14,6 +14,12 @@ import net.sf.cglib.proxy.Proxy;
 
 import org.polyforms.delegation.util.DefaultValue;
 
+/**
+ * Factory used to create proxy for specified class or interface.
+ * 
+ * @author Kuisong Tong
+ * @since 1.0
+ */
 final class ProxyFactory {
     private static final Class<?>[] EMPTY_INTERFACES = new Class<?>[0];
     private static final CallbackFilter CALLBACK_FILTER = new CallbackFilter() {
@@ -73,7 +79,7 @@ final class ProxyFactory {
         return (T) Enhancer.create(proxyClass, EMPTY_INTERFACES, CALLBACK_FILTER, callbacks);
     }
 
-    interface MethodVisitor {
-        void visit(Method method);
+    protected abstract static class MethodVisitor {
+        protected abstract void visit(Method method);
     }
 }

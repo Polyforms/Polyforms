@@ -107,29 +107,26 @@ public final class DelegationRegisterProcessor implements BeanDefinitionRegistry
         visitBeanFactory(beanFactory, new AnnotatedDelegationRegister(delegationBuilder));
     }
 
-    protected static final class RegisteredClassCollector implements BeanClassVisitor {
+    protected static final class RegisteredClassCollector extends BeanClassVisitor {
         private final Set<Class<?>> registeredClasses = new HashSet<Class<?>>();
 
-        public void visit(final Class<?> clazz) {
+        protected void visit(final Class<?> clazz) {
             registeredClasses.add(clazz);
         }
 
-        public boolean contains(final Class<?> clazz) {
+        protected boolean contains(final Class<?> clazz) {
             return registeredClasses.contains(clazz);
         }
     }
 
-    protected static class AnnotatedDelegationRegister implements BeanClassVisitor {
+    protected static class AnnotatedDelegationRegister extends BeanClassVisitor {
         private final DelegationBuilder delegationBuilder;
 
         protected AnnotatedDelegationRegister(final DelegationBuilder delegationBuilder) {
             this.delegationBuilder = delegationBuilder;
         }
 
-        /**
-         * {@inheritDoc}
-         */
-        public void visit(final Class<?> clazz) {
+        protected void visit(final Class<?> clazz) {
             final boolean annotationPresent = clazz.isAnnotationPresent(DelegateTo.class);
             final Set<Method> annotatedMethods = getAnnotatedMethods(clazz.getMethods());
             if (!annotationPresent && annotatedMethods.isEmpty()) {
@@ -191,7 +188,7 @@ public final class DelegationRegisterProcessor implements BeanDefinitionRegistry
         }
     }
 
-    protected interface BeanClassVisitor {
-        void visit(final Class<?> clazz);
+    protected abstract static class BeanClassVisitor {
+        protected abstract void visit(final Class<?> clazz);
     }
 }

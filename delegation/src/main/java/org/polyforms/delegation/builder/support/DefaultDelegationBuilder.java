@@ -24,6 +24,12 @@ import org.springframework.core.ParameterNameDiscoverer;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 
+/**
+ * Implementation of {@link DelegationBuilder}.
+ * 
+ * @author Kuisong Tong
+ * @since 1.0
+ */
 public final class DefaultDelegationBuilder implements DelegationBuilder {
     private final ParameterNameDiscoverer parameterNameDiscoverer = new LocalVariableTableParameterNameDiscoverer();
     private final ProxyFactory delegatorProxyFactory = new ProxyFactory(new DelegatorMethodVisitor());
@@ -168,21 +174,15 @@ public final class DefaultDelegationBuilder implements DelegationBuilder {
         exceptionTypeMap.put(targetType, sourceType);
     }
 
-    private final class DelegatorMethodVisitor implements MethodVisitor {
-        /**
-         * {@inheritDoc}
-         */
-        public void visit(final Method method) {
+    private final class DelegatorMethodVisitor extends MethodVisitor {
+        protected void visit(final Method method) {
             Assert.isNull(delegatorMethod, "Invoke source.xxx twice");
             delegatorMethod = method;
         }
     }
 
-    private final class DelegateeMethodVisitor implements MethodVisitor {
-        /**
-         * {@inheritDoc}
-         */
-        public void visit(final Method method) {
+    private final class DelegateeMethodVisitor extends MethodVisitor {
+        protected void visit(final Method method) {
             Assert.isNull(delegation.getDelegateeMethod(), "The delegatee method has been set.");
             delegation.setDelegateeMethod(method);
             if (parameterProviders.isEmpty()) {
@@ -274,6 +274,9 @@ public final class DefaultDelegationBuilder implements DelegationBuilder {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void registerDelegations() {
         if (delegatorType == null) {
             return;
