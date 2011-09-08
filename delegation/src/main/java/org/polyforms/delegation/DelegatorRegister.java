@@ -2,7 +2,6 @@ package org.polyforms.delegation;
 
 import org.polyforms.delegation.builder.DelegationBuilder;
 import org.polyforms.delegation.builder.DelegationBuilderHolder;
-import org.polyforms.delegation.builder.ParameterAwareRegister;
 import org.springframework.core.GenericTypeResolver;
 
 /**
@@ -21,10 +20,6 @@ import org.springframework.core.GenericTypeResolver;
  *      ... // register delegations
  *     }
  * }
- * 
- * 
- * 
- * 
  * 
  * </pre>
  * 

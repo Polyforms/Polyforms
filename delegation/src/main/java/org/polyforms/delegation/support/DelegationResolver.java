@@ -66,7 +66,7 @@ final class Delegator {
             return true;
         }
 
-        if (obj == null || !(obj instanceof Delegator)) {
+        if (!(obj instanceof Delegator)) {
             return false;
         }
 

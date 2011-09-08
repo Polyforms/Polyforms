@@ -1,5 +1,8 @@
-package org.polyforms.delegation.builder;
+package org.polyforms.delegation;
 
+import org.polyforms.delegation.builder.DelegationBuilderHolder;
+import org.polyforms.delegation.builder.DelegationRegister;
+import org.polyforms.delegation.builder.ParameterProvider;
 import org.polyforms.delegation.provider.At;
 import org.polyforms.delegation.provider.Constant;
 import org.polyforms.delegation.provider.TypeOf;

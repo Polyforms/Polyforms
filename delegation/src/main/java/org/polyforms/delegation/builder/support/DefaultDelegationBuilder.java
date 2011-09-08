@@ -91,15 +91,17 @@ public final class DefaultDelegationBuilder implements DelegationBuilder {
      * {@inheritDoc}
      */
     public <T> T delegate() {
-        Assert.notNull(exceptionTypeMap,
+        Assert.notNull(delegatorType,
                 "The delegatorType is null. The delegatorFrom method must be invoked before delegate method.");
 
+        T target = null;
         if (delegatorMethod == null) {
             registerAllAbstractMethods();
-            return null;
+        } else {
+            target = this.<T> registerDelegation();
         }
 
-        return this.<T> registerDelegation();
+        return target;
     }
 
     @SuppressWarnings("unchecked")
@@ -182,6 +184,7 @@ public final class DefaultDelegationBuilder implements DelegationBuilder {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private final class DelegateeMethodVisitor extends MethodVisitor {
         @Override
         protected void visit(final Method method) {
@@ -214,7 +217,6 @@ public final class DefaultDelegationBuilder implements DelegationBuilder {
             return genericTypes;
         }
 
-        @SuppressWarnings("unchecked")
         private <T> List<ParameterProvider<?>> matchParameters(final T[] delegatorParameters,
                 final T[] delegateeParameters) {
             if (isEmpty(delegatorParameters) || isEmpty(delegateeParameters)) {
@@ -233,7 +235,6 @@ public final class DefaultDelegationBuilder implements DelegationBuilder {
             return delegatorParameters == null || delegatorParameters.length == 0;
         }
 
-        @SuppressWarnings("unchecked")
         private <T> Map<T, Integer> createParameterMap(final T[] parameters) {
             final Map<T, Integer> parameterTypeMap = new HashMap<T, Integer>();
             for (int i = 0; i < parameters.length; i++) {
@@ -246,7 +247,6 @@ public final class DefaultDelegationBuilder implements DelegationBuilder {
             return parameterTypeMap;
         }
 
-        @SuppressWarnings("unchecked")
         private <T> List<ParameterProvider<?>> matchParameters(final T[] delegateeParameters,
                 final Map<T, Integer> delegatorParameterMap) {
             final List<ParameterProvider<?>> resolvedParameterProviders = new ArrayList<ParameterProvider<?>>();

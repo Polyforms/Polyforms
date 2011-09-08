@@ -1,4 +1,4 @@
-package org.polyforms.delegation.builder;
+package org.polyforms.delegation;
 
 import junit.framework.Assert;
 
@@ -6,6 +6,9 @@ import org.easymock.EasyMock;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.polyforms.delegation.builder.DelegationBuilder;
+import org.polyforms.delegation.builder.DelegationBuilderHolder;
+import org.polyforms.delegation.builder.ParameterProvider;
 import org.polyforms.delegation.provider.At;
 import org.polyforms.delegation.provider.Constant;
 import org.polyforms.delegation.provider.TypeOf;
