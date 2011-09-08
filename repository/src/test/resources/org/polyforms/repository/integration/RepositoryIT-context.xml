@@ -32,7 +32,7 @@
 		<property name="password" value="" />
 	</bean>
 
-	<bean primary="true" class="org.polyforms.repository.support.InheritedRepositoryMatcher">
+	<bean class="org.polyforms.repository.support.InheritedRepositoryMatcher">
 		<constructor-arg value="org.polyforms.repository.integration.mock.Repository" />
 	</bean>
 </beans>

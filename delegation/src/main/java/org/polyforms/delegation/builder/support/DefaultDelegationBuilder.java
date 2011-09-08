@@ -14,8 +14,8 @@ import org.polyforms.delegation.builder.Delegation;
 import org.polyforms.delegation.builder.DelegationBuilder;
 import org.polyforms.delegation.builder.DelegationRegistry;
 import org.polyforms.delegation.builder.ParameterProvider;
-import org.polyforms.delegation.builder.ParameterProvider.At;
 import org.polyforms.delegation.builder.support.ProxyFactory.MethodVisitor;
+import org.polyforms.delegation.provider.At;
 import org.polyforms.delegation.util.MethodUtils;
 import org.springframework.core.GenericTypeResolver;
 import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
@@ -175,6 +175,7 @@ public final class DefaultDelegationBuilder implements DelegationBuilder {
     }
 
     private final class DelegatorMethodVisitor extends MethodVisitor {
+        @Override
         protected void visit(final Method method) {
             Assert.isNull(delegatorMethod, "Invoke source.xxx twice");
             delegatorMethod = method;
@@ -182,6 +183,7 @@ public final class DefaultDelegationBuilder implements DelegationBuilder {
     }
 
     private final class DelegateeMethodVisitor extends MethodVisitor {
+        @Override
         protected void visit(final Method method) {
             Assert.isNull(delegation.getDelegateeMethod(), "The delegatee method has been set.");
             delegation.setDelegateeMethod(method);
@@ -224,31 +226,11 @@ public final class DefaultDelegationBuilder implements DelegationBuilder {
                 return Collections.EMPTY_LIST;
             }
 
-            final List<ParameterProvider<?>> resolvedParameterProviders = new ArrayList<ParameterProvider<?>>();
-            for (final T delegateeParameter : delegateeParameters) {
-                final ParameterProvider<?> parameterProvider = findMatchedParameter(delegateeParameter,
-                        delegatorParameterMap);
-                if (parameterProvider == null) {
-                    return Collections.EMPTY_LIST;
-                }
-                resolvedParameterProviders.add(parameterProvider);
-            }
-
-            return resolvedParameterProviders;
+            return matchParameters(delegateeParameters, delegatorParameterMap);
         }
 
         private <T> boolean isEmpty(final T[] delegatorParameters) {
             return delegatorParameters == null || delegatorParameters.length == 0;
-        }
-
-        @SuppressWarnings("rawtypes")
-        private <T> ParameterProvider<?> findMatchedParameter(final T delegateeParameter,
-                final Map<T, Integer> delegatorParameterMap) {
-            if (delegatorParameterMap.containsKey(delegateeParameter)) {
-                return new At(delegatorParameterMap.remove(delegateeParameter));
-            }
-
-            return null;
         }
 
         @SuppressWarnings("unchecked")
@@ -262,6 +244,31 @@ public final class DefaultDelegationBuilder implements DelegationBuilder {
                 parameterTypeMap.put(parameterType, i);
             }
             return parameterTypeMap;
+        }
+
+        @SuppressWarnings("unchecked")
+        private <T> List<ParameterProvider<?>> matchParameters(final T[] delegateeParameters,
+                final Map<T, Integer> delegatorParameterMap) {
+            final List<ParameterProvider<?>> resolvedParameterProviders = new ArrayList<ParameterProvider<?>>();
+            for (final T delegateeParameter : delegateeParameters) {
+                final ParameterProvider<?> parameterProvider = findMatchedParameter(delegateeParameter,
+                        delegatorParameterMap);
+                if (parameterProvider == null) {
+                    return Collections.EMPTY_LIST;
+                }
+                resolvedParameterProviders.add(parameterProvider);
+            }
+            return resolvedParameterProviders;
+        }
+
+        @SuppressWarnings("rawtypes")
+        private <T> ParameterProvider<?> findMatchedParameter(final T delegateeParameter,
+                final Map<T, Integer> delegatorParameterMap) {
+            if (delegatorParameterMap.containsKey(delegateeParameter)) {
+                return new At(delegatorParameterMap.remove(delegateeParameter));
+            }
+
+            return null;
         }
 
         private void setParameterProviders() {

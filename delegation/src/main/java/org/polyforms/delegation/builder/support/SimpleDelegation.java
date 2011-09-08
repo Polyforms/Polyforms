@@ -123,11 +123,7 @@ final class SimpleDelegation implements Delegation {
             return true;
         }
 
-        if (obj == null) {
-            return false;
-        }
-
-        if (!(obj instanceof SimpleDelegation)) {
+        if (obj == null || !(obj instanceof SimpleDelegation)) {
             return false;
         }
 

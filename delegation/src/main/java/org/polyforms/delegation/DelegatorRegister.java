@@ -2,16 +2,17 @@ package org.polyforms.delegation;
 
 import org.polyforms.delegation.builder.DelegationBuilder;
 import org.polyforms.delegation.builder.DelegationBuilderHolder;
-import org.polyforms.delegation.builder.DelegationRegister;
-import org.polyforms.delegation.builder.ParameterProvider;
+import org.polyforms.delegation.builder.ParameterAwareRegister;
 import org.springframework.core.GenericTypeResolver;
 
 /**
  * The helper class is used by client to register delegation by code.
  * 
- * Clients need extends this class and override {@link DelegationRegister#register(Object)} to register the delegation
- * pair which specifies the delegator and delegatee's class and type. Additional configurations like name of bean,
- * {@link ParameterProvider}s are able to customize the delegation more fine granularity.
+ * Clients need extends this class and override
+ * {@link org.polyforms.delegation.builder.DelegationRegister#register(Object)} to register the delegation pair which
+ * specifies the delegator and delegatee's class and type. Additional configurations like name of bean,
+ * {@link org.polyforms.delegation.builder.ParameterProvider}s are able to customize the delegation more fine
+ * granularity.
  * 
  * <pre>
  * public static class DelegateeDelegationBuilder extends DelegatorRegister&lt;Delegator&gt; {
@@ -20,6 +21,10 @@ import org.springframework.core.GenericTypeResolver;
  *      ... // register delegations
  *     }
  * }
+ * 
+ * 
+ * 
+ * 
  * 
  * </pre>
  * 

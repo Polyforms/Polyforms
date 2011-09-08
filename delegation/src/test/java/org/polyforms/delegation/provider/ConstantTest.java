@@ -1,9 +1,9 @@
-package org.polyforms.delegation.builder;
+package org.polyforms.delegation.provider;
 
 import junit.framework.Assert;
 
 import org.junit.Test;
-import org.polyforms.delegation.builder.ParameterProvider.Constant;
+import org.polyforms.delegation.builder.ParameterProvider;
 
 public class ConstantTest {
     @Test

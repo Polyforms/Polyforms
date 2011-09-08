@@ -1,11 +1,8 @@
-package org.polyforms.delegation;
+package org.polyforms.delegation.builder;
 
-import org.polyforms.delegation.builder.DelegationBuilderHolder;
-import org.polyforms.delegation.builder.DelegationRegister;
-import org.polyforms.delegation.builder.ParameterProvider;
-import org.polyforms.delegation.builder.ParameterProvider.At;
-import org.polyforms.delegation.builder.ParameterProvider.Constant;
-import org.polyforms.delegation.builder.ParameterProvider.TypeOf;
+import org.polyforms.delegation.provider.At;
+import org.polyforms.delegation.provider.Constant;
+import org.polyforms.delegation.provider.TypeOf;
 import org.polyforms.delegation.util.DefaultValue;
 
 /**
@@ -16,7 +13,7 @@ import org.polyforms.delegation.util.DefaultValue;
  * 
  * @param <S> type of delegator
  */
-abstract class ParameterAwareRegister<S> implements DelegationRegister<S> {
+public abstract class ParameterAwareRegister<S> implements DelegationRegister<S> {
     /**
      * {@inheritDoc}
      */

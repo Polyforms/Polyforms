@@ -110,6 +110,7 @@ public final class DelegationRegisterProcessor implements BeanDefinitionRegistry
     protected static final class RegisteredClassCollector extends BeanClassVisitor {
         private final Set<Class<?>> registeredClasses = new HashSet<Class<?>>();
 
+        @Override
         protected void visit(final Class<?> clazz) {
             registeredClasses.add(clazz);
         }
@@ -126,6 +127,7 @@ public final class DelegationRegisterProcessor implements BeanDefinitionRegistry
             this.delegationBuilder = delegationBuilder;
         }
 
+        @Override
         protected void visit(final Class<?> clazz) {
             final boolean annotationPresent = clazz.isAnnotationPresent(DelegateTo.class);
             final Set<Method> annotatedMethods = getAnnotatedMethods(clazz.getMethods());

@@ -66,16 +66,11 @@ final class Delegator {
             return true;
         }
 
-        if (obj == null) {
-            return false;
-        }
-
-        if (!(obj instanceof Delegator)) {
+        if (obj == null || !(obj instanceof Delegator)) {
             return false;
         }
 
         final Delegator other = (Delegator) obj;
-
         return type == other.type && method.equals(other.method);
     }
 }

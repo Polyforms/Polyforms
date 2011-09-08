@@ -1,4 +1,4 @@
-package org.polyforms.delegation;
+package org.polyforms.delegation.builder;
 
 import junit.framework.Assert;
 
@@ -6,12 +6,9 @@ import org.easymock.EasyMock;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.polyforms.delegation.builder.DelegationBuilder;
-import org.polyforms.delegation.builder.DelegationBuilderHolder;
-import org.polyforms.delegation.builder.ParameterProvider;
-import org.polyforms.delegation.builder.ParameterProvider.At;
-import org.polyforms.delegation.builder.ParameterProvider.Constant;
-import org.polyforms.delegation.builder.ParameterProvider.TypeOf;
+import org.polyforms.delegation.provider.At;
+import org.polyforms.delegation.provider.Constant;
+import org.polyforms.delegation.provider.TypeOf;
 
 public class ParameterAwareRegisterTest {
     private DelegationBuilder delegationBuilder;
