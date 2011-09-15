@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.polyforms</groupId>
@@ -164,21 +165,12 @@
 		</repository>
 	</distributionManagement>
 
-	<modules>
-		<module>di</module>
-		<module>repository</module>
-		<module>event</module>
-		<module>delegation</module>
-		<module>util</module>
-		<module>querydsl</module>
-	</modules>
-	
 	<dependencies>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 		</dependency>
-	
+
 		<!-- Test -->
 		<dependency>
 			<groupId>junit</groupId>
@@ -267,6 +259,32 @@
 	</properties>
 
 	<profiles>
+		<profile>
+			<id>modules</id>
+			<activation>
+				<property>
+					<name>!only.1.6</name>
+				</property>
+			</activation>
+
+			<modules>
+				<module>di</module>
+				<module>repository</module>
+				<module>event</module>
+				<module>delegation</module>
+				<module>util</module>
+			</modules>
+		</profile>
+		<profile>
+			<id>modules-1.6</id>
+			<activation>
+				<jdk>[1.6,)</jdk>
+			</activation>
+
+			<modules>
+				<module>querydsl</module>
+			</modules>
+		</profile>
 		<profile>
 			<id>jacoco</id>
 			<dependencies>
