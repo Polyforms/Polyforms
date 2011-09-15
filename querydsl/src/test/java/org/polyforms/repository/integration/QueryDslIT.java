@@ -2,15 +2,20 @@ package org.polyforms.repository.integration;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.polyforms.repository.integration.mock.QMockEntity;
-import org.polyforms.repository.integration.mock.QueryDslRepository;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.mysema.query.types.expr.BooleanExpression;
 
-public abstract class QueryDslIT extends RepositoryIT {
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration
+@Transactional
+public class QueryDslIT {
     @Autowired
-    private QueryDslRepository queryDslRepository;
+    private MockEntityRepository queryDslRepository;
 
     @Test
     public void get() {

@@ -1,4 +1,4 @@
-package org.polyforms.repository.integration.mock;
+package org.polyforms.repository.integration;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -15,7 +15,6 @@ public class BuildInExecutorPrefixAlias implements ExecutorPrefixAlias {
      * Create a default instance.
      */
     public BuildInExecutorPrefixAlias() {
-        alias.put("delete", new String[] { "remove" });
         alias.put("find", new String[] { "get" });
     }
 

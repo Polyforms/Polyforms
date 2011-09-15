@@ -170,6 +170,7 @@
 		<module>event</module>
 		<module>delegation</module>
 		<module>util</module>
+		<module>querydsl</module>
 	</modules>
 	
 	<dependencies>

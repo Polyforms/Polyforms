@@ -51,18 +51,6 @@
 			<artifactId>spring-context</artifactId>
 			<optional>true</optional>
 		</dependency>
-		<dependency>
-			<groupId>com.mysema.querydsl</groupId>
-			<artifactId>querydsl-jpa</artifactId>
-			<version>${querydsl.version}</version>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>com.mysema.querydsl</groupId>
-			<artifactId>querydsl-apt</artifactId>
-			<version>${querydsl.version}</version>
-			<scope>provided</scope>
-		</dependency>
 
 		<!-- Integration Test -->
 		<dependency>
@@ -115,25 +103,6 @@
 	</dependencies>
 
 	<build>
-		<plugins>
-			<plugin>
-				<groupId>com.mysema.maven</groupId>
-				<artifactId>maven-apt-plugin</artifactId>
-				<version>1.0.2</version>
-				<executions>
-					<execution>
-						<phase>generate-test-sources</phase>
-						<goals>
-							<goal>test-process</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>target/generated-sources/test</outputDirectory>
-							<processor>com.mysema.query.apt.jpa.JPAAnnotationProcessor</processor>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
 		<pluginManagement>
 			<plugins>
 				<plugin>
@@ -158,7 +127,6 @@
 		<hibernate.version>3.6.6.Final</hibernate.version>
 		<eclipselink.version>2.3.0</eclipselink.version>
 		<openjpa.version>2.1.1</openjpa.version>
-		<querydsl.version>2.2.0</querydsl.version>
 	</properties>
 
 	<profiles>
