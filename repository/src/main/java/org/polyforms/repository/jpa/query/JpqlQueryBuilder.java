@@ -11,7 +11,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import org.polyforms.repository.ExecutorPrefixHolder;
-import org.polyforms.repository.jpa.EntityHelper;
 import org.polyforms.repository.jpa.QueryBuilder.QueryType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,11 +29,11 @@ class JpqlQueryBuilder {
     private EntityManager entityManager;
 
     @Inject
-    protected JpqlQueryBuilder(final ExecutorPrefixHolder executorPrefix, final EntityHelper entityHelper) {
+    protected JpqlQueryBuilder(final ExecutorPrefixHolder executorPrefix) {
         queryStringbuilders.put(QueryType.SELECT, new SelectQueryStringBuilder(executorPrefix));
         queryStringbuilders.put(QueryType.UPDATE, new UpdateQueryStringBuilder(executorPrefix));
         queryStringbuilders.put(QueryType.DELETE, new DeleteQueryStringBuilder(executorPrefix));
-        queryStringbuilders.put(QueryType.COUNT, new CountQueryStringBuilder(executorPrefix, entityHelper));
+        queryStringbuilders.put(QueryType.COUNT, new CountQueryStringBuilder(executorPrefix));
     }
 
     protected Query build(final QueryType type, final Class<?> entityClass, final Method method) {

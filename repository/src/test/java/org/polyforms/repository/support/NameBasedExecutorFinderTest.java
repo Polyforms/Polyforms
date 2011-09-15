@@ -10,12 +10,14 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.polyforms.repository.ExecutorPrefixHolder;
+import org.polyforms.repository.spi.ConditionalExecutor;
 import org.polyforms.repository.spi.Executor;
 import org.polyforms.repository.spi.ExecutorFinder;
 
 public class NameBasedExecutorFinderTest {
     private final Executor get = new Get();
     private final Executor getBy = new GetBy();
+    private final Find find = new Find();
     private ExecutorPrefixHolder executorPrefixHolder;
     private ExecutorFinder executorFinder;
     private Set<String> executorPrefix;
@@ -25,10 +27,12 @@ public class NameBasedExecutorFinderTest {
         executorPrefix = new HashSet<String>();
         executorPrefix.add("get");
         executorPrefix.add("load");
+        executorPrefix.add("find");
 
         final Set<Executor> executors = new HashSet<Executor>();
         executors.add(get);
         executors.add(getBy);
+        executors.add(find);
 
         executorPrefixHolder = EasyMock.createMock(ExecutorPrefixHolder.class);
         executorPrefixHolder.isPrefix("Get");
@@ -38,6 +42,10 @@ public class NameBasedExecutorFinderTest {
         executorPrefixHolder.isPrefix("GetBy");
         EasyMock.expectLastCall().andReturn(true);
         executorPrefixHolder.getAliases("GetBy");
+        EasyMock.expectLastCall().andReturn(executorPrefix);
+        executorPrefixHolder.isPrefix("Find");
+        EasyMock.expectLastCall().andReturn(false);
+        executorPrefixHolder.getAliases("Find");
         EasyMock.expectLastCall().andReturn(executorPrefix);
         EasyMock.replay(executorPrefixHolder);
 
@@ -59,6 +67,12 @@ public class NameBasedExecutorFinderTest {
     public void findExecutorWithAlias() throws NoSuchMethodException {
         final Method method = Repository.class.getMethod("load", new Class<?>[0]);
         Assert.assertSame(get, executorFinder.findExecutor(method));
+    }
+
+    @Test
+    public void findConditionalExecutor() throws NoSuchMethodException {
+        final Method method = Repository.class.getMethod("find", new Class<?>[0]);
+        Assert.assertSame(find, executorFinder.findExecutor(method));
     }
 
     @Test
@@ -85,10 +99,22 @@ public class NameBasedExecutorFinderTest {
         }
     }
 
+    private static class Find implements ConditionalExecutor {
+        public Object execute(final Object target, final Method method, final Object... arguments) {
+            return null;
+        }
+
+        public boolean matches(final Method method) {
+            return method.getName().equals("find");
+        }
+    }
+
     private static interface Repository {
         Object get();
 
         Object load();
+
+        Object find();
 
         Object getByName();
     }

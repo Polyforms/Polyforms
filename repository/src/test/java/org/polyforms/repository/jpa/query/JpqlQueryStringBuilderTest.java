@@ -6,7 +6,6 @@ import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
 import org.polyforms.repository.ExecutorPrefixHolder;
-import org.polyforms.repository.jpa.EntityHelper;
 
 public class JpqlQueryStringBuilderTest {
     private ExecutorPrefixHolder executorPrefix;
@@ -57,32 +56,24 @@ public class JpqlQueryStringBuilderTest {
 
     @Test
     public void countByUser_NameBetween() {
-        final EntityHelper entityHelper = EasyMock.createMock(EntityHelper.class);
-        entityHelper.getIdentifierName(EntityClass.class);
-        EasyMock.expectLastCall().andReturn("id");
         executorPrefix.removePrefixIfAvailable("findByUser_NameBetween");
         EasyMock.expectLastCall().andReturn("ByUser_NameBetween");
-        EasyMock.replay(executorPrefix, entityHelper);
+        EasyMock.replay(executorPrefix);
 
-        Assert.assertEquals("SELECT count( e.id ) FROM EntityClass e WHERE e.user.name BETWEEN ?1 AND ?2 ",
-                new CountQueryStringBuilder(executorPrefix, entityHelper).getQuery(EntityClass.class,
-                        "findByUser_NameBetween"));
-        EasyMock.verify(executorPrefix, entityHelper);
+        Assert.assertEquals("SELECT count( e ) FROM EntityClass e WHERE e.user.name BETWEEN ?1 AND ?2 ",
+                new CountQueryStringBuilder(executorPrefix).getQuery(EntityClass.class, "findByUser_NameBetween"));
+        EasyMock.verify(executorPrefix);
     }
 
     @Test
     public void countByUserNameOrderByIdDesc() {
-        final EntityHelper entityHelper = EasyMock.createMock(EntityHelper.class);
-        entityHelper.getIdentifierName(EntityClass.class);
-        EasyMock.expectLastCall().andReturn("id");
         executorPrefix.removePrefixIfAvailable("findDistinctByUserName");
         EasyMock.expectLastCall().andReturn("findDistinctByUserName");
-        EasyMock.replay(executorPrefix, entityHelper);
+        EasyMock.replay(executorPrefix);
 
-        Assert.assertEquals("SELECT count( DISTINCT e.id ) FROM EntityClass e WHERE e.userName = ?1 ",
-                new CountQueryStringBuilder(executorPrefix, entityHelper).getQuery(EntityClass.class,
-                        "findDistinctByUserName"));
-        EasyMock.verify(executorPrefix, entityHelper);
+        Assert.assertEquals("SELECT count( DISTINCT e ) FROM EntityClass e WHERE e.userName = ?1 ",
+                new CountQueryStringBuilder(executorPrefix).getQuery(EntityClass.class, "findDistinctByUserName"));
+        EasyMock.verify(executorPrefix);
     }
 
     @Test

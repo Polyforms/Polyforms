@@ -10,7 +10,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.polyforms.repository.ExecutorPrefixHolder;
-import org.polyforms.repository.jpa.EntityHelper;
 import org.polyforms.repository.jpa.QueryBuilder.QueryType;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -22,7 +21,7 @@ public class JpqlQueryBuilderTest {
     @Before
     public void setUp() {
         executorPrefix = EasyMock.createMock(ExecutorPrefixHolder.class);
-        queryBuilder = new JpqlQueryBuilder(executorPrefix, EasyMock.createMock(EntityHelper.class));
+        queryBuilder = new JpqlQueryBuilder(executorPrefix);
         entityManager = EasyMock.createMock(EntityManager.class);
         ReflectionTestUtils.setField(queryBuilder, "entityManager", entityManager);
     }

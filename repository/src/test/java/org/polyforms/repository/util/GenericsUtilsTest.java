@@ -5,12 +5,6 @@ import java.util.Collection;
 import org.junit.Assert;
 import org.junit.Test;
 
-/**
- * Test case for field utility class.
- * 
- * @author kuisong
- * @since 1.0
- */
 public class GenericsUtilsTest {
     @Test(expected = UnsupportedOperationException.class)
     public void cannotInstance() {
