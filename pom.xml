@@ -9,7 +9,9 @@
 	<version>0.6-SNAPSHOT</version>
 
 	<name>Polyforms Framework</name>
-	<description><![CDATA[A framework focusing on simplifying the business layer development base on <a href="http://domaindrivendesign.org/">Domain Driven Design</a> methodology.]]></description>
+	<description>
+		<![CDATA[A framework focusing on simplifying the business layer development base on <a href="http://domaindrivendesign.org/">Domain Driven Design</a> methodology.]]>
+	</description>
 	<url>http://www.polyforms.org</url>
 	<inceptionYear>2010</inceptionYear>
 	<organization>
@@ -116,7 +118,7 @@
 					<configuration>
 						<statementContexts>
 							<neverGetHere>
-								throw new IllegalStateException\("Should never get here"\);
+								<![CDATA[throw new IllegalStateException\("Should never get here"\);]]>
 							</neverGetHere>
 						</statementContexts>
 						<contextFilters>neverGetHere</contextFilters>
@@ -236,10 +238,22 @@
 				<artifactId>slf4j-simple</artifactId>
 				<version>${slf4j.version}</version>
 			</dependency>
+
+			<!-- Integration Test -->
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-test</artifactId>
 				<version>${spring.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-entitymanager</artifactId>
+				<version>${hibernate.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.hsqldb</groupId>
+				<artifactId>hsqldb-j5</artifactId>
+				<version>${hsqldb.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -256,6 +270,8 @@
 		<easymock.version>3.0</easymock.version>
 		<spring.version>3.0.5.RELEASE</spring.version>
 		<slf4j.version>1.6.1</slf4j.version>
+		<hsqldb.version>2.2.4</hsqldb.version>
+		<hibernate.version>3.6.6.Final</hibernate.version>
 	</properties>
 
 	<profiles>

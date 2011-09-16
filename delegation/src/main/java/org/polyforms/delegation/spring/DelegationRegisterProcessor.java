@@ -124,6 +124,7 @@ public final class DelegationRegisterProcessor implements BeanDefinitionRegistry
         private final DelegationBuilder delegationBuilder;
 
         protected AnnotatedDelegationRegister(final DelegationBuilder delegationBuilder) {
+            super();
             this.delegationBuilder = delegationBuilder;
         }
 
