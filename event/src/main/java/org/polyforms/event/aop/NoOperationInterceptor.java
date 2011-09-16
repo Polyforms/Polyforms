@@ -4,7 +4,7 @@ import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 
 /**
- * {@link MethodInterceptor} for methods which annotated by {@link org.polyforms.event.annotation.NoOperation}.
+ * {@link MethodInterceptor} for methods which annotated by {@link org.polyforms.event.NoOperation}.
  * 
  * It does nothing in execution, and the return type must be void.
  * 

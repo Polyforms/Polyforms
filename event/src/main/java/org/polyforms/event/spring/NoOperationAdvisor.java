@@ -1,6 +1,6 @@
 package org.polyforms.event.spring;
 
-import org.polyforms.event.annotation.NoOperation;
+import org.polyforms.event.NoOperation;
 import org.polyforms.event.aop.NoOperationInterceptor;
 import org.springframework.aop.support.DefaultPointcutAdvisor;
 import org.springframework.aop.support.annotation.AnnotationMatchingPointcut;

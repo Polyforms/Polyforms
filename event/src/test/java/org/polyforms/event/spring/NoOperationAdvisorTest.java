@@ -2,7 +2,7 @@ package org.polyforms.event.spring;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.polyforms.event.annotation.NoOperation;
+import org.polyforms.event.NoOperation;
 import org.polyforms.event.aop.NoOperationInterceptor;
 import org.springframework.aop.MethodMatcher;
 

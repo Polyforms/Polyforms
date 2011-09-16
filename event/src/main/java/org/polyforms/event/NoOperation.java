@@ -1,4 +1,4 @@
-package org.polyforms.event.annotation;
+package org.polyforms.event;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
