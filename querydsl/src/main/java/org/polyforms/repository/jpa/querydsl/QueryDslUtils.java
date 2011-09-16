@@ -17,14 +17,14 @@ import com.mysema.query.types.EntityPath;
  * @since 1.0
  */
 class QueryDslUtils {
-    private static final Map<Class<?>, EntityPath<?>> entityPathCache = new HashMap<Class<?>, EntityPath<?>>();
+    private static final Map<Class<?>, EntityPath<?>> ENTITY_PATH_CACHE = new HashMap<Class<?>, EntityPath<?>>();
 
     protected QueryDslUtils() {
         throw new UnsupportedOperationException();
     }
 
     protected static EntityPath<?> findEntityPath(final Class<?> entityClass) {
-        if (!entityPathCache.containsKey(entityClass)) {
+        if (!ENTITY_PATH_CACHE.containsKey(entityClass)) {
             final String queryClassName = getQueryClassName(entityClass);
             try {
                 final Class<?> pathClass = ClassUtils.forName(queryClassName, QueryDslUtils.class.getClassLoader());
@@ -33,14 +33,14 @@ class QueryDslUtils {
                 if (field == null) {
                     throw new IllegalStateException("Cannot find static field of query class " + pathClass);
                 } else {
-                    entityPathCache.put(entityClass, (EntityPath<?>) ReflectionUtils.getField(field, null));
+                    ENTITY_PATH_CACHE.put(entityClass, (EntityPath<?>) ReflectionUtils.getField(field, null));
                 }
             } catch (final ClassNotFoundException e) {
-                throw new IllegalArgumentException("Cannot find query class of entity " + entityClass.getName());
+                throw new IllegalArgumentException("Cannot find query class of entity " + entityClass.getName(), e);
             }
         }
 
-        return entityPathCache.get(entityClass);
+        return ENTITY_PATH_CACHE.get(entityClass);
     }
 
     private static Field getStaticFieldOfType(final Class<?> type) {
