@@ -279,7 +279,7 @@
 			<id>modules</id>
 			<activation>
 				<property>
-					<name>!only.1.6</name>
+					<name>!modules-1.6</name>
 				</property>
 			</activation>
 
