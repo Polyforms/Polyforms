@@ -6,7 +6,7 @@ import org.polyforms.delegation.builder.ParameterProvider;
 import org.polyforms.delegation.provider.At;
 import org.polyforms.delegation.provider.Constant;
 import org.polyforms.delegation.provider.TypeOf;
-import org.polyforms.delegation.util.DefaultValue;
+import org.polyforms.util.DefaultValue;
 
 /**
  * Abstract implementstion for {@link DelegationRegister} which methods handling {@link ParameterProvider}.

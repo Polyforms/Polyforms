@@ -12,7 +12,7 @@ import net.sf.cglib.proxy.MethodProxy;
 import net.sf.cglib.proxy.NoOp;
 import net.sf.cglib.proxy.Proxy;
 
-import org.polyforms.delegation.util.DefaultValue;
+import org.polyforms.util.DefaultValue;
 
 /**
  * Factory used to create proxy for specified class or interface.

@@ -1,4 +1,4 @@
-package org.polyforms.delegation.util;
+package org.polyforms.util;
 
 import java.util.HashMap;
 import java.util.Map;
