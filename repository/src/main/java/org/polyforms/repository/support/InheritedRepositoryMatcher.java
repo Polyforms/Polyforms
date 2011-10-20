@@ -4,7 +4,7 @@ import org.polyforms.repository.spi.RepositoryMatcher;
 import org.springframework.util.Assert;
 
 /**
- * Strategy of finding Repository by inheriting.
+ * Strategy of finding Repository by inheritance.
  * 
  * @author Kuisong Tong
  * @since 1.0

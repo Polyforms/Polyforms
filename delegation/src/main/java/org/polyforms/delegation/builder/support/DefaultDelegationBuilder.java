@@ -25,7 +25,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 
 /**
- * Implementation of {@link DelegationBuilder}.
+ * Default implementation of {@link DelegationBuilder}.
  * 
  * @author Kuisong Tong
  * @since 1.0

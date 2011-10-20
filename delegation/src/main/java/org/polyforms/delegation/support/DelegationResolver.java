@@ -5,7 +5,7 @@ import java.lang.reflect.Method;
 import org.polyforms.delegation.builder.Delegation;
 
 /**
- * Strategy of resolving {@link Delegation} built for specific {@link Delegator}.
+ * Strategy of resolving {@link Delegation} built for specified {@link Delegator}.
  * 
  * @author Kuisong Tong
  * @since 1.0
@@ -23,7 +23,7 @@ interface DelegationResolver {
      * Check whether a delegation for specific method supports.
      * 
      * @param delegator the delegator
-     * @return true if there is a delegation of specific delegator, false if not
+     * @return true if there is a delegation of specified delegator, false if not
      */
     boolean supports(Delegator delegator);
 }

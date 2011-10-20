@@ -5,7 +5,7 @@ import java.lang.reflect.Method;
 import javax.persistence.Query;
 
 /**
- * Strategy of bind parameters to @{link Query} related with specified method.
+ * Strategy of binding parameters to @{link Query} related with specified method.
  * 
  * @author Kuisong Tong
  * @since 1.0

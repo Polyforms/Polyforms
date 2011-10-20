@@ -4,7 +4,7 @@ import org.polyforms.delegation.builder.ParameterProvider;
 import org.springframework.util.Assert;
 
 /**
- * Argument Resolved by postion of arguments used to invoke delegator method.
+ * Argument Resolved by position of arguments which are used to invoke delegator method.
  */
 public final class At<P> implements ParameterProvider<P> {
     private final int position;

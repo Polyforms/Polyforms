@@ -16,8 +16,8 @@ import org.springframework.core.ParameterNameDiscoverer;
 /**
  * Parameter matcher matching parameters by name.
  * 
- * Firstly, it tries to match by name if parameter name of method can be got (compile with debug information). If not,
- * then it matches JPA parameters (ordered by name) with method's parameter in order.
+ * Firstly, it tries to match by name if parameters' name of specified method can be gotten (compile with debug information). If not,
+ * then it matches JPA parameters (ordered by name) with method's parameters in order.
  * 
  * @author Kuisong Tong
  * @since 1.0

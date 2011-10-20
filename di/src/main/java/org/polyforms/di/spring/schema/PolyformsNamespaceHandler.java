@@ -3,7 +3,7 @@ package org.polyforms.di.spring.schema;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
- * {@link org.springframework.beans.factory.xml.NamespaceHandler} for the <code>polyforms</code> namespace.
+ * {@link org.springframework.beans.factory.xml.NamespaceHandler} for the namespace <code>polyforms</code>.
  * 
  * @author Kuisong Tong
  * @since 1.0

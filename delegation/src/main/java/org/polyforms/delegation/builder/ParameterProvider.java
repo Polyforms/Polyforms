@@ -10,7 +10,7 @@ package org.polyforms.delegation.builder;
  */
 public interface ParameterProvider<P> {
     /**
-     * Check whether the argument can be resolved.
+     * Check whether the arguments can be resolved or not.
      * 
      * @param parameterTypes of delegatee method
      */

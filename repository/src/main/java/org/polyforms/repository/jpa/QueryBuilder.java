@@ -5,7 +5,7 @@ import java.lang.reflect.Method;
 import javax.persistence.Query;
 
 /**
- * Strategy of build query for specific method.
+ * Strategy of build query for specified method.
  * 
  * @author Kuisong Tong
  * @since 1.0

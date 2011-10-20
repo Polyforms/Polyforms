@@ -9,7 +9,7 @@ import org.polyforms.delegation.provider.TypeOf;
 import org.polyforms.delegation.util.DefaultValue;
 
 /**
- * Abstract implementstion for {@link DelegationRegister} which methods handling {@link ParameterProvider}.
+ * Abstract implementstion for {@link DelegationRegister} whose methods handling {@link ParameterProvider}.
  * 
  * @author Kuisong Tong
  * @since 1.0

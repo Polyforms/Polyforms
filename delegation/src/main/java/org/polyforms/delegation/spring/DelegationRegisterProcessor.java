@@ -27,7 +27,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 /**
- * {@link BeanDefinitionRegistryPostProcessor} which executing {@link DelegationBuilder} to bind delegator and delegatee
+ * {@link BeanDefinitionRegistryPostProcessor} which executes {@link DelegationBuilder} to bind delegator and delegatee
  * and register delegator as a bean if necessary.
  * 
  * @author Kuisong Tong

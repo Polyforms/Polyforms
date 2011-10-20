@@ -18,13 +18,14 @@ import org.springframework.util.ClassUtils;
  * invocation of methods in that classes of interfaces would be implemented with an aspect.
  * 
  * The typical usage of that incldes two cases:
+ * The typical usage includes two cases:
  * <p>
  * <bean id="myInterface" class="package.name.MyInterface" />
  * <p>
  * <bean id="myAbstractObject" class="package.name.MyAbstractObject" />
  * 
- * As there is no default implementation for abstract methods in interface or abstract classes, an intercept have to
- * take over the execution of that methods. Otherwise, some exceptions would be thrown by invocation by these methods.
+ * As there is no default implementation for abstract methods in interfaces or abstract classes, use an interceptor to
+ * take over the execution of these methods, otherwise, exceptions would be thrown by invocation of these methods.
  * 
  * @author Kuisong Tong
  * @since 1.0

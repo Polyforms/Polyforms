@@ -3,8 +3,8 @@ package org.polyforms.delegation;
 import java.lang.reflect.Method;
 
 /**
- * The service interface for delegation. This is the entry point into the delegation system. Call
- * {@link #delegate(Class, Method, Object[])} to invoke a related method which linked by builder.
+ * The service interface for delegation. This is the entry point to the delegation system. Call
+ * {@link #delegate(Class, Method, Object[])} to invoke a related method which is linked by builder.
  * 
  * The real method executed by invocation of the delegator is a method in a bean or in first parameter, which is binded
  * by delegation builder.
@@ -12,13 +12,13 @@ import java.lang.reflect.Method;
  * The {@link IllegalArgumentException} should be thrown if there is no bean with specified name in Ioc container or no
  * parameters while using first parameter as delegated target.
  * 
- * Parameters including all from client's invocation or might excepting first parameter while using it as delegated
+ * Parameters including all from client's invocation or might excepting first parameter while using it as delegated target,
  * would be passed to real method invocation in order.
  * 
- * if parameters passed are more than required, the more parameters should be ignored silently. In opposition, The
- * {@link IllegalArgumentException} should be thrown if less parameters.
+ * if quantity of passed parameters are more than required, the redundant parameters should be ignored silently. In opposition, 
+ * Exception {@link IllegalArgumentException} should be thrown if quantity of parameters are less than required.
  * 
- * Conversion might exist if type of passed and required are unmatching. Please check conversion service for more
+ * Conversion might happen if type of passed and required are unmatched. Please check conversion service for more
  * detail.
  * 
  * @author Kuisong Tong
