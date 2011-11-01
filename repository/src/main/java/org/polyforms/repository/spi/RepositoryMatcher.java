@@ -8,7 +8,7 @@ package org.polyforms.repository.spi;
  */
 public interface RepositoryMatcher {
     /**
-     * Check whether the specific class is a repository.
+     * Check whether the specified class is a repository.
      * 
      * @param candidate class for repository
      * 

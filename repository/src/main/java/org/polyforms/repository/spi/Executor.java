@@ -12,7 +12,7 @@ public interface Executor {
     /**
      * {@link Executor} implementation which throws {@link UnsupportedOperationException}.
      * 
-     * It is used for situation that no matched executor has found for specific method.
+     * It is used for situation that no matched executor has found for specified method.
      */
     Executor UNSUPPORTED = new Executor() {
         /**
@@ -24,7 +24,7 @@ public interface Executor {
     };
 
     /**
-     * Execute the delegating method with this executor with specific arguments.
+     * Execute the delegating method with this executor with specified arguments.
      * 
      * @param target which method is executing on
      * @param method to be executed by executor

@@ -33,6 +33,7 @@ public class NameBasedExecutorFinderTest {
         executors.add(get);
         executors.add(getBy);
         executors.add(find);
+        executors.add(new FindBy());
 
         executorPrefixHolder = EasyMock.createMock(ExecutorPrefixHolder.class);
         executorPrefixHolder.isPrefix("Get");
@@ -46,6 +47,10 @@ public class NameBasedExecutorFinderTest {
         executorPrefixHolder.isPrefix("Find");
         EasyMock.expectLastCall().andReturn(false);
         executorPrefixHolder.getAliases("Find");
+        EasyMock.expectLastCall().andReturn(executorPrefix);
+        executorPrefixHolder.isPrefix("FindBy");
+        EasyMock.expectLastCall().andReturn(true);
+        executorPrefixHolder.getAliases("FindBy");
         EasyMock.expectLastCall().andReturn(executorPrefix);
         EasyMock.replay(executorPrefixHolder);
 
@@ -106,6 +111,16 @@ public class NameBasedExecutorFinderTest {
 
         public boolean matches(final Method method) {
             return method.getName().equals("find");
+        }
+    }
+
+    private static class FindBy implements ConditionalExecutor {
+        public Object execute(final Object target, final Method method, final Object... arguments) {
+            return null;
+        }
+
+        public boolean matches(final Method method) {
+            return false;
         }
     }
 

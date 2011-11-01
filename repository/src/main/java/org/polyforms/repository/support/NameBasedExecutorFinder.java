@@ -18,7 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Strategy of finding {@link Executor} for specific method.
+ * Strategy of finding {@link Executor} for specified method.
  * 
  * @author Kuisong Tong
  * @since 1.0

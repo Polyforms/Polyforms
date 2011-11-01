@@ -20,9 +20,9 @@ public final class MethodUtils {
     }
 
     /**
-     * Find method from interfaces and/or classes according to name and parameter types.
+     * Find method from interfaces and/or classes according to method name and parameter types.
      * 
-     * If there is no exact method matching the name and parameter types, and parameter types is empty, the method
+     * If there is no exact method matching both the name and parameter types, and parameter types is empty, the method
      * matching the name is returned.
      * 
      * The order of searching is class, super classes, interfaces in order. {@link IllegalArgumentException} is thrown

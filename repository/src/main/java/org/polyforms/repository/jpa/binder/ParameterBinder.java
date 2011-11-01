@@ -15,7 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Abstract implementation of {@link ParameterBinder} for JPA 2.0 which binds parameters by pairs mathced by matchers.
+ * Abstract implementation of {@link ParameterBinder} for JPA 2.0 which binds parameters by pairs matched by matchers.
  * 
  * @author Kuisong Tong
  * @since 1.0

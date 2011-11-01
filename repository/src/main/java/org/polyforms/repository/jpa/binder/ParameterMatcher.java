@@ -14,7 +14,7 @@ import javax.persistence.Parameter;
  */
 abstract class ParameterMatcher<T> {
     /**
-     * Match parameters of JPA with parameters of method.
+     * Match parameters of JPA with parameters of given method.
      * 
      * @param method
      * @param parameters of JPA

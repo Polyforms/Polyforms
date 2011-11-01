@@ -8,7 +8,7 @@ import javax.persistence.PersistenceContext;
 import org.polyforms.repository.spi.Executor;
 
 /**
- * Abstract implementation for method which may have variable parameters.
+ * Abstract implementation for method which may has variable parameters.
  * 
  * @author Kuisong Tong
  * @since 1.0

@@ -4,13 +4,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Utilities for getting default value for type.
+ * Utilities for getting default value for primitive types and object types.
  * 
  * @author Kuisong Tong
  * @since 1.0
  */
 public final class DefaultValue {
-    private static final Map<Class<?>, Object> PRIVITIVE_MAP = new HashMap<Class<?>, Object>();
+	
+    private static final Map<Class<?>, Object> PRIMITIVE_MAP = new HashMap<Class<?>, Object>();
     private static char primitiveChar;
     private static byte primitiveByte;
     private static short primitiveShort;
@@ -20,14 +21,14 @@ public final class DefaultValue {
     private static double primitiveDouble;
 
     static {
-        PRIVITIVE_MAP.put(boolean.class, Boolean.FALSE);
-        PRIVITIVE_MAP.put(char.class, primitiveChar);
-        PRIVITIVE_MAP.put(byte.class, primitiveByte);
-        PRIVITIVE_MAP.put(short.class, primitiveShort);
-        PRIVITIVE_MAP.put(int.class, primitiveInt);
-        PRIVITIVE_MAP.put(long.class, primitiveLong);
-        PRIVITIVE_MAP.put(float.class, primitiveFloat);
-        PRIVITIVE_MAP.put(double.class, primitiveDouble);
+        PRIMITIVE_MAP.put(boolean.class, Boolean.FALSE);
+        PRIMITIVE_MAP.put(char.class, primitiveChar);
+        PRIMITIVE_MAP.put(byte.class, primitiveByte);
+        PRIMITIVE_MAP.put(short.class, primitiveShort);
+        PRIMITIVE_MAP.put(int.class, primitiveInt);
+        PRIMITIVE_MAP.put(long.class, primitiveLong);
+        PRIMITIVE_MAP.put(float.class, primitiveFloat);
+        PRIMITIVE_MAP.put(double.class, primitiveDouble);
     }
 
     protected DefaultValue() {
@@ -43,6 +44,6 @@ public final class DefaultValue {
      */
     @SuppressWarnings("unchecked")
     public static <T> T get(final Class<T> type) {
-        return (T) PRIVITIVE_MAP.get(type);
+        return (T) PRIMITIVE_MAP.get(type);
     }
 }
