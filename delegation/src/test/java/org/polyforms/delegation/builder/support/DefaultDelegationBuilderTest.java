@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.polyforms.delegation.builder.DelegationBuilder;
 import org.polyforms.delegation.builder.DelegationRegistry;
-import org.polyforms.delegation.builder.ParameterProvider;
+import org.polyforms.parameter.provider.ArgumentProvider;
 
 public class DefaultDelegationBuilderTest {
     private DelegationRegistry delegationRegistry;
@@ -46,21 +46,21 @@ public class DefaultDelegationBuilderTest {
         EasyMock.expectLastCall().andReturn(false);
         delegationRegistry.contains(DomainDelegator.class, setMethod);
         EasyMock.expectLastCall().andReturn(true);
-        final ParameterProvider<?> parameterProvider = EasyMock.createMock(ParameterProvider.class);
-        parameterProvider.validate(DomainObject.class, String.class);
+        final ArgumentProvider argumentProvider = EasyMock.createMock(ArgumentProvider.class);
+        argumentProvider.validate(setMethod);
         delegationRegistry.register(new SimpleDelegation(DomainDelegator.class, getMethod));
         delegationRegistry.register(new SimpleDelegation(DomainDelegator.class, setMethod));
-        EasyMock.replay(delegationRegistry, parameterProvider);
+        EasyMock.replay(delegationRegistry, argumentProvider);
 
         final DomainDelegator domainDelegator = delegationBuilder.delegateFrom(DomainDelegator.class);
         Assert.assertNull(delegationBuilder.delegate());
         domainDelegator.set(null, null);
         final DomainObject domainObject = delegationBuilder.delegate();
-        delegationBuilder.parameter(parameterProvider);
+        delegationBuilder.parameter(argumentProvider);
         domainObject.set(null);
         delegationBuilder.map(RuntimeException.class, Exception.class);
         delegationBuilder.registerDelegations();
-        EasyMock.verify(delegationRegistry, parameterProvider);
+        EasyMock.verify(delegationRegistry, argumentProvider);
     }
 
     @Test
@@ -151,7 +151,7 @@ public class DefaultDelegationBuilderTest {
     public void setParameterBeforeDelegate() {
         final DomainDelegator domainDelegator = delegationBuilder.delegateFrom(DomainDelegator.class);
         domainDelegator.get(null);
-        delegationBuilder.parameter(EasyMock.createMock(ParameterProvider.class));
+        delegationBuilder.parameter(EasyMock.createMock(ArgumentProvider.class));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -159,8 +159,8 @@ public class DefaultDelegationBuilderTest {
         final DomainDelegator domainDelegator = delegationBuilder.delegateFrom(DomainDelegator.class);
         domainDelegator.get(null);
         final DomainObject domainObject = delegationBuilder.<DomainObject> delegate();
-        delegationBuilder.parameter(EasyMock.createMock(ParameterProvider.class));
-        delegationBuilder.parameter(EasyMock.createMock(ParameterProvider.class));
+        delegationBuilder.parameter(EasyMock.createMock(ArgumentProvider.class));
+        delegationBuilder.parameter(EasyMock.createMock(ArgumentProvider.class));
         domainObject.get();
     }
 

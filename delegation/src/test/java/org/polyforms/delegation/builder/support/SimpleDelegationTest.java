@@ -8,7 +8,7 @@ import junit.framework.Assert;
 
 import org.easymock.EasyMock;
 import org.junit.Test;
-import org.polyforms.delegation.builder.ParameterProvider;
+import org.polyforms.parameter.provider.ArgumentProvider;
 
 public class SimpleDelegationTest {
     private final SimpleDelegation delegationA;
@@ -49,18 +49,18 @@ public class SimpleDelegationTest {
     }
 
     @Test
-    public void getParameterProviders() {
-        final ParameterProvider<?> parameterProvider = EasyMock.createMock(ParameterProvider.class);
-        delegationA.addParameterProvider(parameterProvider);
-        final List<ParameterProvider<?>> parameterProviders = delegationA.getParameterProviders();
-        Assert.assertEquals(1, parameterProviders.size());
-        Assert.assertSame(parameterProvider, parameterProviders.get(0));
+    public void getargumentProviders() {
+        final ArgumentProvider argumentProvider = EasyMock.createMock(ArgumentProvider.class);
+        delegationA.addargumentProvider(argumentProvider);
+        final List<ArgumentProvider> argumentProviders = delegationA.getargumentProviders();
+        Assert.assertEquals(1, argumentProviders.size());
+        Assert.assertSame(argumentProvider, argumentProviders.get(0));
     }
 
     @Test(expected = UnsupportedOperationException.class)
-    public void unmodifiedParameterProviders() {
-        final ParameterProvider<?> parameterProvider = EasyMock.createMock(ParameterProvider.class);
-        delegationA.getParameterProviders().add(parameterProvider);
+    public void unmodifiedargumentProviders() {
+        final ArgumentProvider argumentProvider = EasyMock.createMock(ArgumentProvider.class);
+        delegationA.getargumentProviders().add(argumentProvider);
     }
 
     @Test

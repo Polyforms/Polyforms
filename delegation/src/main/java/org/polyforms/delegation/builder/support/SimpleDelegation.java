@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.polyforms.delegation.builder.Delegation;
-import org.polyforms.delegation.builder.ParameterProvider;
+import org.polyforms.parameter.provider.ArgumentProvider;
 
 /**
  * Implementation of {@link Delegation}.
@@ -16,7 +16,7 @@ import org.polyforms.delegation.builder.ParameterProvider;
  * @since 1.0
  */
 final class SimpleDelegation implements Delegation {
-    private final List<ParameterProvider<?>> parameterProviders = new ArrayList<ParameterProvider<?>>();
+    private final List<ArgumentProvider> argumentProviders = new ArrayList<ArgumentProvider>();
     private Map<Class<? extends Throwable>, Class<? extends Throwable>> exceptionTypeMap;
     private final Class<?> delegatorType;
     private final Method delegatorMethod;
@@ -67,8 +67,8 @@ final class SimpleDelegation implements Delegation {
     /**
      * {@inheritDoc}
      */
-    public List<ParameterProvider<?>> getParameterProviders() {
-        return Collections.unmodifiableList(parameterProviders);
+    public List<ArgumentProvider> getargumentProviders() {
+        return Collections.unmodifiableList(argumentProviders);
     }
 
     /**
@@ -81,8 +81,8 @@ final class SimpleDelegation implements Delegation {
         return exceptionTypeMap.get(exceptionType);
     }
 
-    protected void addParameterProvider(final ParameterProvider<?> parameterProvider) {
-        parameterProviders.add(parameterProvider);
+    protected void addargumentProvider(final ArgumentProvider argumentProvider) {
+        argumentProviders.add(argumentProvider);
     }
 
     protected void setDelegateeType(final Class<?> delegateeType) {

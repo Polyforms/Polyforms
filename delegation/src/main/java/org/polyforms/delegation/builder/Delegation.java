@@ -3,6 +3,8 @@ package org.polyforms.delegation.builder;
 import java.lang.reflect.Method;
 import java.util.List;
 
+import org.polyforms.parameter.provider.ArgumentProvider;
+
 /**
  * The interface for getting properties of delegation.
  * 
@@ -50,7 +52,7 @@ public interface Delegation {
      * 
      * @return parameter providers
      */
-    List<ParameterProvider<?>> getParameterProviders();
+    List<ArgumentProvider> getargumentProviders();
 
     /**
      * Get mapped exception type.

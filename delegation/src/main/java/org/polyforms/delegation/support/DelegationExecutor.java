@@ -9,7 +9,7 @@ import javax.inject.Named;
 
 import org.polyforms.delegation.builder.BeanContainer;
 import org.polyforms.delegation.builder.Delegation;
-import org.polyforms.delegation.builder.ParameterProvider;
+import org.polyforms.parameter.provider.ArgumentProvider;
 import org.polyforms.util.DefaultValue;
 import org.springframework.core.GenericTypeResolver;
 import org.springframework.core.MethodParameter;
@@ -39,7 +39,7 @@ class DelegationExecutor {
         final Method delegateeMethod = delegation.getDelegateeMethod();
 
         final Object target = getTarget(delegation.getDelegateeName(), delegateeType, arguments);
-        final Object[] tailoredArguments = getArguments(delegation.getParameterProviders(), target, arguments);
+        final Object[] tailoredArguments = getArguments(delegation.getargumentProviders(), target, arguments);
         Assert.isTrue(arguments.length >= delegateeMethod.getParameterTypes().length,
                 "The arguments passed to are less than parameters required by method.");
 
@@ -89,15 +89,15 @@ class DelegationExecutor {
         return argument;
     }
 
-    private Object[] getArguments(final List<ParameterProvider<?>> parameterProviders, final Object target,
+    private Object[] getArguments(final List<ArgumentProvider> argumentProviders, final Object target,
             final Object[] arguments) {
         Object[] tailoredArguments = arguments;
 
-        if (!parameterProviders.isEmpty()) {
-            tailoredArguments = new Object[parameterProviders.size()];
+        if (!argumentProviders.isEmpty()) {
+            tailoredArguments = new Object[argumentProviders.size()];
             int i = 0;
-            for (final ParameterProvider<?> parameterProvider : parameterProviders) {
-                tailoredArguments[i++] = parameterProvider.get(arguments);
+            for (final ArgumentProvider argumentProvider : argumentProviders) {
+                tailoredArguments[i++] = argumentProvider.get(arguments);
             }
         } else if (arguments.length > 0 && arguments[0] == target) {
             tailoredArguments = new Object[arguments.length - 1];

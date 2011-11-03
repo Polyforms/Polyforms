@@ -1,5 +1,7 @@
 package org.polyforms.delegation.builder;
 
+import org.polyforms.parameter.provider.ArgumentProvider;
+
 /**
  * Internal interface is used to build delegation.
  * 
@@ -39,9 +41,9 @@ public interface DelegationBuilder {
     /**
      * Add parameter provider.
      * 
-     * @param parameterProvider
+     * @param argumentProvider
      */
-    void parameter(ParameterProvider<?> parameterProvider);
+    void parameter(ArgumentProvider argumentProvider);
 
     /**
      * Map exception type.

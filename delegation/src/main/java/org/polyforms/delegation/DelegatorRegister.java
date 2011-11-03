@@ -10,7 +10,7 @@ import org.springframework.core.GenericTypeResolver;
  * Clients need extends this class and override
  * {@link org.polyforms.delegation.builder.DelegationRegister#register(Object)} to register the delegation pair which
  * specifies the delegator and delegatee's class and type. Additional configurations like name of bean,
- * {@link org.polyforms.delegation.builder.ParameterProvider}s are able to customize the delegation more fine
+ * {@link org.polyforms.delegation.builder.argumentProvider}s are able to customize the delegation more fine
  * granularity.
  * 
  * <pre>
@@ -31,10 +31,10 @@ import org.springframework.core.GenericTypeResolver;
  * <code>this.<Delegatee> delegate(delegator.delegatorMethod(null...));</code>
  * 
  * <h3>Register method in delegator to specified delegatee method.</h3>
- * <code>this.<Delegatee> delegate(delegator.delegatorMethod(null...)).delegateeMethod(parameterProvider...);</code>
+ * <code>this.<Delegatee> delegate(delegator.delegatorMethod(null...)).delegateeMethod(argumentProvider...);</code>
  * 
  * <h3>Register void method in delegator to specified delegatee method.</h3>
- * <code>delegator.delegatorMethod(null...); delegate().delegateeMethod(parameterProvider...);</code>
+ * <code>delegator.delegatorMethod(null...); delegate().delegateeMethod(argumentProvider...);</code>
  * 
  * <h3>Register all abstract methods in delegator.</h3> <code>delegate();</code>
  * 

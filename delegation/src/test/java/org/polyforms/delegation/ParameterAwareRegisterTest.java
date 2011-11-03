@@ -8,10 +8,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.polyforms.delegation.builder.DelegationBuilder;
 import org.polyforms.delegation.builder.DelegationBuilderHolder;
-import org.polyforms.delegation.builder.ParameterProvider;
-import org.polyforms.delegation.provider.At;
-import org.polyforms.delegation.provider.Constant;
-import org.polyforms.delegation.provider.TypeOf;
+import org.polyforms.parameter.provider.ArgumentAt;
+import org.polyforms.parameter.provider.ArgumentOfType;
+import org.polyforms.parameter.provider.ArgumentProvider;
+import org.polyforms.parameter.provider.ConstantArgument;
 
 public class ParameterAwareRegisterTest {
     private DelegationBuilder delegationBuilder;
@@ -46,7 +46,7 @@ public class ParameterAwareRegisterTest {
 
     @Test
     public void at() {
-        delegationBuilder.parameter(EasyMock.isA(At.class));
+        delegationBuilder.parameter(EasyMock.isA(ArgumentAt.class));
         EasyMock.replay(delegationBuilder);
 
         Assert.assertNull(parameterAwareRegister.at(String.class, 0));
@@ -55,7 +55,7 @@ public class ParameterAwareRegisterTest {
 
     @Test
     public void typeOf() {
-        delegationBuilder.parameter(EasyMock.isA(TypeOf.class));
+        delegationBuilder.parameter(EasyMock.isA(ArgumentOfType.class));
         EasyMock.replay(delegationBuilder);
 
         Assert.assertEquals(0, parameterAwareRegister.typeOf(int.class, String.class).intValue());
@@ -64,7 +64,7 @@ public class ParameterAwareRegisterTest {
 
     @Test
     public void constant() {
-        delegationBuilder.parameter(EasyMock.isA(Constant.class));
+        delegationBuilder.parameter(EasyMock.isA(ConstantArgument.class));
         EasyMock.replay(delegationBuilder);
 
         Assert.assertNull(parameterAwareRegister.constant("test"));
@@ -73,7 +73,7 @@ public class ParameterAwareRegisterTest {
 
     @Test
     public void constantNull() {
-        delegationBuilder.parameter(EasyMock.isA(Constant.class));
+        delegationBuilder.parameter(EasyMock.isA(ConstantArgument.class));
         EasyMock.replay(delegationBuilder);
 
         Assert.assertNull(parameterAwareRegister.constant(null));
@@ -81,13 +81,12 @@ public class ParameterAwareRegisterTest {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     public void provideBy() {
-        final ParameterProvider<String> parameterProvider = EasyMock.createMock(ParameterProvider.class);
-        delegationBuilder.parameter(parameterProvider);
+        final ArgumentProvider argumentProvider = EasyMock.createMock(ArgumentProvider.class);
+        delegationBuilder.parameter(argumentProvider);
         EasyMock.replay(delegationBuilder);
 
-        Assert.assertNull(parameterAwareRegister.provideBy(String.class, parameterProvider));
+        Assert.assertNull(parameterAwareRegister.provideBy(String.class, argumentProvider));
         EasyMock.verify(delegationBuilder);
     }
 }
