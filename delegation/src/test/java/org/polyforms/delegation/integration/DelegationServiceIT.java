@@ -190,7 +190,7 @@ public class DelegationServiceIT {
             return string.length();
         }
 
-        public String toString(Integer number) {
+        public String toString(final Integer number) {
             return number.toString();
         }
 

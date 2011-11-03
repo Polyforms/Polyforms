@@ -1,13 +1,13 @@
 package org.polyforms.delegation.spring;
 
 import org.polyforms.delegation.builder.BeanContainer;
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * Adapter implementation of {@link BeanContainer} for Spring {@link org.springframework.beans.factory.BeanFactory}.
+ * Adapter implementation of {@link BeanContainer} for Spring
+ * {@link org.springframework.beans.factory.ListableBeanFactory}.
  * 
  * @author Kuisong Tong
  * @since 1.0
@@ -17,7 +17,7 @@ public final class SpringBeanContainer implements BeanContainer {
     private final ListableBeanFactory beanFactory;
 
     /**
-     * Create an instance with Spring {@link BeanFactory}
+     * Create an instance with Spring {@link ListableBeanFactory}
      */
     @Autowired
     public SpringBeanContainer(final ListableBeanFactory beanFactory) {

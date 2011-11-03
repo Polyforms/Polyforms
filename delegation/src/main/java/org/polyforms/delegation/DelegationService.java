@@ -12,11 +12,12 @@ import java.lang.reflect.Method;
  * The {@link IllegalArgumentException} should be thrown if there is no bean with specified name in Ioc container or no
  * parameters while using first parameter as delegated target.
  * 
- * Parameters including all from client's invocation or might excepting first parameter while using it as delegated target,
- * would be passed to real method invocation in order.
+ * Parameters including all from client's invocation or might excepting first parameter while using it as delegated
+ * target, would be passed to real method invocation in order.
  * 
- * if quantity of passed parameters are more than required, the redundant parameters should be ignored silently. In opposition, 
- * Exception {@link IllegalArgumentException} should be thrown if quantity of parameters are less than required.
+ * if quantity of passed parameters are more than required, the redundant parameters should be ignored silently. In
+ * opposition, Exception {@link IllegalArgumentException} should be thrown if quantity of parameters are less than
+ * required.
  * 
  * Conversion might happen if type of passed and required are unmatched. Please check conversion service for more
  * detail.

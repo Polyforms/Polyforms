@@ -36,9 +36,9 @@ public class DelegationExecutorTest {
     @Test
     public void domainDelegationExecute() throws Throwable {
         delegation.getDelegateeType();
-        EasyMock.expectLastCall().andReturn(String.class);
+        EasyMock.expectLastCall().andReturn(String.class).times(2);
         delegation.getDelegateeMethod();
-        EasyMock.expectLastCall().andReturn(String.class.getMethod("concat", new Class<?>[] { String.class }));
+        EasyMock.expectLastCall().andReturn(String.class.getMethod("concat", new Class<?>[] { String.class })).times(2);
         delegation.getDelegateeName();
         EasyMock.expectLastCall().andReturn(null);
         beanContainer.containsBean(String.class);
@@ -50,10 +50,10 @@ public class DelegationExecutorTest {
         conversionService.convert(4, String.class);
         EasyMock.expectLastCall().andReturn("4");
         delegation.getDelegatorType();
-        EasyMock.expectLastCall().andReturn(Delegator.class);
+        EasyMock.expectLastCall().andReturn(Delegator.class).times(2);
         delegation.getDelegatorMethod();
-        EasyMock.expectLastCall().andReturn(
-                Delegator.class.getMethod("concat", new Class<?>[] { String.class, int.class }));
+        EasyMock.expectLastCall()
+                .andReturn(Delegator.class.getMethod("concat", new Class<?>[] { String.class, int.class })).times(2);
         conversionService.convert("test4", String.class);
         EasyMock.expectLastCall().andReturn("test4");
         EasyMock.replay(beanContainer, conversionService, delegation);
@@ -96,9 +96,10 @@ public class DelegationExecutorTest {
         final Delegatee delegatee = EasyMock.createMock(Delegatee.class);
 
         delegation.getDelegateeType();
-        EasyMock.expectLastCall().andReturn(Delegatee.class);
+        EasyMock.expectLastCall().andReturn(Delegatee.class).times(2);
         delegation.getDelegateeMethod();
-        EasyMock.expectLastCall().andReturn(Delegatee.class.getMethod("length", new Class<?>[] { String.class }));
+        EasyMock.expectLastCall().andReturn(Delegatee.class.getMethod("length", new Class<?>[] { String.class }))
+                .times(2);
         delegation.getDelegateeName();
         EasyMock.expectLastCall().andReturn(null);
         beanContainer.containsBean(Delegatee.class);
@@ -121,6 +122,10 @@ public class DelegationExecutorTest {
         final Delegatee delegatee = EasyMock.createMock(Delegatee.class);
 
         mockBeanDelegation(delegatee);
+        delegation.getDelegatorType();
+        EasyMock.expectLastCall().andReturn(Delegator.class);
+        delegation.getDelegatorMethod();
+        EasyMock.expectLastCall().andReturn(Delegator.class.getMethod("length", new Class<?>[] { String.class }));
         delegatee.length("test");
         EasyMock.replay(beanContainer, conversionService, delegation, delegatee);
 
@@ -129,9 +134,10 @@ public class DelegationExecutorTest {
 
     private void mockBeanDelegation(final Delegatee delegatee) throws NoSuchMethodException {
         delegation.getDelegateeType();
-        EasyMock.expectLastCall().andReturn(Delegatee.class);
+        EasyMock.expectLastCall().andReturn(Delegatee.class).times(2);
         delegation.getDelegateeMethod();
-        EasyMock.expectLastCall().andReturn(Delegatee.class.getMethod("length", new Class<?>[] { String.class }));
+        EasyMock.expectLastCall().andReturn(Delegatee.class.getMethod("length", new Class<?>[] { String.class }))
+                .times(2);
         delegation.getDelegateeName();
         EasyMock.expectLastCall().andReturn(null);
         delegation.getDelegatorType();

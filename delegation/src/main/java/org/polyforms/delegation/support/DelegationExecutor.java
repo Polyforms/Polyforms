@@ -40,15 +40,11 @@ class DelegationExecutor {
     protected Object execute(final Delegation delegation, final Object... arguments) throws Throwable {
         final Class<?> delegateeType = delegation.getDelegateeType();
         final Method delegateeMethod = delegation.getDelegateeMethod();
-        final Object target = getTarget(delegation.getDelegateeName(), delegateeType, arguments);
+        final String delegateeName = delegation.getDelegateeName();
 
-        List<ArgumentProvider> argumentProviders = delegation.getArgumentProviders();
-        final Class<?> delegatorType = delegation.getDelegatorType();
-        final Method delegatorMethod = delegation.getDelegatorMethod();
-        if (argumentProviders.isEmpty()) {
-            argumentProviders = Arrays.asList(parameterMatcher.match(delegatorType, delegatorMethod, delegateeType,
-                    delegateeMethod, (arguments.length > 0 && arguments[0] == target) ? 1 : 0));
-        }
+        final boolean beanDelegation = isBeanDelegation(delegateeName, delegateeType);
+        final Object target = getTarget(beanDelegation, delegateeName, delegateeType, arguments);
+        final List<ArgumentProvider> argumentProviders = getArgumentProviders(delegation, beanDelegation);
 
         final Object[] tailoredArguments = getArguments(argumentProviders, arguments);
         Assert.isTrue(arguments.length >= delegateeMethod.getParameterTypes().length,
@@ -60,7 +56,7 @@ class DelegationExecutor {
 
         try {
             final Object returnValue = delegateeMethod.invoke(convertedTarget, convertedAguments);
-            return convertReturnValue(returnValue, delegatorType, delegatorMethod);
+            return convertReturnValue(returnValue, delegation.getDelegatorType(), delegation.getDelegatorMethod());
         } catch (final InvocationTargetException e) {
             final Throwable exception = e.getTargetException();
             final Class<? extends Throwable> delegatorExceptionType = getDelegatorExceptionType(delegation,
@@ -73,8 +69,19 @@ class DelegationExecutor {
         }
     }
 
-    protected Object getTarget(final String delegateeName, final Class<?> delegateeType, final Object[] arguments) {
-        if (isBeanDelegation(delegateeName, delegateeType)) {
+    private List<ArgumentProvider> getArgumentProviders(final Delegation delegation, final boolean beanDelegation) {
+        List<ArgumentProvider> argumentProviders = delegation.getArgumentProviders();
+        if (argumentProviders.isEmpty()) {
+            argumentProviders = Arrays.asList(parameterMatcher.match(delegation.getDelegatorType(),
+                    delegation.getDelegatorMethod(), delegation.getDelegateeType(), delegation.getDelegateeMethod(),
+                    beanDelegation ? 0 : 1));
+        }
+        return argumentProviders;
+    }
+
+    protected Object getTarget(final boolean beanDelegation, final String delegateeName, final Class<?> delegateeType,
+            final Object[] arguments) {
+        if (beanDelegation) {
             return getBean(delegateeName, delegateeType);
         }
 
