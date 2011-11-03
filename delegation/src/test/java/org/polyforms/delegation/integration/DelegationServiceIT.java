@@ -44,6 +44,11 @@ public class DelegationServiceIT {
     }
 
     @Test
+    public void domainDelegationWithParameter() {
+        Assert.assertEquals("4", delegator.echo(string, "4"));
+    }
+
+    @Test
     public void delegationWithMoreParameters() {
         Assert.assertEquals("CN", delegator.getCountry(Locale.CHINA, 1));
     }
@@ -127,6 +132,7 @@ public class DelegationServiceIT {
         public void register(final Delegator source) {
             delegate();
             this.<StringWrapper> delegate(source.echo(null)).toString();
+            this.<StringWrapper> delegate(source.echo(null, null)).toString(0);
             source.voidMethod(null);
             this.<StringWrapper> delegate().length();
 
@@ -150,6 +156,8 @@ public class DelegationServiceIT {
         String echo(StringWrapper string);
 
         int length(StringWrapper string);
+
+        String echo(StringWrapper string, String number);
 
         String name();
 
@@ -180,6 +188,10 @@ public class DelegationServiceIT {
 
         public int length() {
             return string.length();
+        }
+
+        public String toString(Integer number) {
+            return number.toString();
         }
 
         @Override

@@ -51,8 +51,8 @@ public class SimpleDelegationTest {
     @Test
     public void getargumentProviders() {
         final ArgumentProvider argumentProvider = EasyMock.createMock(ArgumentProvider.class);
-        delegationA.addargumentProvider(argumentProvider);
-        final List<ArgumentProvider> argumentProviders = delegationA.getargumentProviders();
+        delegationA.addArgumentProvider(argumentProvider);
+        final List<ArgumentProvider> argumentProviders = delegationA.getArgumentProviders();
         Assert.assertEquals(1, argumentProviders.size());
         Assert.assertSame(argumentProvider, argumentProviders.get(0));
     }
@@ -60,7 +60,7 @@ public class SimpleDelegationTest {
     @Test(expected = UnsupportedOperationException.class)
     public void unmodifiedargumentProviders() {
         final ArgumentProvider argumentProvider = EasyMock.createMock(ArgumentProvider.class);
-        delegationA.getargumentProviders().add(argumentProvider);
+        delegationA.getArgumentProviders().add(argumentProvider);
     }
 
     @Test

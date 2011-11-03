@@ -1,8 +1,8 @@
 package org.polyforms.delegation.spring;
 
 import org.polyforms.delegation.builder.BeanContainer;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,13 +14,13 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public final class SpringBeanContainer implements BeanContainer {
-    private final BeanFactory beanFactory;
+    private final ListableBeanFactory beanFactory;
 
     /**
      * Create an instance with Spring {@link BeanFactory}
      */
     @Autowired
-    public SpringBeanContainer(final BeanFactory beanFactory) {
+    public SpringBeanContainer(final ListableBeanFactory beanFactory) {
         this.beanFactory = beanFactory;
     }
 
@@ -28,12 +28,7 @@ public final class SpringBeanContainer implements BeanContainer {
      * {@inheritDoc}
      */
     public boolean containsBean(final Class<?> type) {
-        try {
-            beanFactory.getBean(type);
-            return true;
-        } catch (final BeansException e) {
-            return false;
-        }
+        return beanFactory.getBeanNamesForType(type).length > 0;
     }
 
     /**

@@ -5,23 +5,22 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.polyforms.delegation.builder.BeanContainer;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.beans.factory.ListableBeanFactory;
 
 public final class SpringBeanContainerTest {
-    private BeanFactory beanFactory;
+    private ListableBeanFactory beanFactory;
     private BeanContainer beanContainer;
 
     @Before
     public void setUp() {
-        beanFactory = EasyMock.createMock(BeanFactory.class);
+        beanFactory = EasyMock.createMock(ListableBeanFactory.class);
         beanContainer = new SpringBeanContainer(beanFactory);
     }
 
     @Test
     public void containsBean() {
-        beanFactory.getBean(Object.class);
-        EasyMock.expectLastCall().andReturn(new Object());
+        beanFactory.getBeanNamesForType(Object.class);
+        EasyMock.expectLastCall().andReturn(new String[] { "bean" });
         EasyMock.replay(beanFactory);
 
         Assert.assertTrue(beanContainer.containsBean(Object.class));
@@ -30,8 +29,8 @@ public final class SpringBeanContainerTest {
 
     @Test
     public void notContainsBean() {
-        beanFactory.getBean(Object.class);
-        EasyMock.expectLastCall().andThrow(new NoSuchBeanDefinitionException(Object.class));
+        beanFactory.getBeanNamesForType(Object.class);
+        EasyMock.expectLastCall().andReturn(new String[0]);
         EasyMock.replay(beanFactory);
 
         Assert.assertFalse(beanContainer.containsBean(Object.class));

@@ -67,7 +67,7 @@ final class SimpleDelegation implements Delegation {
     /**
      * {@inheritDoc}
      */
-    public List<ArgumentProvider> getargumentProviders() {
+    public List<ArgumentProvider> getArgumentProviders() {
         return Collections.unmodifiableList(argumentProviders);
     }
 
@@ -81,7 +81,7 @@ final class SimpleDelegation implements Delegation {
         return exceptionTypeMap.get(exceptionType);
     }
 
-    protected void addargumentProvider(final ArgumentProvider argumentProvider) {
+    protected void addArgumentProvider(final ArgumentProvider argumentProvider) {
         argumentProviders.add(argumentProvider);
     }
 

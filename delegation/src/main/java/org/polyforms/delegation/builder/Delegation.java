@@ -52,7 +52,7 @@ public interface Delegation {
      * 
      * @return parameter providers
      */
-    List<ArgumentProvider> getargumentProviders();
+    List<ArgumentProvider> getArgumentProviders();
 
     /**
      * Get mapped exception type.

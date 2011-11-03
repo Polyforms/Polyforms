@@ -2,6 +2,7 @@ package org.polyforms.delegation.support;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -10,6 +11,7 @@ import javax.inject.Named;
 import org.polyforms.delegation.builder.BeanContainer;
 import org.polyforms.delegation.builder.Delegation;
 import org.polyforms.parameter.provider.ArgumentProvider;
+import org.polyforms.parameter.support.MethodParameterMatcher;
 import org.polyforms.util.DefaultValue;
 import org.springframework.core.GenericTypeResolver;
 import org.springframework.core.MethodParameter;
@@ -25,6 +27,7 @@ import org.springframework.util.StringUtils;
  */
 @Named
 class DelegationExecutor {
+    private final MethodParameterMatcher parameterMatcher = new MethodParameterMatcher();
     private final BeanContainer beanContainer;
     private final ConversionService conversionService;
 
@@ -37,9 +40,17 @@ class DelegationExecutor {
     protected Object execute(final Delegation delegation, final Object... arguments) throws Throwable {
         final Class<?> delegateeType = delegation.getDelegateeType();
         final Method delegateeMethod = delegation.getDelegateeMethod();
-
         final Object target = getTarget(delegation.getDelegateeName(), delegateeType, arguments);
-        final Object[] tailoredArguments = getArguments(delegation.getargumentProviders(), target, arguments);
+
+        List<ArgumentProvider> argumentProviders = delegation.getArgumentProviders();
+        final Class<?> delegatorType = delegation.getDelegatorType();
+        final Method delegatorMethod = delegation.getDelegatorMethod();
+        if (argumentProviders.isEmpty()) {
+            argumentProviders = Arrays.asList(parameterMatcher.match(delegatorType, delegatorMethod, delegateeType,
+                    delegateeMethod, (arguments.length > 0 && arguments[0] == target) ? 1 : 0));
+        }
+
+        final Object[] tailoredArguments = getArguments(argumentProviders, arguments);
         Assert.isTrue(arguments.length >= delegateeMethod.getParameterTypes().length,
                 "The arguments passed to are less than parameters required by method.");
 
@@ -49,7 +60,7 @@ class DelegationExecutor {
 
         try {
             final Object returnValue = delegateeMethod.invoke(convertedTarget, convertedAguments);
-            return convertReturnValue(returnValue, delegation.getDelegatorType(), delegation.getDelegatorMethod());
+            return convertReturnValue(returnValue, delegatorType, delegatorMethod);
         } catch (final InvocationTargetException e) {
             final Throwable exception = e.getTargetException();
             final Class<? extends Throwable> delegatorExceptionType = getDelegatorExceptionType(delegation,
@@ -89,21 +100,11 @@ class DelegationExecutor {
         return argument;
     }
 
-    private Object[] getArguments(final List<ArgumentProvider> argumentProviders, final Object target,
-            final Object[] arguments) {
-        Object[] tailoredArguments = arguments;
-
-        if (!argumentProviders.isEmpty()) {
-            tailoredArguments = new Object[argumentProviders.size()];
-            int i = 0;
-            for (final ArgumentProvider argumentProvider : argumentProviders) {
-                tailoredArguments[i++] = argumentProvider.get(arguments);
-            }
-        } else if (arguments.length > 0 && arguments[0] == target) {
-            tailoredArguments = new Object[arguments.length - 1];
-            System.arraycopy(arguments, 1, tailoredArguments, 0, arguments.length - 1);
+    private Object[] getArguments(final List<ArgumentProvider> argumentProviders, final Object[] arguments) {
+        final Object[] tailoredArguments = new Object[argumentProviders.size()];
+        for (int i = 0; i < argumentProviders.size(); i++) {
+            tailoredArguments[i] = argumentProviders.get(i).get(arguments);
         }
-
         return tailoredArguments;
     }
 
