@@ -11,6 +11,7 @@ import javax.inject.Named;
 import org.polyforms.delegation.builder.BeanContainer;
 import org.polyforms.delegation.builder.Delegation;
 import org.polyforms.parameter.provider.ArgumentProvider;
+import org.polyforms.parameter.support.AbstractParameterMatcher;
 import org.polyforms.parameter.support.MethodParameter;
 import org.polyforms.parameter.support.MethodParameterMatcher;
 import org.polyforms.parameter.support.MethodParameters;
@@ -28,7 +29,7 @@ import org.springframework.util.StringUtils;
  */
 @Named
 class DelegationExecutor {
-    private final MethodParameterMatcher parameterMatcher = new MethodParameterMatcher();
+    private final AbstractParameterMatcher<MethodParameter, MethodParameter> parameterMatcher = new MethodParameterMatcher();
     private final BeanContainer beanContainer;
     private final ConversionService conversionService;
 

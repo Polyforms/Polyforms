@@ -5,11 +5,6 @@ public class Parameter {
     private int index;
     private String name;
 
-    public Parameter(final Class<?> type, final int index) {
-        this.type = type;
-        this.index = index;
-    }
-
     public Class<?> getType() {
         return type;
     }

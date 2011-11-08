@@ -17,33 +17,38 @@ public class MethodParameters implements Parameters<MethodParameter> {
     public MethodParameters(final Class<?> clazz, final Method method, final boolean applyAnnotation) {
         final Class<?>[] parameterTypes = method.getParameterTypes();
         final String[] parameterNames = parameterNameDiscoverer.getParameterNames(method);
+        final Annotation[][] parameterAnnotations = method.getParameterAnnotations();
 
         parameters = new MethodParameter[parameterTypes.length];
         for (int i = 0; i < parameterTypes.length; i++) {
-            final Class<?> type = ClassUtils.resolvePrimitiveIfNecessary(GenericTypeResolver.resolveParameterType(
-                    new org.springframework.core.MethodParameter(method, i), clazz));
-            final MethodParameter parameter = new MethodParameter(type, i);
+            final MethodParameter parameter = new MethodParameter();
             parameters[i] = parameter;
 
+            parameter.setIndex(i);
+
+            final Class<?> type = ClassUtils.resolvePrimitiveIfNecessary(GenericTypeResolver.resolveParameterType(
+                    new org.springframework.core.MethodParameter(method, i), clazz));
+            parameter.setType(type);
+
             if (parameterNames != null) {
-                final String name = parameterNames[i];
-                parameter.setName(name);
+                parameter.setName(parameterNames[i]);
+            }
+
+            parameter.setAnnotation(getFirstProviderAnnotation(parameterAnnotations[i]), applyAnnotation);
+        }
+    }
+
+    private Annotation getFirstProviderAnnotation(final Annotation[] annotations) {
+        for (final Annotation annotation : annotations) {
+            if (annotation.getClass().isAnnotationPresent(Provider.class)) {
+                return annotation;
             }
         }
 
-        final Annotation[][] parameterAnnotations = method.getParameterAnnotations();
-        for (int i = 0; i < parameters.length; i++) {
-            for (final Annotation annotation : parameterAnnotations[i]) {
-                if (annotation.getClass().isAnnotationPresent(Provider.class)) {
-                    parameters[i].setAnnotation(annotation, applyAnnotation);
-                    break;
-                }
-            }
-        }
+        return null;
     }
 
     public MethodParameter[] getParameters() {
         return parameters;
     }
-
 }

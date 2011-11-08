@@ -12,6 +12,8 @@ import org.polyforms.parameter.annotation.TypeOf;
 public class MethodParameter extends Parameter {
     @SuppressWarnings("rawtypes")
     private static final Map<Class<? extends Annotation>, Action> annotationActions = new HashMap<Class<? extends Annotation>, Action>();
+    private Annotation annotation;
+
     static {
         annotationActions.put(At.class, new Action<At>() {
             public void apply(final Parameter parameter, final At annotation) {
@@ -30,16 +32,10 @@ public class MethodParameter extends Parameter {
         });
     }
 
-    private Annotation annotation;
-
-    public MethodParameter(final Class<?> type, final int index) {
-        super(type, index);
-    }
-
     @SuppressWarnings("unchecked")
     public void setAnnotation(final Annotation annotation, final boolean apply) {
         this.annotation = annotation;
-        if (apply) {
+        if (apply && annotation != null) {
             annotationActions.get(annotation.getClass()).apply(this, annotation);
         }
     }
