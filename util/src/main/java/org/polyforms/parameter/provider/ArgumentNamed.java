@@ -34,7 +34,7 @@ public class ArgumentNamed implements ArgumentProvider {
      * {@inheritDoc}
      */
     public void validate(final Method method) {
-        String[] parameterNames = parameterNameDiscoverer.getParameterNames(method);
+        final String[] parameterNames = parameterNameDiscoverer.getParameterNames(method);
         Assert.notNull(parameterNames,
                 "Cannot get parameter names because the class file was compiled without debug information.");
         Assert.isTrue(position < parameterNames.length, "Parameter position " + position

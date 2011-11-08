@@ -2,7 +2,6 @@ package org.polyforms.parameter.provider;
 
 import java.lang.reflect.Method;
 
-
 /**
  * Constant holder always returning constant value.
  */

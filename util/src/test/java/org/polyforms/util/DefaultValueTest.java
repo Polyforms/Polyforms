@@ -2,7 +2,6 @@ package org.polyforms.util;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.polyforms.util.DefaultValue;
 
 public final class DefaultValueTest {
     @Test(expected = UnsupportedOperationException.class)

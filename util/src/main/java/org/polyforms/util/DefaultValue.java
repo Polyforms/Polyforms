@@ -10,7 +10,7 @@ import java.util.Map;
  * @since 1.0
  */
 public final class DefaultValue {
-	
+
     private static final Map<Class<?>, Object> PRIMITIVE_MAP = new HashMap<Class<?>, Object>();
     private static char primitiveChar;
     private static byte primitiveByte;

@@ -29,7 +29,7 @@ public final class ArgumentAt implements ArgumentProvider {
      * {@inheritDoc}
      */
     public void validate(final Method method) {
-        Class<?>[] parameterTypes = method.getParameterTypes();
+        final Class<?>[] parameterTypes = method.getParameterTypes();
         Assert.isTrue(position < parameterTypes.length, "Parameter position " + position
                 + " must not less than parameter count " + parameterTypes.length + " of delegator method.");
     }

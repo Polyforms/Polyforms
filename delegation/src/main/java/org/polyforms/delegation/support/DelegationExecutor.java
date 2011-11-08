@@ -11,10 +11,11 @@ import javax.inject.Named;
 import org.polyforms.delegation.builder.BeanContainer;
 import org.polyforms.delegation.builder.Delegation;
 import org.polyforms.parameter.provider.ArgumentProvider;
+import org.polyforms.parameter.support.MethodParameter;
 import org.polyforms.parameter.support.MethodParameterMatcher;
+import org.polyforms.parameter.support.MethodParameters;
 import org.polyforms.util.DefaultValue;
 import org.springframework.core.GenericTypeResolver;
-import org.springframework.core.MethodParameter;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -72,11 +73,20 @@ class DelegationExecutor {
     private List<ArgumentProvider> getArgumentProviders(final Delegation delegation, final boolean beanDelegation) {
         List<ArgumentProvider> argumentProviders = delegation.getArgumentProviders();
         if (argumentProviders.isEmpty()) {
-            argumentProviders = Arrays.asList(parameterMatcher.match(delegation.getDelegatorType(),
-                    delegation.getDelegatorMethod(), delegation.getDelegateeType(), delegation.getDelegateeMethod(),
-                    beanDelegation ? 0 : 1));
+            argumentProviders = Arrays.asList(match(delegation.getDelegatorType(), delegation.getDelegatorMethod(),
+                    delegation.getDelegateeType(), delegation.getDelegateeMethod(), beanDelegation ? 0 : 1));
         }
         return argumentProviders;
+    }
+
+    private final ArgumentProvider[] match(final Class<?> sourceClass, final Method sourceMethod,
+            final Class<?> targetClass, final Method targetMethod, final int offset) {
+        final MethodParameters sourceParameters = new MethodParameters(sourceClass, sourceMethod, true);
+        final MethodParameters targetParameters = new MethodParameters(targetClass, targetMethod, false);
+        for (final MethodParameter parameter : targetParameters.getParameters()) {
+            parameter.setIndex(parameter.getIndex() + offset);
+        }
+        return parameterMatcher.match(sourceParameters, targetParameters);
     }
 
     protected Object getTarget(final boolean beanDelegation, final String delegateeName, final Class<?> delegateeType,
@@ -119,8 +129,8 @@ class DelegationExecutor {
         final Class<?>[] parameterTypes = method.getParameterTypes();
         final Object[] targets = new Object[parameterTypes.length];
         for (int i = 0; i < parameterTypes.length; i++) {
-            final Class<?> genericType = GenericTypeResolver.resolveParameterType(new MethodParameter(method, i),
-                    targetClass);
+            final Class<?> genericType = GenericTypeResolver.resolveParameterType(
+                    new org.springframework.core.MethodParameter(method, i), targetClass);
             targets[i] = conversionService.convert(arguments[i], genericType);
         }
         return targets;

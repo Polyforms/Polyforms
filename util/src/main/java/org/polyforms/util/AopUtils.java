@@ -42,30 +42,36 @@ public final class AopUtils {
     private static class NullDeproxyer extends Deproxyer {
         private static final Class<?>[] EMPTY_CLASS = new Class<?>[0];
 
+        @Override
         protected boolean supports(final Class<?> clazz) {
             return clazz == null || clazz.getSuperclass() == null;
         }
 
+        @Override
         protected Class<?>[] deproxy(final Class<?> clazz) {
             return EMPTY_CLASS.clone();
         }
     }
 
     private static class ProxyDeproxyer extends Deproxyer {
+        @Override
         protected boolean supports(final Class<?> clazz) {
             return java.lang.reflect.Proxy.isProxyClass(clazz) || Proxy.isProxyClass(clazz);
         }
 
+        @Override
         protected Class<?>[] deproxy(final Class<?> clazz) {
             return clazz.getInterfaces();
         }
     }
 
     private static class EnhancerDeproxyer extends Deproxyer {
+        @Override
         protected boolean supports(final Class<?> clazz) {
             return Enhancer.isEnhanced(clazz);
         }
 
+        @Override
         protected Class<?>[] deproxy(final Class<?> clazz) {
             final Class<?>[] interfaces = clazz.getInterfaces();
             final Class<?>[] result = new Class<?>[interfaces.length + 1];
