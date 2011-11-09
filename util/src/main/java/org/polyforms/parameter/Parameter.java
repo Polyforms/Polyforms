@@ -2,7 +2,7 @@ package org.polyforms.parameter;
 
 public class Parameter {
     private Class<?> type;
-    private int index;
+    private int index = -1;
     private String name;
 
     public Class<?> getType() {

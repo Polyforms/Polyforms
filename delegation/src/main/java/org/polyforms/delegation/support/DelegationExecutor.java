@@ -80,8 +80,8 @@ class DelegationExecutor {
         return argumentProviders;
     }
 
-    private final ArgumentProvider[] match(final Class<?> sourceClass, final Method sourceMethod,
-            final Class<?> targetClass, final Method targetMethod, final int offset) {
+    private ArgumentProvider[] match(final Class<?> sourceClass, final Method sourceMethod, final Class<?> targetClass,
+            final Method targetMethod, final int offset) {
         final MethodParameters sourceParameters = new MethodParameters(sourceClass, sourceMethod, true);
         final MethodParameters targetParameters = new MethodParameters(targetClass, targetMethod, false);
         for (final MethodParameter parameter : targetParameters.getParameters()) {

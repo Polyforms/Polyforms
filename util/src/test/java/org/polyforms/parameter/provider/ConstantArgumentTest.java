@@ -6,20 +6,20 @@ import org.junit.Test;
 
 public class ConstantArgumentTest {
     @Test
-    public void constantProvider() {
-        final ArgumentProvider constantProvider = new ConstantArgument("test");
-        Assert.assertEquals("test", constantProvider.get(new Object[0]));
+    public void get() {
+        final ArgumentProvider provider = new ConstantArgument("test");
+        Assert.assertEquals("test", provider.get(new Object[0]));
     }
 
     @Test
-    public void nullProvider() {
-        final ArgumentProvider constantProvider = new ConstantArgument(null);
-        Assert.assertNull(constantProvider.get(new Object[0]));
+    public void nullArgument() {
+        final ArgumentProvider provider = new ConstantArgument(null);
+        Assert.assertNull(provider.get(new Object[0]));
     }
 
     @Test
     public void validate() throws NoSuchMethodException {
-        final ArgumentProvider constantProvider = new ConstantArgument("test");
-        constantProvider.validate(Object.class.getMethod("toString", new Class<?>[0]));
+        final ArgumentProvider provider = new ConstantArgument("test");
+        provider.validate(Object.class.getMethod("toString", new Class<?>[0]));
     }
 }

@@ -8,10 +8,10 @@ import java.lang.annotation.Target;
 
 import org.polyforms.parameter.provider.ArgumentNamed;
 
-@Target(ElementType.TYPE)
+@Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Provider(ArgumentNamed.class)
-public @interface Name {
+public @interface Named {
     String value();
 }

@@ -34,7 +34,7 @@ public final class ArgumentOfType implements ArgumentProvider {
         final Class<?>[] parameterTypes = method.getParameterTypes();
         for (int i = 0; i < parameterTypes.length; i++) {
             final Class<?> parameterType = parameterTypes[i];
-            if (type == parameterType) {
+            if (type.equals(parameterType)) {
                 Assert.isTrue(position < 0, "There is more than one parameter of type " + type
                         + " in delegator method.");
                 position = i;

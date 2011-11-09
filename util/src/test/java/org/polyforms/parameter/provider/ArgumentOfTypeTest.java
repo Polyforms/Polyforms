@@ -6,39 +6,39 @@ import org.junit.Test;
 
 public class ArgumentOfTypeTest {
     @Test
-    public void atProvider() throws NoSuchMethodException {
-        final ArgumentProvider atProvider = new ArgumentOfType(String.class);
-        atProvider.validate(String.class.getMethod("indexOf", new Class<?>[] { String.class, int.class }));
-        Assert.assertEquals("test", atProvider.get(new Object[] { "test", 0 }));
+    public void get() throws NoSuchMethodException {
+        final ArgumentProvider provider = new ArgumentOfType(String.class);
+        provider.validate(String.class.getMethod("indexOf", new Class<?>[] { String.class, int.class }));
+        Assert.assertEquals("test", provider.get(new Object[] { "test", 0 }));
     }
 
     @Test
-    public void atProviderWithNull() throws NoSuchMethodException {
-        final ArgumentProvider atProvider = new ArgumentOfType(String.class);
-        atProvider.validate(String.class.getMethod("indexOf", new Class<?>[] { String.class, int.class }));
-        Assert.assertNull(atProvider.get(new Object[] { null, 0 }));
+    public void nullArgument() throws NoSuchMethodException {
+        final ArgumentProvider provider = new ArgumentOfType(String.class);
+        provider.validate(String.class.getMethod("indexOf", new Class<?>[] { String.class, int.class }));
+        Assert.assertNull(provider.get(new Object[] { null, 0 }));
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void atProvideWithNegativePosition() {
-        new ArgumentOfType(null);
+    public void getBeforeValidation() throws NoSuchMethodException {
+        final ArgumentProvider provider = new ArgumentOfType(String.class);
+        provider.get(new Object[] { "test", 0 });
     }
 
-    @Test
-    public void validate() throws NoSuchMethodException {
-        final ArgumentProvider atProvider = new ArgumentOfType(String.class);
-        atProvider.validate(String.class.getMethod("concat", new Class<?>[] { String.class }));
+    @Test(expected = IllegalArgumentException.class)
+    public void nullType() {
+        new ArgumentOfType(null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void noParameterOfType() throws NoSuchMethodException {
-        final ArgumentProvider atProvider = new ArgumentOfType(String.class);
-        atProvider.validate(String.class.getMethod("charAt", new Class<?>[] { int.class }));
+        final ArgumentProvider provider = new ArgumentOfType(String.class);
+        provider.validate(String.class.getMethod("charAt", new Class<?>[] { int.class }));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void moreThanOneParameterOfType() throws NoSuchMethodException {
-        final ArgumentProvider atProvider = new ArgumentOfType(String.class);
-        atProvider.validate(String.class.getMethod("replaceAll", new Class<?>[] { String.class, String.class }));
+        final ArgumentProvider provider = new ArgumentOfType(String.class);
+        provider.validate(String.class.getMethod("replaceAll", new Class<?>[] { String.class, String.class }));
     }
 }

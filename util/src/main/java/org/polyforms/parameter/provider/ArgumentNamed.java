@@ -37,13 +37,13 @@ public class ArgumentNamed implements ArgumentProvider {
         final String[] parameterNames = parameterNameDiscoverer.getParameterNames(method);
         Assert.notNull(parameterNames,
                 "Cannot get parameter names because the class file was compiled without debug information.");
-        Assert.isTrue(position < parameterNames.length, "Parameter position " + position
-                + " must not less than parameter count " + parameterNames.length + " of delegator method.");
         for (int i = 0; i < parameterNames.length; i++) {
             if (name.equals(parameterNames[i])) {
                 position = i;
                 break;
             }
         }
+
+        Assert.isTrue(position >= 0, "Cannot find parameter with name [" + name + "] in " + method + ".");
     }
 }

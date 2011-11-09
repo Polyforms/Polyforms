@@ -8,6 +8,7 @@ import org.polyforms.parameter.annotation.Provider;
 import org.springframework.core.GenericTypeResolver;
 import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 import org.springframework.core.ParameterNameDiscoverer;
+import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.util.ClassUtils;
 
 public class MethodParameters implements Parameters<MethodParameter> {
@@ -40,7 +41,7 @@ public class MethodParameters implements Parameters<MethodParameter> {
 
     private Annotation getFirstProviderAnnotation(final Annotation[] annotations) {
         for (final Annotation annotation : annotations) {
-            if (annotation.getClass().isAnnotationPresent(Provider.class)) {
+            if (AnnotationUtils.findAnnotation(annotation.getClass(), Provider.class) != null) {
                 return annotation;
             }
         }
@@ -49,6 +50,8 @@ public class MethodParameters implements Parameters<MethodParameter> {
     }
 
     public MethodParameter[] getParameters() {
-        return parameters;
+        final MethodParameter[] returnParameters = new MethodParameter[parameters.length];
+        System.arraycopy(parameters, 0, returnParameters, 0, parameters.length);
+        return returnParameters;
     }
 }

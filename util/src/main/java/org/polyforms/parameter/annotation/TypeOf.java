@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 
 import org.polyforms.parameter.provider.ArgumentOfType;
 
-@Target(ElementType.TYPE)
+@Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Provider(ArgumentOfType.class)
