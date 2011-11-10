@@ -3,6 +3,7 @@ package org.polyforms.parameter.provider;
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.polyforms.parameter.ArgumentProvider;
 
 public class ArgumentOfTypeTest {
     @Test

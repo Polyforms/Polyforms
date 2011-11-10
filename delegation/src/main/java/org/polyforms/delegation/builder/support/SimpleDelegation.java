@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.polyforms.delegation.builder.Delegation;
-import org.polyforms.parameter.provider.ArgumentProvider;
+import org.polyforms.parameter.ArgumentProvider;
 
 /**
  * Implementation of {@link Delegation}.

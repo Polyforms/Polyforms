@@ -1,4 +1,4 @@
-package org.polyforms.parameter.provider;
+package org.polyforms.parameter;
 
 import java.lang.reflect.Method;
 

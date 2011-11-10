@@ -11,7 +11,7 @@ import org.polyforms.delegation.builder.BeanContainer;
 import org.polyforms.delegation.builder.Delegation;
 import org.polyforms.delegation.support.DelegationExecutorTest.Delegatee.MockException;
 import org.polyforms.delegation.support.DelegationExecutorTest.Delegator.DelegateException;
-import org.polyforms.parameter.provider.ArgumentProvider;
+import org.polyforms.parameter.ArgumentProvider;
 import org.springframework.core.convert.ConversionService;
 
 public class DelegationExecutorTest {

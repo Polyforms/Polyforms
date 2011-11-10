@@ -10,7 +10,7 @@ import javax.inject.Named;
 
 import org.polyforms.delegation.builder.BeanContainer;
 import org.polyforms.delegation.builder.Delegation;
-import org.polyforms.parameter.provider.ArgumentProvider;
+import org.polyforms.parameter.ArgumentProvider;
 import org.polyforms.parameter.support.AbstractParameterMatcher;
 import org.polyforms.parameter.support.MethodParameter;
 import org.polyforms.parameter.support.MethodParameterMatcher;

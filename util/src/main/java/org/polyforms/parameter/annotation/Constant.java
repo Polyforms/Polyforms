@@ -8,10 +8,19 @@ import java.lang.annotation.Target;
 
 import org.polyforms.parameter.provider.ConstantArgument;
 
+/**
+ * Annotation to return constant as argument.
+ * 
+ * @author Kuisong Tong
+ * @since 1.0
+ */
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Provider(ConstantArgument.class)
 public @interface Constant {
+    /**
+     * Constant argument.
+     */
     String value();
 }

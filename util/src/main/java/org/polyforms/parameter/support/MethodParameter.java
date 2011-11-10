@@ -12,6 +12,12 @@ import org.polyforms.parameter.annotation.TypeOf;
 import org.polyforms.util.AopUtils;
 import org.springframework.util.Assert;
 
+/**
+ * {@link Parameter} of {@link Method}.
+ * 
+ * @author Kuisong Tong
+ * @since 1.0
+ */
 public class MethodParameter extends Parameter {
     @SuppressWarnings("rawtypes")
     private static final Map<Class<? extends Annotation>, Action> ANNOTATION_ACTIONS = new HashMap<Class<? extends Annotation>, Action>();
@@ -19,22 +25,28 @@ public class MethodParameter extends Parameter {
 
     static {
         ANNOTATION_ACTIONS.put(At.class, new Action<At>() {
-            public void apply(final Parameter parameter, final At annotation) {
+            protected void apply(final Parameter parameter, final At annotation) {
                 parameter.setIndex(annotation.value());
             }
         });
         ANNOTATION_ACTIONS.put(Named.class, new Action<Named>() {
-            public void apply(final Parameter parameter, final Named annotation) {
+            protected void apply(final Parameter parameter, final Named annotation) {
                 parameter.setName(annotation.value());
             }
         });
         ANNOTATION_ACTIONS.put(TypeOf.class, new Action<TypeOf>() {
-            public void apply(final Parameter parameter, final TypeOf annotation) {
+            protected void apply(final Parameter parameter, final TypeOf annotation) {
                 parameter.setType(annotation.value());
             }
         });
     }
 
+    /**
+     * Set provider annotation of parameter.
+     * 
+     * @param annotation annotated with {@link Provider}
+     * @param apply whether apply the annotation to meta data of parameter.
+     */
     @SuppressWarnings("unchecked")
     public void setAnnotation(final Annotation annotation, final boolean apply) {
         this.annotation = annotation;
@@ -63,7 +75,7 @@ public class MethodParameter extends Parameter {
         return annotation;
     }
 
-    private interface Action<A extends Annotation> {
-        void apply(Parameter parameter, A annotation);
+    private static abstract class Action<A extends Annotation> {
+        protected abstract void apply(Parameter parameter, A annotation);
     }
 }

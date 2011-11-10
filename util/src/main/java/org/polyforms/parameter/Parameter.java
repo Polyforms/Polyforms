@@ -1,5 +1,11 @@
 package org.polyforms.parameter;
 
+/**
+ * Bean used to keep information about parameter.
+ * 
+ * @author Kuisong Tong
+ * @since 1.0
+ */
 public class Parameter {
     private Class<?> type;
     private int index = -1;

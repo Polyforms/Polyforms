@@ -5,8 +5,8 @@ import java.lang.reflect.Method;
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.polyforms.parameter.ArgumentProvider;
 import org.polyforms.parameter.annotation.At;
-import org.polyforms.parameter.provider.ArgumentProvider;
 
 public class MethodParameterMatcherTest {
     private final MethodParameterMatcher methodParameterMatcher = new MethodParameterMatcher();

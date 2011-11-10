@@ -2,12 +2,16 @@ package org.polyforms.parameter.provider;
 
 import java.lang.reflect.Method;
 
+import org.polyforms.parameter.ArgumentProvider;
 import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 import org.springframework.core.ParameterNameDiscoverer;
 import org.springframework.util.Assert;
 
 /**
  * Argument Resolved by name of arguments which are used to invoke method.
+ * 
+ * @author Kuisong Tong
+ * @since 1.0
  */
 public class ArgumentNamed implements ArgumentProvider {
     private final ParameterNameDiscoverer parameterNameDiscoverer = new LocalVariableTableParameterNameDiscoverer();

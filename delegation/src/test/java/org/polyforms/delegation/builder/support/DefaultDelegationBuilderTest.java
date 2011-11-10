@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.polyforms.delegation.builder.DelegationBuilder;
 import org.polyforms.delegation.builder.DelegationRegistry;
-import org.polyforms.parameter.provider.ArgumentProvider;
+import org.polyforms.parameter.ArgumentProvider;
 
 public class DefaultDelegationBuilderTest {
     private DelegationRegistry delegationRegistry;

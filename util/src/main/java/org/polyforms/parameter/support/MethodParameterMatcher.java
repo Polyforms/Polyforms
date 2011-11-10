@@ -2,9 +2,15 @@ package org.polyforms.parameter.support;
 
 import java.lang.annotation.Annotation;
 
+import org.polyforms.parameter.ArgumentProvider;
 import org.polyforms.parameter.provider.ArgumentAt;
-import org.polyforms.parameter.provider.ArgumentProvider;
 
+/**
+ * Parameter Matcher used to match parameters from two methods.
+ * 
+ * @author Kuisong Tong
+ * @since 1.0
+ */
 public class MethodParameterMatcher extends AbstractParameterMatcher<MethodParameter, MethodParameter> {
     private final ArgumentProviderBuilder argumentProviderBuilder = new ArgumentProviderBuilder();
 

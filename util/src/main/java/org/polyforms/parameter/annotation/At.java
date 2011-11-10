@@ -8,10 +8,19 @@ import java.lang.annotation.Target;
 
 import org.polyforms.parameter.provider.ArgumentAt;
 
+/**
+ * Annotation to locate argument by index provided.
+ * 
+ * @author Kuisong Tong
+ * @since 1.0
+ */
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Provider(ArgumentAt.class)
 public @interface At {
+    /**
+     * Index of matched parameter.
+     */
     int value();
 }

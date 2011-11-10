@@ -8,7 +8,7 @@ import junit.framework.Assert;
 
 import org.easymock.EasyMock;
 import org.junit.Test;
-import org.polyforms.parameter.provider.ArgumentProvider;
+import org.polyforms.parameter.ArgumentProvider;
 
 public class SimpleDelegationTest {
     private final SimpleDelegation delegationA;

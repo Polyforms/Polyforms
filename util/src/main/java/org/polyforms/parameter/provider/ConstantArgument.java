@@ -2,8 +2,13 @@ package org.polyforms.parameter.provider;
 
 import java.lang.reflect.Method;
 
+import org.polyforms.parameter.ArgumentProvider;
+
 /**
  * Constant holder always returning constant value.
+ * 
+ * @author Kuisong Tong
+ * @since 1.0
  */
 public final class ConstantArgument implements ArgumentProvider {
     private final Object value;

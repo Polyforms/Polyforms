@@ -14,7 +14,7 @@ import org.polyforms.delegation.builder.DelegationBuilder;
 import org.polyforms.delegation.builder.DelegationRegistry;
 import org.polyforms.delegation.builder.support.ProxyFactory.MethodVisitor;
 import org.polyforms.delegation.util.MethodUtils;
-import org.polyforms.parameter.provider.ArgumentProvider;
+import org.polyforms.parameter.ArgumentProvider;
 import org.springframework.util.Assert;
 
 /**

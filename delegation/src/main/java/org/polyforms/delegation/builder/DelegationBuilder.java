@@ -1,6 +1,6 @@
 package org.polyforms.delegation.builder;
 
-import org.polyforms.parameter.provider.ArgumentProvider;
+import org.polyforms.parameter.ArgumentProvider;
 
 /**
  * Internal interface is used to build delegation.

@@ -8,10 +8,19 @@ import java.lang.annotation.Target;
 
 import org.polyforms.parameter.provider.ArgumentOfType;
 
+/**
+ * Annotation to locate parameter by type provided.
+ * 
+ * @author Kuisong Tong
+ * @since 1.0
+ */
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Provider(ArgumentOfType.class)
 public @interface TypeOf {
+    /**
+     * Type pf matched parameter.
+     */
     Class<?> value();
 }

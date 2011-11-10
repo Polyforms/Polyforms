@@ -3,8 +3,8 @@ package org.polyforms.parameter.support;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 
+import org.polyforms.parameter.ArgumentProvider;
 import org.polyforms.parameter.annotation.Provider;
-import org.polyforms.parameter.provider.ArgumentProvider;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;

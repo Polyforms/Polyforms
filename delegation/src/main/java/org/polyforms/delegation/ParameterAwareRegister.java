@@ -2,9 +2,9 @@ package org.polyforms.delegation;
 
 import org.polyforms.delegation.builder.DelegationBuilderHolder;
 import org.polyforms.delegation.builder.DelegationRegister;
+import org.polyforms.parameter.ArgumentProvider;
 import org.polyforms.parameter.provider.ArgumentAt;
 import org.polyforms.parameter.provider.ArgumentOfType;
-import org.polyforms.parameter.provider.ArgumentProvider;
 import org.polyforms.parameter.provider.ConstantArgument;
 import org.polyforms.util.DefaultValue;
 

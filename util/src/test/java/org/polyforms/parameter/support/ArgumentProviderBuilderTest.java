@@ -6,9 +6,9 @@ import java.lang.reflect.Method;
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.polyforms.parameter.ArgumentProvider;
 import org.polyforms.parameter.annotation.At;
 import org.polyforms.parameter.provider.ArgumentAt;
-import org.polyforms.parameter.provider.ArgumentProvider;
 
 public class ArgumentProviderBuilderTest {
     private final ArgumentProviderBuilder argumentProviderBuilde = new ArgumentProviderBuilder();

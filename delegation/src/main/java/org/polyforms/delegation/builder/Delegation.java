@@ -3,7 +3,7 @@ package org.polyforms.delegation.builder;
 import java.lang.reflect.Method;
 import java.util.List;
 
-import org.polyforms.parameter.provider.ArgumentProvider;
+import org.polyforms.parameter.ArgumentProvider;
 
 /**
  * The interface for getting properties of delegation.

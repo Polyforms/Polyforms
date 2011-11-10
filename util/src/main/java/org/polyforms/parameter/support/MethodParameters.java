@@ -11,10 +11,19 @@ import org.springframework.core.ParameterNameDiscoverer;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.util.ClassUtils;
 
+/**
+ * {@link Parameters} to extra parameters information from {@link Method}.
+ * 
+ * @author Kuisong Tong
+ * @since 1.0
+ */
 public class MethodParameters implements Parameters<MethodParameter> {
     private final ParameterNameDiscoverer parameterNameDiscoverer = new LocalVariableTableParameterNameDiscoverer();
     private final MethodParameter[] parameters;
 
+    /**
+     * Create an instance from provided method.
+     */
     public MethodParameters(final Class<?> clazz, final Method method, final boolean applyAnnotation) {
         final Class<?>[] parameterTypes = method.getParameterTypes();
         final String[] parameterNames = parameterNameDiscoverer.getParameterNames(method);
@@ -49,6 +58,9 @@ public class MethodParameters implements Parameters<MethodParameter> {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public MethodParameter[] getParameters() {
         final MethodParameter[] returnParameters = new MethodParameter[parameters.length];
         System.arraycopy(parameters, 0, returnParameters, 0, parameters.length);
