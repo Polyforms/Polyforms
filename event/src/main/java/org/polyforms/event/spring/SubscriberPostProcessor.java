@@ -7,8 +7,6 @@ import org.polyforms.event.Subscribe;
 import org.polyforms.event.bus.Event;
 import org.polyforms.event.bus.Subscriber;
 import org.polyforms.event.bus.SubscriberRegistry;
-import org.polyforms.parameter.support.AbstractParameterMatcher;
-import org.polyforms.parameter.support.MethodParameterMatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.support.AopUtils;
@@ -22,7 +20,6 @@ import org.springframework.util.ReflectionUtils;
 
 public class SubscriberPostProcessor implements PriorityOrdered, BeanFactoryAware, DestructionAwareBeanPostProcessor {
     private final static Logger LOGGER = LoggerFactory.getLogger(SubscriberPostProcessor.class);
-    private final AbstractParameterMatcher parameterMatcher = new MethodParameterMatcher();
     private int order = Ordered.LOWEST_PRECEDENCE - 1;
     private static BeanFactory beanFactory;
     private SubscriberRegistry subscriberRegistry;
