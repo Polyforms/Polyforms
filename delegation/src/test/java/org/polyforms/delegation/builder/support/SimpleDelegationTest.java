@@ -1,7 +1,6 @@
 package org.polyforms.delegation.builder.support;
 
 import java.lang.reflect.Method;
-import java.util.List;
 import java.util.Map;
 
 import junit.framework.Assert;
@@ -52,15 +51,9 @@ public class SimpleDelegationTest {
     public void getargumentProviders() {
         final ArgumentProvider argumentProvider = EasyMock.createMock(ArgumentProvider.class);
         delegationA.addArgumentProvider(argumentProvider);
-        final List<ArgumentProvider> argumentProviders = delegationA.getArgumentProviders();
-        Assert.assertEquals(1, argumentProviders.size());
-        Assert.assertSame(argumentProvider, argumentProviders.get(0));
-    }
-
-    @Test(expected = UnsupportedOperationException.class)
-    public void unmodifiedargumentProviders() {
-        final ArgumentProvider argumentProvider = EasyMock.createMock(ArgumentProvider.class);
-        delegationA.getArgumentProviders().add(argumentProvider);
+        final ArgumentProvider[] argumentProviders = delegationA.getArgumentProviders();
+        Assert.assertEquals(1, argumentProviders.length);
+        Assert.assertSame(argumentProvider, argumentProviders[0]);
     }
 
     @Test

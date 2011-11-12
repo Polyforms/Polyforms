@@ -1,7 +1,5 @@
 package org.polyforms.delegation.support;
 
-import java.util.Collections;
-
 import org.easymock.EasyMock;
 import org.junit.After;
 import org.junit.Assert;
@@ -44,7 +42,7 @@ public class DelegationExecutorTest {
         beanContainer.containsBean(String.class);
         EasyMock.expectLastCall().andReturn(false);
         delegation.getArgumentProviders();
-        EasyMock.expectLastCall().andReturn(Collections.EMPTY_LIST);
+        EasyMock.expectLastCall().andReturn(new ArgumentProvider[0]);
         conversionService.convert("test", String.class);
         EasyMock.expectLastCall().andReturn("test");
         conversionService.convert(4, String.class);
@@ -107,7 +105,7 @@ public class DelegationExecutorTest {
         beanContainer.getBean(Delegatee.class);
         EasyMock.expectLastCall().andReturn(delegatee);
         delegation.getArgumentProviders();
-        EasyMock.expectLastCall().andReturn(Collections.EMPTY_LIST);
+        EasyMock.expectLastCall().andReturn(new ArgumentProvider[0]);
         delegation.getDelegatorType();
         EasyMock.expectLastCall().andReturn(Object.class);
         delegation.getDelegatorMethod();
@@ -151,7 +149,7 @@ public class DelegationExecutorTest {
         conversionService.convert(delegatee, Delegatee.class);
         EasyMock.expectLastCall().andReturn(delegatee);
         delegation.getArgumentProviders();
-        EasyMock.expectLastCall().andReturn(Collections.EMPTY_LIST);
+        EasyMock.expectLastCall().andReturn(new ArgumentProvider[0]);
         conversionService.convert("test", String.class);
         EasyMock.expectLastCall().andReturn("test");
     }
@@ -173,7 +171,7 @@ public class DelegationExecutorTest {
         conversionService.convert(delegatee, Delegatee.class);
         EasyMock.expectLastCall().andReturn(delegatee);
         delegation.getArgumentProviders();
-        EasyMock.expectLastCall().andReturn(Collections.singletonList(argumentProvider));
+        EasyMock.expectLastCall().andReturn(new ArgumentProvider[] { argumentProvider });
         argumentProvider.get(arguments);
         EasyMock.expectLastCall().andReturn("test");
         conversionService.convert("test", String.class);

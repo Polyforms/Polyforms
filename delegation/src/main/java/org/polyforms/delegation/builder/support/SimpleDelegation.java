@@ -2,7 +2,6 @@ package org.polyforms.delegation.builder.support;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +15,7 @@ import org.polyforms.parameter.ArgumentProvider;
  * @since 1.0
  */
 final class SimpleDelegation implements Delegation {
+    private static final ArgumentProvider[] EMPTY_ARGUMENT_PROVIDERS = new ArgumentProvider[0];
     private final List<ArgumentProvider> argumentProviders = new ArrayList<ArgumentProvider>();
     private Map<Class<? extends Throwable>, Class<? extends Throwable>> exceptionTypeMap;
     private final Class<?> delegatorType;
@@ -67,8 +67,8 @@ final class SimpleDelegation implements Delegation {
     /**
      * {@inheritDoc}
      */
-    public List<ArgumentProvider> getArgumentProviders() {
-        return Collections.unmodifiableList(argumentProviders);
+    public ArgumentProvider[] getArgumentProviders() {
+        return argumentProviders.toArray(EMPTY_ARGUMENT_PROVIDERS);
     }
 
     /**

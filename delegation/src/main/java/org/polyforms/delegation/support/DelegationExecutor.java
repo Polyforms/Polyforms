@@ -2,8 +2,6 @@ package org.polyforms.delegation.support;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -46,9 +44,7 @@ class DelegationExecutor {
 
         final boolean beanDelegation = isBeanDelegation(delegateeName, delegateeType);
         final Object target = getTarget(beanDelegation, delegateeName, delegateeType, arguments);
-        final List<ArgumentProvider> argumentProviders = getArgumentProviders(delegation, beanDelegation);
-
-        final Object[] tailoredArguments = getArguments(argumentProviders, arguments);
+        final Object[] tailoredArguments = getArguments(delegation, beanDelegation, arguments);
         Assert.isTrue(arguments.length >= delegateeMethod.getParameterTypes().length,
                 "The arguments passed to are less than parameters required by method.");
 
@@ -69,25 +65,6 @@ class DelegationExecutor {
             }
             throw conversionService.convert(exception, delegatorExceptionType); // NOPMD
         }
-    }
-
-    private List<ArgumentProvider> getArgumentProviders(final Delegation delegation, final boolean beanDelegation) {
-        List<ArgumentProvider> argumentProviders = delegation.getArgumentProviders();
-        if (argumentProviders.isEmpty()) {
-            argumentProviders = Arrays.asList(match(delegation.getDelegatorType(), delegation.getDelegatorMethod(),
-                    delegation.getDelegateeType(), delegation.getDelegateeMethod(), beanDelegation ? 0 : 1));
-        }
-        return argumentProviders;
-    }
-
-    private ArgumentProvider[] match(final Class<?> sourceClass, final Method sourceMethod, final Class<?> targetClass,
-            final Method targetMethod, final int offset) {
-        final MethodParameters sourceParameters = new MethodParameters(sourceClass, sourceMethod, true);
-        final MethodParameters targetParameters = new MethodParameters(targetClass, targetMethod, false);
-        for (final MethodParameter parameter : targetParameters.getParameters()) {
-            parameter.setIndex(parameter.getIndex() + offset);
-        }
-        return parameterMatcher.match(sourceParameters, targetParameters);
     }
 
     protected Object getTarget(final boolean beanDelegation, final String delegateeName, final Class<?> delegateeType,
@@ -118,12 +95,32 @@ class DelegationExecutor {
         return argument;
     }
 
-    private Object[] getArguments(final List<ArgumentProvider> argumentProviders, final Object[] arguments) {
-        final Object[] tailoredArguments = new Object[argumentProviders.size()];
-        for (int i = 0; i < argumentProviders.size(); i++) {
-            tailoredArguments[i] = argumentProviders.get(i).get(arguments);
+    private Object[] getArguments(final Delegation delegation, final boolean beanDelegation, final Object[] arguments) {
+        final ArgumentProvider[] argumentProviders = getArgumentProviders(delegation, beanDelegation);
+        final Object[] tailoredArguments = new Object[argumentProviders.length];
+        for (int i = 0; i < argumentProviders.length; i++) {
+            tailoredArguments[i] = argumentProviders[i].get(arguments);
         }
         return tailoredArguments;
+    }
+
+    private ArgumentProvider[] getArgumentProviders(final Delegation delegation, final boolean beanDelegation) {
+        ArgumentProvider[] argumentProviders = delegation.getArgumentProviders();
+        if (argumentProviders.length == 0) {
+            argumentProviders = match(delegation.getDelegatorType(), delegation.getDelegatorMethod(),
+                    delegation.getDelegateeType(), delegation.getDelegateeMethod(), beanDelegation ? 0 : 1);
+        }
+        return argumentProviders;
+    }
+
+    private ArgumentProvider[] match(final Class<?> sourceClass, final Method sourceMethod, final Class<?> targetClass,
+            final Method targetMethod, final int offset) {
+        final MethodParameters sourceParameters = new MethodParameters(sourceClass, sourceMethod, true);
+        final MethodParameters targetParameters = new MethodParameters(targetClass, targetMethod, false);
+        for (final MethodParameter parameter : targetParameters.getParameters()) {
+            parameter.setIndex(parameter.getIndex() + offset);
+        }
+        return parameterMatcher.match(sourceParameters, targetParameters);
     }
 
     private Object[] convertArguments(final Object[] arguments, final Class<?> targetClass, final Method method) {

@@ -75,7 +75,7 @@ public class MethodParameter extends Parameter {
         return annotation;
     }
 
-    private static abstract class Action<A extends Annotation> {
+    private abstract static class Action<A extends Annotation> {
         protected abstract void apply(Parameter parameter, A annotation);
     }
 }
