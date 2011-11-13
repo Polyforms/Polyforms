@@ -1,4 +1,4 @@
-package org.polyforms.di.util;
+package org.polyforms.util;
 
 import java.lang.reflect.Method;
 

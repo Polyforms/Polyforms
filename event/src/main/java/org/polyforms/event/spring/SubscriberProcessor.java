@@ -2,7 +2,6 @@ package org.polyforms.event.spring;
 
 import java.lang.reflect.Method;
 
-import org.polyforms.di.util.ConversionUtils;
 import org.polyforms.event.Subscriber;
 import org.polyforms.event.bus.Listener;
 import org.polyforms.event.bus.ListenerRegistry;
@@ -12,6 +11,7 @@ import org.polyforms.parameter.ParameterMatcher;
 import org.polyforms.parameter.support.MethodParameter;
 import org.polyforms.parameter.support.MethodParameterMatcher;
 import org.polyforms.parameter.support.MethodParameters;
+import org.polyforms.util.ConversionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;

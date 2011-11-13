@@ -8,12 +8,12 @@ import javax.inject.Named;
 
 import org.polyforms.delegation.builder.BeanContainer;
 import org.polyforms.delegation.builder.Delegation;
-import org.polyforms.di.util.ConversionUtils;
 import org.polyforms.parameter.ArgumentProvider;
 import org.polyforms.parameter.ParameterMatcher;
 import org.polyforms.parameter.support.MethodParameter;
 import org.polyforms.parameter.support.MethodParameterMatcher;
 import org.polyforms.parameter.support.MethodParameters;
+import org.polyforms.util.ConversionUtils;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
