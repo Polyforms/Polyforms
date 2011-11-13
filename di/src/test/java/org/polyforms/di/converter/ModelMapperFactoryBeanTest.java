@@ -1,4 +1,4 @@
-package org.polyforms.delegation.converter;
+package org.polyforms.di.converter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +16,7 @@ import org.modelmapper.convention.NameTokenizers;
 import org.modelmapper.convention.NameTransformers;
 import org.modelmapper.convention.NamingConventions;
 import org.modelmapper.spi.ConditionalConverter;
+import org.polyforms.di.converter.ModelMapperFactoryBean;
 import org.springframework.test.util.ReflectionTestUtils;
 
 public class ModelMapperFactoryBeanTest {

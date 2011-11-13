@@ -1,4 +1,4 @@
-package org.polyforms.delegation.converter;
+package org.polyforms.di.converter;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

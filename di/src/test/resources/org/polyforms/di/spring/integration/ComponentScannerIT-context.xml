@@ -8,5 +8,5 @@
 		http://www.polyforms.org/schema/polyforms.xsd">
 	<bean id="abstractMethodOverrideProcessor" class="org.polyforms.di.spring.AbstractMethodOverrideProcessor" />
 
-	<polyforms:component-scan base-package="org.polyforms.di.spring.integration" />
+	<polyforms:component-scan base-package="org.polyforms.di" />
 </beans>

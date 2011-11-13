@@ -52,8 +52,6 @@ public class DelegationExecutorTest {
         delegation.getDelegatorMethod();
         EasyMock.expectLastCall()
                 .andReturn(Delegator.class.getMethod("concat", new Class<?>[] { String.class, int.class })).times(2);
-        conversionService.convert("test4", String.class);
-        EasyMock.expectLastCall().andReturn("test4");
         EasyMock.replay(beanContainer, conversionService, delegation);
 
         Assert.assertEquals("test4", delegationExecutor.execute(delegation, new Object[] { "test", 4 }));
@@ -150,8 +148,6 @@ public class DelegationExecutorTest {
         EasyMock.expectLastCall().andReturn(delegatee);
         delegation.getArgumentProviders();
         EasyMock.expectLastCall().andReturn(new ArgumentProvider[0]);
-        conversionService.convert("test", String.class);
-        EasyMock.expectLastCall().andReturn("test");
     }
 
     @Test
@@ -173,8 +169,6 @@ public class DelegationExecutorTest {
         delegation.getArgumentProviders();
         EasyMock.expectLastCall().andReturn(new ArgumentProvider[] { argumentProvider });
         argumentProvider.get(arguments);
-        EasyMock.expectLastCall().andReturn("test");
-        conversionService.convert("test", String.class);
         EasyMock.expectLastCall().andReturn("test");
         delegatee.echo("test");
         EasyMock.expectLastCall().andReturn(null);

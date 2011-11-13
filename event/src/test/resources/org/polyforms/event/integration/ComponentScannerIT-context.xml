@@ -7,6 +7,5 @@
 		http://www.polyforms.org/schema/polyforms.xsd">
 		
 	<bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" />
-
-	<polyforms:component-scan base-package="org.polyforms.event" />
+	<polyforms:component-scan base-package="org.polyforms.di org.polyforms.event" />
 </beans>

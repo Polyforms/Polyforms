@@ -7,6 +7,7 @@ import org.aopalliance.intercept.MethodInvocation;
 import org.polyforms.util.DefaultValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.Assert;
 
 /**
  * {@link MethodInterceptor} for methods which annotated by {@link org.polyforms.event.NoOperation}.
@@ -23,6 +24,7 @@ public final class NoOperationInterceptor implements MethodInterceptor {
      * {@inheritDoc}
      */
     public Object invoke(final MethodInvocation invocation) {
+        Assert.notNull(invocation);
         final Method method = invocation.getMethod();
         LOGGER.debug("Execute no operation for {}.", method);
         return DefaultValue.get(method.getReturnType());

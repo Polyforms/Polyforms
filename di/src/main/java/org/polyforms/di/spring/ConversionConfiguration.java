@@ -1,4 +1,4 @@
-package org.polyforms.delegation.spring;
+package org.polyforms.di.spring;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
@@ -10,6 +10,6 @@ import org.springframework.context.annotation.ImportResource;
  * @since 1.0
  */
 @Configuration
-@ImportResource("classpath:/org/polyforms/delegation/spring/module-context.xml")
+@ImportResource("classpath:/org/polyforms/di/spring/module-context.xml")
 interface ConversionConfiguration {
 }

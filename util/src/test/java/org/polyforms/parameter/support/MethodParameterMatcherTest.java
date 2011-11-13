@@ -18,8 +18,10 @@ public class MethodParameterMatcherTest {
         final Method targetMethod = this.getClass().getMethod("targetMethod",
                 new Class<?>[] { long.class, String.class });
 
-        final ArgumentProvider[] argumentProviders = methodParameterMatcher.match(new MethodParameters(this.getClass(),
-                sourceMethod, true), new MethodParameters(this.getClass(), targetMethod, false));
+        final MethodParameters sourceParameters = new MethodParameters(this.getClass(), sourceMethod);
+        sourceParameters.applyAnnotation();
+        final MethodParameters targetParameters = new MethodParameters(this.getClass(), targetMethod);
+        final ArgumentProvider[] argumentProviders = methodParameterMatcher.match(sourceParameters, targetParameters);
         Assert.assertEquals(2, argumentProviders.length);
 
         final Object[] arguments = new Object[] { "test", 1 };

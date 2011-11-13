@@ -8,13 +8,12 @@ import javax.inject.Named;
 
 import org.polyforms.delegation.builder.BeanContainer;
 import org.polyforms.delegation.builder.Delegation;
+import org.polyforms.di.util.ConversionUtils;
 import org.polyforms.parameter.ArgumentProvider;
-import org.polyforms.parameter.support.AbstractParameterMatcher;
+import org.polyforms.parameter.ParameterMatcher;
 import org.polyforms.parameter.support.MethodParameter;
 import org.polyforms.parameter.support.MethodParameterMatcher;
 import org.polyforms.parameter.support.MethodParameters;
-import org.polyforms.util.DefaultValue;
-import org.springframework.core.GenericTypeResolver;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -27,7 +26,7 @@ import org.springframework.util.StringUtils;
  */
 @Named
 class DelegationExecutor {
-    private final AbstractParameterMatcher<MethodParameter, MethodParameter> parameterMatcher = new MethodParameterMatcher();
+    private final ParameterMatcher<MethodParameter, MethodParameter> parameterMatcher = new MethodParameterMatcher();
     private final BeanContainer beanContainer;
     private final ConversionService conversionService;
 
@@ -44,17 +43,18 @@ class DelegationExecutor {
 
         final boolean beanDelegation = isBeanDelegation(delegateeName, delegateeType);
         final Object target = getTarget(beanDelegation, delegateeName, delegateeType, arguments);
-        final Object[] tailoredArguments = getArguments(delegation, beanDelegation, arguments);
+        final Object[] matchedArguments = getArguments(delegation, beanDelegation, arguments);
         Assert.isTrue(arguments.length >= delegateeMethod.getParameterTypes().length,
                 "The arguments passed to are less than parameters required by method.");
 
         final Object convertedTarget = conversionService.convert(target, delegateeType);
-        final Object[] convertedAguments = convertArguments(tailoredArguments, convertedTarget.getClass(),
-                delegateeMethod);
+        final Object[] convertedAguments = ConversionUtils.convertArguments(conversionService,
+                convertedTarget.getClass(), delegateeMethod, matchedArguments);
 
         try {
             final Object returnValue = delegateeMethod.invoke(convertedTarget, convertedAguments);
-            return convertReturnValue(returnValue, delegation.getDelegatorType(), delegation.getDelegatorMethod());
+            return ConversionUtils.convertReturnValue(conversionService, delegation.getDelegatorType(),
+                    delegation.getDelegatorMethod(), returnValue);
         } catch (final InvocationTargetException e) {
             final Throwable exception = e.getTargetException();
             final Class<? extends Throwable> delegatorExceptionType = getDelegatorExceptionType(delegation,
@@ -115,33 +115,13 @@ class DelegationExecutor {
 
     private ArgumentProvider[] match(final Class<?> sourceClass, final Method sourceMethod, final Class<?> targetClass,
             final Method targetMethod, final int offset) {
-        final MethodParameters sourceParameters = new MethodParameters(sourceClass, sourceMethod, true);
-        final MethodParameters targetParameters = new MethodParameters(targetClass, targetMethod, false);
+        final MethodParameters sourceParameters = new MethodParameters(sourceClass, sourceMethod);
+        sourceParameters.applyAnnotation();
+        final MethodParameters targetParameters = new MethodParameters(targetClass, targetMethod);
         for (final MethodParameter parameter : targetParameters.getParameters()) {
             parameter.setIndex(parameter.getIndex() + offset);
         }
         return parameterMatcher.match(sourceParameters, targetParameters);
-    }
-
-    private Object[] convertArguments(final Object[] arguments, final Class<?> targetClass, final Method method) {
-        final Class<?>[] parameterTypes = method.getParameterTypes();
-        final Object[] targets = new Object[parameterTypes.length];
-        for (int i = 0; i < parameterTypes.length; i++) {
-            final Class<?> genericType = GenericTypeResolver.resolveParameterType(
-                    new org.springframework.core.MethodParameter(method, i), targetClass);
-            targets[i] = conversionService.convert(arguments[i], genericType);
-        }
-        return targets;
-    }
-
-    private Object convertReturnValue(final Object returnValue, final Class<?> targetClass, final Method method) {
-        final Class<?> returnType = method.getReturnType();
-
-        if (returnType == void.class || returnValue == null) {
-            return DefaultValue.get(returnType);
-        }
-
-        return conversionService.convert(returnValue, GenericTypeResolver.resolveReturnType(method, targetClass));
     }
 
     private Class<? extends Throwable> getDelegatorExceptionType(final Delegation delegation,

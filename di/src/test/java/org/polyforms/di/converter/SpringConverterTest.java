@@ -1,4 +1,4 @@
-package org.polyforms.delegation.converter;
+package org.polyforms.di.converter;
 
 import java.lang.annotation.ElementType;
 import java.lang.reflect.Method;
@@ -14,6 +14,8 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.spi.ConditionalConverter;
 import org.modelmapper.spi.ConditionalConverter.MatchResult;
 import org.modelmapper.spi.MappingContext;
+import org.polyforms.di.converter.ModelMapperConverter;
+import org.polyforms.di.converter.SpringConverter;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.convert.support.ConversionServiceFactory;

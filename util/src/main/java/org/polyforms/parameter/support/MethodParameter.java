@@ -25,16 +25,19 @@ public class MethodParameter extends Parameter {
 
     static {
         ANNOTATION_ACTIONS.put(At.class, new Action<At>() {
+            @Override
             protected void apply(final Parameter parameter, final At annotation) {
                 parameter.setIndex(annotation.value());
             }
         });
         ANNOTATION_ACTIONS.put(Named.class, new Action<Named>() {
+            @Override
             protected void apply(final Parameter parameter, final Named annotation) {
                 parameter.setName(annotation.value());
             }
         });
         ANNOTATION_ACTIONS.put(TypeOf.class, new Action<TypeOf>() {
+            @Override
             protected void apply(final Parameter parameter, final TypeOf annotation) {
                 parameter.setType(annotation.value());
             }
@@ -47,15 +50,24 @@ public class MethodParameter extends Parameter {
      * @param annotation annotated with {@link Provider}
      * @param apply whether apply the annotation to meta data of parameter.
      */
-    @SuppressWarnings("unchecked")
-    public void setAnnotation(final Annotation annotation, final boolean apply) {
-        this.annotation = annotation;
-
+    public void setAnnotation(final Annotation annotation) {
         if (annotation != null) {
             final Class<?> annotationClass = findAnnotationClass(annotation);
             Assert.notNull(annotationClass, "The annotation for argument provider should be annotated by @Provider.");
+        }
 
-            if (apply && ANNOTATION_ACTIONS.containsKey(annotationClass)) {
+        this.annotation = annotation;
+    }
+
+    /**
+     * Apply annotation to meta data of parameter.
+     */
+    @SuppressWarnings("unchecked")
+    public void applyAnnotation() {
+        if (annotation != null) {
+            final Class<?> annotationClass = findAnnotationClass(annotation);
+
+            if (ANNOTATION_ACTIONS.containsKey(annotationClass)) {
                 ANNOTATION_ACTIONS.get(annotationClass).apply(this, annotation);
             }
         }

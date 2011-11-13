@@ -24,7 +24,7 @@ public class MethodParameters implements Parameters<MethodParameter> {
     /**
      * Create an instance from provided method.
      */
-    public MethodParameters(final Class<?> clazz, final Method method, final boolean applyAnnotation) {
+    public MethodParameters(final Class<?> clazz, final Method method) {
         final Class<?>[] parameterTypes = method.getParameterTypes();
         final String[] parameterNames = parameterNameDiscoverer.getParameterNames(method);
         final Annotation[][] parameterAnnotations = method.getParameterAnnotations();
@@ -44,7 +44,7 @@ public class MethodParameters implements Parameters<MethodParameter> {
                 parameter.setName(parameterNames[i]);
             }
 
-            parameter.setAnnotation(getFirstProviderAnnotation(parameterAnnotations[i]), applyAnnotation);
+            parameter.setAnnotation(getFirstProviderAnnotation(parameterAnnotations[i]));
         }
     }
 
@@ -56,6 +56,16 @@ public class MethodParameters implements Parameters<MethodParameter> {
         }
 
         return null;
+    }
+
+    /**
+     * Apply annotations to meta data of parameters.
+     */
+    public void applyAnnotation() {
+        for (final MethodParameter parameter : parameters) {
+            parameter.applyAnnotation();
+        }
+
     }
 
     /**

@@ -11,7 +11,7 @@ public class MethodParametersTest {
     @Test
     public void getParameters() throws NoSuchMethodException {
         final Method method = String.class.getMethod("indexOf", new Class<?>[] { String.class, int.class });
-        final MethodParameters methodParameters = new MethodParameters(String.class, method, false);
+        final MethodParameters methodParameters = new MethodParameters(String.class, method);
         final MethodParameter[] parameters = methodParameters.getParameters();
         Assert.assertEquals(2, parameters.length);
 
@@ -29,7 +29,8 @@ public class MethodParametersTest {
     @Test
     public void getParametersWithAnnotation() throws NoSuchMethodException {
         final Method method = this.getClass().getMethod("annotatedMethod", new Class<?>[] { String.class, int.class });
-        final MethodParameters methodParameters = new MethodParameters(this.getClass(), method, true);
+        final MethodParameters methodParameters = new MethodParameters(this.getClass(), method);
+        methodParameters.applyAnnotation();
         final MethodParameter[] parameters = methodParameters.getParameters();
         Assert.assertEquals(2, parameters.length);
 
