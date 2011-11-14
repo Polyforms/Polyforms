@@ -35,7 +35,7 @@ import org.springframework.util.ReflectionUtils;
 public class SubscriberProcessor implements PriorityOrdered, BeanFactoryAware, DestructionAwareBeanPostProcessor {
     private final static ParameterMatcher<MethodParameter, MethodParameter> parameterMatcher = new MethodParameterMatcher();
     private final static Logger LOGGER = LoggerFactory.getLogger(SubscriberProcessor.class);
-    private int order = Ordered.LOWEST_PRECEDENCE - 1;
+    private final int order = Ordered.LOWEST_PRECEDENCE - 1;
     private ConversionService conversionService;
     private ListenerRegistry listenerRegistry;
     private BeanFactory beanFactory;

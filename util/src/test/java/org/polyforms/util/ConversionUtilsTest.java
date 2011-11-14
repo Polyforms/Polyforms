@@ -26,14 +26,14 @@ public class ConversionUtilsTest implements ForConversionTest<String> {
     @Test
     public void convertArguments() {
         final Integer[] integers = new Integer[] { 1 };
-        Object[] arguments = new Object[] { integers, 0 };
+        final Object[] arguments = new Object[] { integers, 0 };
 
         conversionService.convert(integers, String[].class);
         EasyMock.expectLastCall().andReturn(new String[] { "1" });
         EasyMock.replay(conversionService);
 
-        Object[] convertedArguments = ConversionUtils.convertArguments(conversionService, this.getClass(), method,
-                arguments);
+        final Object[] convertedArguments = ConversionUtils.convertArguments(conversionService, this.getClass(),
+                method, arguments);
         Assert.assertEquals("1", ((String[]) convertedArguments[0])[0]);
         Assert.assertEquals(0, convertedArguments[1]);
         EasyMock.verify(conversionService);
@@ -59,7 +59,7 @@ public class ConversionUtilsTest implements ForConversionTest<String> {
         Assert.assertNull(ConversionUtils.convertReturnValue(conversionService, this.getClass(), method, null));
     }
 
-    public String indexOf(String[] values, Integer index) {
+    public String indexOf(final String[] values, final Integer index) {
         return null;
     }
 }

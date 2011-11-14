@@ -9,6 +9,7 @@ import org.springframework.core.GenericTypeResolver;
 import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 import org.springframework.core.ParameterNameDiscoverer;
 import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 
 /**
@@ -19,12 +20,20 @@ import org.springframework.util.ClassUtils;
  */
 public class MethodParameters implements Parameters<MethodParameter> {
     private final ParameterNameDiscoverer parameterNameDiscoverer = new LocalVariableTableParameterNameDiscoverer();
+    private final Class<?> clazz;
+    private final Method method;
     private final MethodParameter[] parameters;
 
     /**
      * Create an instance from provided method.
      */
     public MethodParameters(final Class<?> clazz, final Method method) {
+        Assert.notNull(clazz);
+        Assert.notNull(method);
+
+        this.clazz = clazz;
+        this.method = method;
+
         final Class<?>[] parameterTypes = method.getParameterTypes();
         final String[] parameterNames = parameterNameDiscoverer.getParameterNames(method);
         final Annotation[][] parameterAnnotations = method.getParameterAnnotations();
@@ -75,5 +84,32 @@ public class MethodParameters implements Parameters<MethodParameter> {
         final MethodParameter[] returnParameters = new MethodParameter[parameters.length];
         System.arraycopy(parameters, 0, returnParameters, 0, parameters.length);
         return returnParameters;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + clazz.hashCode();
+        result = prime * result + method.hashCode();
+        return result;
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final MethodParameters other = (MethodParameters) obj;
+        if (!clazz.equals(other.clazz)) {
+            return false;
+        }
+        return method.equals(other.method);
     }
 }

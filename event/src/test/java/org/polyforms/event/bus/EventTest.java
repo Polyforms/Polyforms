@@ -7,7 +7,7 @@ import org.junit.Test;
 public class EventTest {
     @Test
     public void newInstance() {
-        Event event = new Event("name");
+        final Event event = new Event("name");
         Assert.assertEquals("name", event.getName());
     }
 

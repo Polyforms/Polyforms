@@ -37,7 +37,7 @@ public class PublisherInterceptor implements MethodInterceptor {
     /**
      * {@inheritDoc}
      */
-    public Object invoke(MethodInvocation methodInvocation) throws Throwable {
+    public Object invoke(final MethodInvocation methodInvocation) throws Throwable {
         Assert.notNull(methodInvocation);
 
         final Object target = methodInvocation.getThis();
@@ -53,7 +53,7 @@ public class PublisherInterceptor implements MethodInterceptor {
         final Method specificMethod = ClassUtils.getMostSpecificMethod(method, target.getClass());
         final Publishers publishers = AnnotationUtils.findAnnotation(specificMethod, Publishers.class);
         if (publishers != null) {
-            for (Publisher publisher : publishers.value()) {
+            for (final Publisher publisher : publishers.value()) {
                 publishEvent(when, method, args, target, specificMethod, publisher);
             }
         }

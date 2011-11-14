@@ -17,8 +17,7 @@ import org.springframework.util.ClassUtils;
  * {@link BeanFactoryPostProcessor} to add method overrides for instantiation interfaces or abstract classes, and all
  * invocation of methods in that classes of interfaces would be implemented with an aspect.
  * 
- * The typical usage of that incldes two cases:
- * The typical usage includes two cases:
+ * The typical usage of that incldes two cases: The typical usage includes two cases:
  * <p>
  * <bean id="myInterface" class="package.name.MyInterface" />
  * <p>

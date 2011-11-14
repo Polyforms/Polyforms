@@ -17,18 +17,25 @@ public class SubscriberProcessorTest {
     private BeanFactory beanFactory;
     private ListenerRegistry listenerRegistry;
     private SubscriberProcessor subscriberProcessor;
+    private SpringBeanMethodInvoker methodInvokerA;
+    private SpringBeanMethodInvoker methodInvokerB;
 
     @Before
-    public void setUp() {
+    public void setUp() throws NoSuchMethodException {
         listenerRegistry = EasyMock.createMock(ListenerRegistry.class);
         beanFactory = EasyMock.createMock(BeanFactory.class);
         subscriberProcessor = new SubscriberProcessor();
         subscriberProcessor.setBeanFactory(beanFactory);
+
+        methodInvokerA = subscriberProcessor.new SpringBeanMethodInvoker("subscriber", this.getClass().getMethod(
+                "subscriberMethod", new Class<?>[] { String.class }));
+        methodInvokerB = subscriberProcessor.new SpringBeanMethodInvoker("subscriber", this.getClass().getMethod(
+                "publisherMethod", new Class<?>[] { int.class }));
     }
 
     @Test
     public void postProcessBeforeInitialization() {
-        Object bean = new Object();
+        final Object bean = new Object();
         Assert.assertSame(bean, subscriberProcessor.postProcessBeforeInitialization(bean, "beanName"));
     }
 
@@ -71,15 +78,15 @@ public class SubscriberProcessorTest {
     public void onEvent() throws NoSuchMethodException {
         beanFactory.getBean("beanName");
         EasyMock.expectLastCall().andReturn(this).times(2);
-        ConversionService conversionService = EasyMock.createMock(ConversionService.class);
+        final ConversionService conversionService = EasyMock.createMock(ConversionService.class);
         beanFactory.getBean(ConversionService.class);
         EasyMock.expectLastCall().andReturn(conversionService);
         conversionService.convert(1, String.class);
         EasyMock.expectLastCall().andReturn("1").times(2);
         EasyMock.replay(beanFactory, conversionService);
 
-        Listener<MethodInvocationEvent> listener = subscriberProcessor.new SpringBeanMethodInvoker("beanName", this
-                .getClass().getMethod("subscriberMethod", new Class<?>[] { String.class }));
+        final Listener<MethodInvocationEvent> listener = subscriberProcessor.new SpringBeanMethodInvoker("beanName",
+                this.getClass().getMethod("subscriberMethod", new Class<?>[] { String.class }));
         listener.onEvent(new MethodInvocationEvent("sync", this.getClass(), this.getClass().getMethod(
                 "publisherMethod", new Class<?>[] { int.class }), 1));
         // Just for test cache of conversion service
@@ -88,10 +95,47 @@ public class SubscriberProcessorTest {
         EasyMock.verify(beanFactory, conversionService);
     }
 
-    @Subscriber("event")
-    public void subscriberMethod(String string) {
+    @Test
+    public void hashcode() {
+        Assert.assertTrue(methodInvokerA.hashCode() != methodInvokerB.hashCode());
     }
 
-    public void publisherMethod(int number) {
+    @Test
+    public void equalsSame() {
+        Assert.assertTrue(methodInvokerA.equals(methodInvokerA));
+    }
+
+    @Test
+    public void notEqualsNull() {
+        Assert.assertFalse(methodInvokerA.equals(null));
+    }
+
+    @Test
+    public void notEqualsOtherClass() {
+        Assert.assertFalse(methodInvokerA.equals(new Object()));
+    }
+
+    @Test
+    public void notEqualsBeanName() throws NoSuchMethodException {
+        Assert.assertFalse(methodInvokerA.equals(subscriberProcessor.new SpringBeanMethodInvoker("subscriber2", this
+                .getClass().getMethod("subscriberMethod", new Class<?>[] { String.class }))));
+    }
+
+    @Test
+    public void notEqualsMethod() {
+        Assert.assertFalse(methodInvokerA.equals(methodInvokerB));
+    }
+
+    @Test
+    public void equals() throws NoSuchMethodException {
+        Assert.assertTrue(methodInvokerA.equals(subscriberProcessor.new SpringBeanMethodInvoker("subscriber", this
+                .getClass().getMethod("subscriberMethod", new Class<?>[] { String.class }))));
+    }
+
+    @Subscriber("event")
+    public void subscriberMethod(final String string) {
+    }
+
+    public void publisherMethod(final int number) {
     }
 }

@@ -68,7 +68,7 @@ public class SimpleEventBus implements EventBus, ListenerRegistry {
         register(async ? asyncListeners : syncListeners, name, listener);
     }
 
-    private void register(Map<String, Set<Listener>> listeners, final String name, final Listener<?> listener) {
+    private void register(final Map<String, Set<Listener>> listeners, final String name, final Listener<?> listener) {
         if (!listeners.containsKey(name)) {
             listeners.put(name, new HashSet<Listener>());
         }

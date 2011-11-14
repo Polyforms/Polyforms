@@ -12,7 +12,7 @@ public class MethodInvocationEventTest {
         final Class<? extends MethodInvocationEventTest> targetClass = this.getClass();
         final Method method = targetClass.getMethod("mockMethod", new Class<?>[0]);
         final Object[] arguments = new Object[0];
-        MethodInvocationEvent event = new MethodInvocationEvent("name", targetClass, method, arguments);
+        final MethodInvocationEvent event = new MethodInvocationEvent("name", targetClass, method, arguments);
 
         Assert.assertSame(targetClass, event.getTargetClass());
         Assert.assertSame(method, event.getMethod());

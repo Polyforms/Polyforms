@@ -27,6 +27,9 @@ public class MethodParameterMatcherTest {
         final Object[] arguments = new Object[] { "test", 1 };
         Assert.assertEquals(1, argumentProviders[0].get(arguments));
         Assert.assertEquals("test", argumentProviders[1].get(arguments));
+
+        // Just for testing cache
+        Assert.assertSame(argumentProviders, methodParameterMatcher.match(sourceParameters, targetParameters));
     }
 
     public void sourceMethod(final String name, final int index) {

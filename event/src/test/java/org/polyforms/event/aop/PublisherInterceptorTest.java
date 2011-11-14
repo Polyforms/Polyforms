@@ -26,7 +26,7 @@ public class PublisherInterceptorTest {
     public void publisher() throws Throwable {
         final Object[] arguments = new Object[0];
         final Object returnValue = new Object();
-        MethodInvocation methodInvocation = EasyMock.createMock(MethodInvocation.class);
+        final MethodInvocation methodInvocation = EasyMock.createMock(MethodInvocation.class);
         methodInvocation.getThis();
         EasyMock.expectLastCall().andReturn(this);
         methodInvocation.getMethod();
@@ -45,7 +45,7 @@ public class PublisherInterceptorTest {
     @Test
     public void publishers() throws Throwable {
         final Object[] arguments = new Object[0];
-        MethodInvocation methodInvocation = EasyMock.createMock(MethodInvocation.class);
+        final MethodInvocation methodInvocation = EasyMock.createMock(MethodInvocation.class);
         methodInvocation.getThis();
         EasyMock.expectLastCall().andReturn(this);
         methodInvocation.getMethod();

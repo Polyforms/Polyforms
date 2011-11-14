@@ -27,6 +27,7 @@ public class MethodParameterTest {
     public void setAnnotation() {
         final Annotation annotation = annotations[0][1];
         methodParameter.setAnnotation(annotation);
+        methodParameter.applyAnnotation();
         Assert.assertSame(annotation, methodParameter.getAnnotation());
     }
 
