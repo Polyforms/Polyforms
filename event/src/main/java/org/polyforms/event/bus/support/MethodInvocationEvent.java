@@ -39,6 +39,8 @@ public class MethodInvocationEvent extends Event {
     }
 
     public Object[] getArguments() {
-        return arguments;
+        final Object[] copiedArguments = new Object[arguments.length];
+        System.arraycopy(arguments, 0, copiedArguments, 0, arguments.length);
+        return copiedArguments;
     }
 }

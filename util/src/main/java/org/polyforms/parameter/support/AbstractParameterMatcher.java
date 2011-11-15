@@ -61,17 +61,13 @@ public abstract class AbstractParameterMatcher<S extends Parameter, T extends Pa
             if (this == obj) {
                 return true;
             }
-            if (obj == null) {
+
+            if (!(obj instanceof ParametersPair)) {
                 return false;
             }
-            if (getClass() != obj.getClass()) {
-                return false;
-            }
+
             final ParametersPair other = (ParametersPair) obj;
-            if (!sourceParameters.equals(other.sourceParameters)) {
-                return false;
-            }
-            return targetParameters.equals(other.targetParameters);
+            return sourceParameters.equals(other.sourceParameters) && targetParameters.equals(other.targetParameters);
         }
     }
 }

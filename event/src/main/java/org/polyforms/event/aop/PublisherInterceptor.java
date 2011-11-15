@@ -1,6 +1,7 @@
 package org.polyforms.event.aop;
 
 import java.lang.reflect.Method;
+import java.util.Locale;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
@@ -9,7 +10,6 @@ import org.polyforms.event.Publisher.When;
 import org.polyforms.event.Publishers;
 import org.polyforms.event.bus.EventBus;
 import org.polyforms.event.bus.support.MethodInvocationEvent;
-import org.polyforms.event.spring.SubscriberProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -23,7 +23,7 @@ import org.springframework.util.ClassUtils;
  * @since 1.0
  */
 public class PublisherInterceptor implements MethodInterceptor {
-    private final static Logger LOGGER = LoggerFactory.getLogger(SubscriberProcessor.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PublisherInterceptor.class);
     private final EventBus eventBus;
 
     /**
@@ -69,7 +69,7 @@ public class PublisherInterceptor implements MethodInterceptor {
         if (annotation.when() == when) {
             eventBus.publish(new MethodInvocationEvent(annotation.value(), target.getClass(), specificMethod, args));
             LOGGER.debug("Publish domain event {} {} invocation of {}.", new Object[] { annotation.value(),
-                    when.name().toLowerCase(), method });
+                    when.name().toLowerCase(Locale.getDefault()), method });
         }
     }
 }

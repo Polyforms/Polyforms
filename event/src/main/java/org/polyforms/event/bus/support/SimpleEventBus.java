@@ -23,7 +23,7 @@ import org.springframework.util.Assert;
 @Component
 @SuppressWarnings("rawtypes")
 public class SimpleEventBus implements EventBus, ListenerRegistry {
-    private final static Logger LOGGER = LoggerFactory.getLogger(SimpleEventBus.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SimpleEventBus.class);
     private final Map<String, Set<Listener>> syncListeners = new ConcurrentHashMap<String, Set<Listener>>();
     private final Map<String, Set<Listener>> asyncListeners = new ConcurrentHashMap<String, Set<Listener>>();
 

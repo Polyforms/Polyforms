@@ -100,16 +100,12 @@ public class MethodParameters implements Parameters<MethodParameter> {
         if (this == obj) {
             return true;
         }
-        if (obj == null) {
+
+        if (!(obj instanceof MethodParameters)) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
+
         final MethodParameters other = (MethodParameters) obj;
-        if (!clazz.equals(other.clazz)) {
-            return false;
-        }
-        return method.equals(other.method);
+        return clazz.equals(other.clazz) && method.equals(other.method);
     }
 }

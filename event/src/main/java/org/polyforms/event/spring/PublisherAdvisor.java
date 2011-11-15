@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class PublisherAdvisor extends DefaultPointcutAdvisor {
     private static final long serialVersionUID = 6904896946238590335L;
+    private static final int DEFAULT_ORDER = 100;
 
     /**
      * Create an default instance.
@@ -27,6 +28,6 @@ public class PublisherAdvisor extends DefaultPointcutAdvisor {
     public PublisherAdvisor(final EventBus eventBus) {
         super(new ComposablePointcut(new AnnotationMatchingPointcut(null, Publishers.class))
                 .union(new AnnotationMatchingPointcut(null, Publisher.class)), new PublisherInterceptor(eventBus));
-        setOrder(100);
+        setOrder(DEFAULT_ORDER);
     }
 }

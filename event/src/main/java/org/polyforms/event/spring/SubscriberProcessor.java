@@ -14,7 +14,6 @@ import org.polyforms.parameter.support.MethodParameters;
 import org.polyforms.util.ConversionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.config.DestructionAwareBeanPostProcessor;
@@ -33,9 +32,9 @@ import org.springframework.util.ReflectionUtils;
  */
 @Component
 public class SubscriberProcessor implements PriorityOrdered, BeanFactoryAware, DestructionAwareBeanPostProcessor {
-    private final static ParameterMatcher<MethodParameter, MethodParameter> parameterMatcher = new MethodParameterMatcher();
-    private final static Logger LOGGER = LoggerFactory.getLogger(SubscriberProcessor.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SubscriberProcessor.class);
     private final int order = Ordered.LOWEST_PRECEDENCE - 1;
+    private ParameterMatcher<MethodParameter, MethodParameter> parameterMatcher = new MethodParameterMatcher();
     private ConversionService conversionService;
     private ListenerRegistry listenerRegistry;
     private BeanFactory beanFactory;
@@ -43,16 +42,16 @@ public class SubscriberProcessor implements PriorityOrdered, BeanFactoryAware, D
     /**
      * {@inheritDoc}
      */
-    public Object postProcessBeforeInitialization(final Object bean, final String beanName) throws BeansException {
+    public Object postProcessBeforeInitialization(final Object bean, final String beanName) {
         return bean;
     }
 
     /**
      * {@inheritDoc}
      */
-    public Object postProcessAfterInitialization(final Object bean, final String beanName) throws BeansException {
+    public Object postProcessAfterInitialization(final Object bean, final String beanName) {
         process(beanName, bean, new Action() {
-            public void run(final String type, final Listener<?> subscriber, final boolean async) {
+            protected void run(final String type, final Listener<?> subscriber, final boolean async) {
                 getListenerRegistry().register(type, subscriber, async);
                 LOGGER.info("Register listener {} to {}.", new Object[] { subscriber, type });
             }
@@ -63,9 +62,9 @@ public class SubscriberProcessor implements PriorityOrdered, BeanFactoryAware, D
     /**
      * {@inheritDoc}
      */
-    public void postProcessBeforeDestruction(final Object bean, final String beanName) throws BeansException {
+    public void postProcessBeforeDestruction(final Object bean, final String beanName) {
         process(beanName, bean, new Action() {
-            public void run(final String type, final Listener<?> subscriber, final boolean async) {
+            protected void run(final String type, final Listener<?> subscriber, final boolean async) {
                 getListenerRegistry().unregister(type, subscriber);
                 LOGGER.info("unregister listener {} from {}.", subscriber, type);
             }
@@ -105,7 +104,7 @@ public class SubscriberProcessor implements PriorityOrdered, BeanFactoryAware, D
     /**
      * {@inheritDoc}
      */
-    public void setBeanFactory(final BeanFactory factory) throws BeansException {
+    public void setBeanFactory(final BeanFactory factory) {
         beanFactory = factory;
     }
 
@@ -116,8 +115,8 @@ public class SubscriberProcessor implements PriorityOrdered, BeanFactoryAware, D
         return listenerRegistry;
     }
 
-    private interface Action {
-        void run(String type, Listener<?> subscriber, boolean async);
+    private abstract static class Action {
+        protected abstract void run(String type, Listener<?> subscriber, boolean async);
     }
 
     protected class SpringBeanMethodInvoker implements Listener<MethodInvocationEvent> {
@@ -189,20 +188,12 @@ public class SubscriberProcessor implements PriorityOrdered, BeanFactoryAware, D
                 return true;
             }
 
-            if (obj == null) {
-                return false;
-            }
-
-            if (getClass() != obj.getClass()) {
+            if (!(obj instanceof SpringBeanMethodInvoker)) {
                 return false;
             }
 
             final SpringBeanMethodInvoker other = (SpringBeanMethodInvoker) obj;
-            if (!beanName.equals(other.beanName)) {
-                return false;
-            }
-
-            return method.equals(other.method);
+            return beanName.equals(other.beanName) && method.equals(other.method);
         }
     }
 }
