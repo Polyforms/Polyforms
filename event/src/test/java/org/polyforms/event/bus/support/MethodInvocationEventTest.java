@@ -1,6 +1,7 @@
 package org.polyforms.event.bus.support;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 
 import junit.framework.Assert;
 
@@ -14,9 +15,9 @@ public class MethodInvocationEventTest {
         final Object[] arguments = new Object[0];
         final MethodInvocationEvent event = new MethodInvocationEvent("name", targetClass, method, arguments);
 
-        Assert.assertSame(targetClass, event.getTargetClass());
-        Assert.assertSame(method, event.getMethod());
-        Assert.assertSame(arguments, event.getArguments());
+        Assert.assertEquals(targetClass, event.getTargetClass());
+        Assert.assertEquals(method, event.getMethod());
+        Assert.assertTrue(Arrays.deepEquals(arguments, event.getArguments()));
     }
 
     @Test(expected = IllegalArgumentException.class)
