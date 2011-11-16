@@ -9,9 +9,9 @@ public class MockSubscriber {
     private String log;
 
     @Subscriber(SyncEventIT.AFTER_EVENT_NAME)
-    public void onEvent(final String string, final String start) {
+    public void onEvent(final String string, final String start, final String returnValue) {
         eventCount++;
-        log = string + "_" + start;
+        log = string + "_" + start + "=" + returnValue;
     }
 
     @Subscriber(SyncEventIT.BEFORE_EVENT_NAME)

@@ -11,8 +11,11 @@ package org.polyforms.parameter;
 public interface Parameters<P extends Parameter> {
     /**
      * Get parameters.
-     * 
-     * @return parameters
      */
     P[] getParameters();
+
+    /**
+     * Get parameter of return value
+     */
+    P getReturnParameter();
 }

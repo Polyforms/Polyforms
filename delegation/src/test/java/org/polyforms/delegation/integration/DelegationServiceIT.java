@@ -231,7 +231,7 @@ public class DelegationServiceIT {
 
     @Component
     public static class Delegatee extends GenericDelegateeImpl<Integer> {
-        public String hello(final String name) {
+        public String hello(final String name, final int number) {
             return "hello " + name;
         }
 

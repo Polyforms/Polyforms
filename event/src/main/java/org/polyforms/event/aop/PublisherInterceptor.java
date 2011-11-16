@@ -45,8 +45,16 @@ public class PublisherInterceptor implements MethodInterceptor {
         final Object[] arguments = methodInvocation.getArguments();
         process(When.BEFORE, method, arguments, target);
         final Object returnValue = methodInvocation.proceed();
-        process(When.AFTER, method, arguments, target);
+
+        process(When.AFTER, method, joinReturnValue(arguments, returnValue), target);
         return returnValue;
+    }
+
+    private Object[] joinReturnValue(final Object[] arguments, final Object returnValue) {
+        final Object[] newArguments = new Object[arguments.length + 1];
+        System.arraycopy(arguments, 0, newArguments, 0, arguments.length);
+        newArguments[arguments.length] = returnValue;
+        return newArguments;
     }
 
     private void process(final When when, final Method method, final Object[] args, final Object target) {

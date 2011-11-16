@@ -36,6 +36,11 @@ public class MethodParametersTest {
         Assert.assertEquals(Integer.class, intParameter.getType());
         Assert.assertNull(intParameter.getName());
         Assert.assertEquals(1, intParameter.getIndex());
+
+        final MethodParameter returnParameter = methodParameters.getReturnParameter();
+        Assert.assertEquals(Integer.class, returnParameter.getType());
+        Assert.assertEquals("returnValue", returnParameter.getName());
+        Assert.assertEquals(2, returnParameter.getIndex());
     }
 
     @Test
@@ -55,6 +60,8 @@ public class MethodParametersTest {
         Assert.assertEquals(Integer.class, intParameter.getType());
         Assert.assertEquals("index", intParameter.getName());
         Assert.assertEquals(1, intParameter.getIndex());
+
+        Assert.assertNull(methodParameters.getReturnParameter());
     }
 
     @Test

@@ -22,6 +22,6 @@ public class SyncEventIT {
     public void syncEvent() {
         publisher.subString("testString", 4);
         Assert.assertEquals(2, subscriber.getEventCount());
-        Assert.assertEquals("testString_4", subscriber.getLog());
+        Assert.assertEquals("testString_4=String", subscriber.getLog());
     }
 }

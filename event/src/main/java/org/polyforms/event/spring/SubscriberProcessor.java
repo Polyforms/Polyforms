@@ -34,7 +34,7 @@ import org.springframework.util.ReflectionUtils;
 public class SubscriberProcessor implements PriorityOrdered, BeanFactoryAware, DestructionAwareBeanPostProcessor {
     private static final Logger LOGGER = LoggerFactory.getLogger(SubscriberProcessor.class);
     private final int order = Ordered.LOWEST_PRECEDENCE - 1;
-    private ParameterMatcher<MethodParameter, MethodParameter> parameterMatcher = new MethodParameterMatcher();
+    private final ParameterMatcher<MethodParameter, MethodParameter> parameterMatcher = new MethodParameterMatcher();
     private ConversionService conversionService;
     private ListenerRegistry listenerRegistry;
     private BeanFactory beanFactory;
@@ -51,6 +51,7 @@ public class SubscriberProcessor implements PriorityOrdered, BeanFactoryAware, D
      */
     public Object postProcessAfterInitialization(final Object bean, final String beanName) {
         process(beanName, bean, new Action() {
+            @Override
             protected void run(final String type, final Listener<?> subscriber, final boolean async) {
                 getListenerRegistry().register(type, subscriber, async);
                 LOGGER.info("Register listener {} to {}.", new Object[] { subscriber, type });
@@ -64,6 +65,7 @@ public class SubscriberProcessor implements PriorityOrdered, BeanFactoryAware, D
      */
     public void postProcessBeforeDestruction(final Object bean, final String beanName) {
         process(beanName, bean, new Action() {
+            @Override
             protected void run(final String type, final Listener<?> subscriber, final boolean async) {
                 getListenerRegistry().unregister(type, subscriber);
                 LOGGER.info("unregister listener {} from {}.", subscriber, type);

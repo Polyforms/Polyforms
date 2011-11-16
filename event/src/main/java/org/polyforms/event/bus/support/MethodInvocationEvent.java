@@ -38,6 +38,9 @@ public class MethodInvocationEvent extends Event {
         return method;
     }
 
+    /**
+     * Get copy of arguments.
+     */
     public Object[] getArguments() {
         final Object[] copiedArguments = new Object[arguments.length];
         System.arraycopy(arguments, 0, copiedArguments, 0, arguments.length);

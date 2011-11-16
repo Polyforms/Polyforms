@@ -1,5 +1,6 @@
 package org.polyforms.parameter.support;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -45,6 +46,12 @@ class SourceParameters {
 
     private void prepareNamedParameters() {
         namedParameters = new HashMap<String, Parameter>();
+
+        final Parameter returnParameter = parameters.getReturnParameter();
+        if (returnParameter != null) {
+            namedParameters.put(returnParameter.getName(), returnParameter);
+        }
+
         for (final Parameter sourceParameter : parameters.getParameters()) {
             namedParameters.put(sourceParameter.getName(), sourceParameter);
         }
@@ -64,12 +71,18 @@ class SourceParameters {
 
     private void prepareTypedParameters() {
         typedParameters = new HashMap<Class<?>, Set<Parameter>>();
+
         for (final Parameter sourceParameter : parameters.getParameters()) {
             final Class<?> type = sourceParameter.getType();
             if (!typedParameters.containsKey(type)) {
                 typedParameters.put(type, new HashSet<Parameter>());
             }
             typedParameters.get(type).add(sourceParameter);
+        }
+
+        final Parameter returnParameter = parameters.getReturnParameter();
+        if (returnParameter != null && !typedParameters.containsKey(returnParameter.getType())) {
+            typedParameters.put(returnParameter.getType(), Collections.singleton(returnParameter));
         }
     }
 
@@ -82,6 +95,12 @@ class SourceParameters {
 
     private void prepareIndexedParameters() {
         indexedParameters = new HashMap<Integer, Parameter>();
+
+        final Parameter returnParameter = parameters.getReturnParameter();
+        if (returnParameter != null) {
+            indexedParameters.put(returnParameter.getIndex(), returnParameter);
+        }
+
         for (final Parameter sourceParameter : parameters.getParameters()) {
             indexedParameters.put(sourceParameter.getIndex(), sourceParameter);
         }

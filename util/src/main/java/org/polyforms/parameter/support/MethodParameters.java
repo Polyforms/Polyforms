@@ -19,10 +19,12 @@ import org.springframework.util.ClassUtils;
  * @since 1.0
  */
 public class MethodParameters implements Parameters<MethodParameter> {
+    private static final String NAME_OF_RETURN_VALUE = "returnValue";
     private final ParameterNameDiscoverer parameterNameDiscoverer = new LocalVariableTableParameterNameDiscoverer();
     private final Class<?> clazz;
     private final Method method;
     private final MethodParameter[] parameters;
+    private MethodParameter returnParameter;
 
     /**
      * Create an instance from provided method.
@@ -55,6 +57,14 @@ public class MethodParameters implements Parameters<MethodParameter> {
 
             parameter.setAnnotation(getFirstProviderAnnotation(parameterAnnotations[i]));
         }
+
+        final Class<?> returnType = GenericTypeResolver.resolveReturnType(method, clazz);
+        if (!returnType.equals(void.class)) {
+            returnParameter = new MethodParameter();
+            returnParameter.setType(ClassUtils.resolvePrimitiveIfNecessary(returnType));
+            returnParameter.setName(NAME_OF_RETURN_VALUE);
+            returnParameter.setIndex(parameters.length);
+        }
     }
 
     private Annotation getFirstProviderAnnotation(final Annotation[] annotations) {
@@ -74,7 +84,6 @@ public class MethodParameters implements Parameters<MethodParameter> {
         for (final MethodParameter parameter : parameters) {
             parameter.applyAnnotation();
         }
-
     }
 
     /**
@@ -84,6 +93,13 @@ public class MethodParameters implements Parameters<MethodParameter> {
         final MethodParameter[] returnParameters = new MethodParameter[parameters.length];
         System.arraycopy(parameters, 0, returnParameters, 0, parameters.length);
         return returnParameters;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public MethodParameter getReturnParameter() {
+        return returnParameter;
     }
 
     @Override
