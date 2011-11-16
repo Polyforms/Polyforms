@@ -13,9 +13,4 @@ public interface Parameters<P extends Parameter> {
      * Get parameters.
      */
     P[] getParameters();
-
-    /**
-     * Get parameter of return value
-     */
-    P getReturnParameter();
 }

@@ -36,11 +36,25 @@ public class MethodParametersTest {
         Assert.assertEquals(Integer.class, intParameter.getType());
         Assert.assertNull(intParameter.getName());
         Assert.assertEquals(1, intParameter.getIndex());
+    }
+
+    @Test
+    public void getReturnParameter() throws NoSuchMethodException {
+        final Method method = String.class.getMethod("indexOf", new Class<?>[] { String.class, int.class });
+        final MethodParameters methodParameters = new MethodParameters(String.class, method);
 
         final MethodParameter returnParameter = methodParameters.getReturnParameter();
         Assert.assertEquals(Integer.class, returnParameter.getType());
         Assert.assertEquals("returnValue", returnParameter.getName());
         Assert.assertEquals(2, returnParameter.getIndex());
+    }
+
+    @Test
+    public void getReturnParameterForVoidMethod() throws NoSuchMethodException {
+        final Method method = this.getClass().getMethod("annotatedMethod", new Class<?>[] { String.class, int.class });
+        final MethodParameters methodParameters = new MethodParameters(String.class, method);
+
+        Assert.assertNull(methodParameters.getReturnParameter());
     }
 
     @Test
@@ -60,8 +74,6 @@ public class MethodParametersTest {
         Assert.assertEquals(Integer.class, intParameter.getType());
         Assert.assertEquals("index", intParameter.getName());
         Assert.assertEquals(1, intParameter.getIndex());
-
-        Assert.assertNull(methodParameters.getReturnParameter());
     }
 
     @Test

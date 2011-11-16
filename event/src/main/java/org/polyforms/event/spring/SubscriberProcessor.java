@@ -11,6 +11,7 @@ import org.polyforms.parameter.ParameterMatcher;
 import org.polyforms.parameter.support.MethodParameter;
 import org.polyforms.parameter.support.MethodParameterMatcher;
 import org.polyforms.parameter.support.MethodParameters;
+import org.polyforms.parameter.support.ReturnValueParameters;
 import org.polyforms.util.ConversionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -150,8 +151,8 @@ public class SubscriberProcessor implements PriorityOrdered, BeanFactoryAware, D
 
         private Object[] matchParameters(final MethodInvocationEvent event, final Object bean) {
             final ArgumentProvider[] argumentsProviders = parameterMatcher.match(
-                    new MethodParameters(event.getTargetClass(), event.getMethod()),
-                    new MethodParameters(bean.getClass(), method));
+                    new ReturnValueParameters<MethodParameter>(new MethodParameters(event.getTargetClass(), event
+                            .getMethod())), new MethodParameters(bean.getClass(), method));
 
             final Object[] arguments = event.getArguments();
             final Object[] matchedArguments = new Object[argumentsProviders.length];

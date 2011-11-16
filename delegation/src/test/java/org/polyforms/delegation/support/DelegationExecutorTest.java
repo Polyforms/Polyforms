@@ -94,8 +94,8 @@ public class DelegationExecutorTest {
         delegation.getDelegateeType();
         EasyMock.expectLastCall().andReturn(Delegatee.class).times(2);
         delegation.getDelegateeMethod();
-        EasyMock.expectLastCall()
-                .andReturn(Delegatee.class.getMethod("substring", new Class<?>[] { String.class, int.class })).times(2);
+        EasyMock.expectLastCall().andReturn(Delegatee.class.getMethod("length", new Class<?>[] { String.class }))
+                .times(2);
         delegation.getDelegateeName();
         EasyMock.expectLastCall().andReturn(null);
         beanContainer.containsBean(Delegatee.class);
@@ -246,8 +246,6 @@ public class DelegationExecutorTest {
 
     public interface Delegatee {
         void length(String string) throws MockException, DelegateException;
-
-        String substring(String string, int number);
 
         String echo(String string);
 

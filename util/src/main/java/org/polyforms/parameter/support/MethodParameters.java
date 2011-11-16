@@ -3,7 +3,6 @@ package org.polyforms.parameter.support;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
-import org.polyforms.parameter.Parameters;
 import org.polyforms.parameter.annotation.Provider;
 import org.springframework.core.GenericTypeResolver;
 import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
@@ -13,18 +12,17 @@ import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 
 /**
- * {@link Parameters} to extra parameters information from {@link Method}.
+ * {@link org.polyforms.parameter.Parameters} to extra parameters information from {@link Method}.
  * 
  * @author Kuisong Tong
  * @since 1.0
  */
-public class MethodParameters implements Parameters<MethodParameter> {
+public class MethodParameters implements ReturnParameterAware<MethodParameter> {
     private static final String NAME_OF_RETURN_VALUE = "returnValue";
     private final ParameterNameDiscoverer parameterNameDiscoverer = new LocalVariableTableParameterNameDiscoverer();
     private final Class<?> clazz;
     private final Method method;
     private final MethodParameter[] parameters;
-    private MethodParameter returnParameter;
 
     /**
      * Create an instance from provided method.
@@ -56,14 +54,6 @@ public class MethodParameters implements Parameters<MethodParameter> {
             }
 
             parameter.setAnnotation(getFirstProviderAnnotation(parameterAnnotations[i]));
-        }
-
-        final Class<?> returnType = GenericTypeResolver.resolveReturnType(method, clazz);
-        if (!returnType.equals(void.class)) {
-            returnParameter = new MethodParameter();
-            returnParameter.setType(ClassUtils.resolvePrimitiveIfNecessary(returnType));
-            returnParameter.setName(NAME_OF_RETURN_VALUE);
-            returnParameter.setIndex(parameters.length);
         }
     }
 
@@ -99,6 +89,14 @@ public class MethodParameters implements Parameters<MethodParameter> {
      * {@inheritDoc}
      */
     public MethodParameter getReturnParameter() {
+        final Class<?> returnType = GenericTypeResolver.resolveReturnType(method, clazz);
+        if (returnType.equals(void.class)) {
+            return null;
+        }
+        final MethodParameter returnParameter = new MethodParameter();
+        returnParameter.setType(ClassUtils.resolvePrimitiveIfNecessary(returnType));
+        returnParameter.setName(NAME_OF_RETURN_VALUE);
+        returnParameter.setIndex(parameters.length);
         return returnParameter;
     }
 
