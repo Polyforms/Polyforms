@@ -9,6 +9,12 @@ import org.polyforms.parameter.Parameter;
 import org.polyforms.parameter.Parameters;
 import org.springframework.util.StringUtils;
 
+/**
+ * Help class used to match parameter.
+ * 
+ * @author Kuisong Tong
+ * @since 1.0
+ */
 public class SourceParameters {
     private final Parameters<?> parameters;
     private Map<String, Parameter> namedParameters;
@@ -19,6 +25,13 @@ public class SourceParameters {
         this.parameters = parameters;
     }
 
+    /**
+     * Find matched paramter of specified parameter.
+     * 
+     * @param parameter of target invocation
+     * @return matched parameter from source invocation
+     * @throws IllegalArgumentException if no matched parameter found
+     */
     public Parameter match(final Parameter parameter) {
         Parameter matchedParameter = matchByName(parameter);
 

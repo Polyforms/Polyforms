@@ -18,5 +18,5 @@ public interface QueryParameterBinder {
      * @param method related specified query
      * @param arguments to bind
      */
-    void bind(Query query, Method method, Object[] arguments);
+    void bind(Query query, Method method, Object... arguments);
 }

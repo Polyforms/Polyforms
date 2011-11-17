@@ -20,6 +20,9 @@ import org.polyforms.parameter.support.MethodParameters;
 import org.polyforms.parameter.support.SourceParameters;
 import org.polyforms.repository.jpa.QueryParameterBinder;
 import org.polyforms.util.ArrayUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.util.comparator.NullSafeComparator;
 
 /**
  * The JPA2 implementation of {@link QueryParameterBinder}.
@@ -29,17 +32,21 @@ import org.polyforms.util.ArrayUtils;
  */
 @Named
 public class Jpa2QueryParameterBinder implements QueryParameterBinder {
+    private static final Logger LOGGER = LoggerFactory.getLogger(Jpa2QueryParameterBinder.class);
     private static final javax.persistence.Parameter<?>[] EMPTY_QUERY_PARAMETERS = new javax.persistence.Parameter<?>[0];
     private static final Comparator<javax.persistence.Parameter<?>> COMPARATOR = new Comparator<javax.persistence.Parameter<?>>() {
         /**
          * {@inheritDoc}
          */
         public int compare(final javax.persistence.Parameter<?> arg0, final javax.persistence.Parameter<?> arg1) {
-            final String name = arg0.getName();
-            if (name == null) {
-                return arg1.getName() == null ? 0 : -1;
-            }
-            return name.compareTo(arg1.getName());
+            return new NullSafeComparator<String>(new Comparator<String>() {
+                /**
+                 * {@inheritDoc}
+                 */
+                public int compare(final String o1, final String o2) {
+                    return o1.compareTo(o2);
+                }
+            }, true).compare(arg0.getName(), arg1.getName());
         }
     };
     private final Map<Method, ArgumentProvider[]> argumentProvidersCache = new HashMap<Method, ArgumentProvider[]>();
@@ -48,19 +55,27 @@ public class Jpa2QueryParameterBinder implements QueryParameterBinder {
     /**
      * {@inheritDoc}
      */
-    public void bind(final Query query, final Method method, final Object[] arguments) {
+    public void bind(final Query query, final Method method, final Object... arguments) {
         final javax.persistence.Parameter<?>[] parameters = getQueryParameters(query);
         final ArgumentProvider[] argumentProviders = matchParameters(method, parameters);
 
         for (int i = 0; i < argumentProviders.length; i++) {
             final Object argument = argumentProviders[i].get(arguments);
             final javax.persistence.Parameter<?> parameter = parameters[i];
-            if (parameter.getPosition() == null) {
-                query.setParameter(parameter.getName(), argument);
+            if (isNamedParameter(parameter)) {
+                final String name = parameter.getName();
+                query.setParameter(name, argument);
+                LOGGER.debug("Bind named parameter {} with value {}.", name, argument);
             } else {
-                query.setParameter(parameter.getPosition(), argument);
+                final Integer position = parameter.getPosition();
+                query.setParameter(position, argument);
+                LOGGER.debug("Bind positional parameter at {} with value {}.", position, argument);
             }
         }
+    }
+
+    private boolean isNamedParameter(final javax.persistence.Parameter<?> parameter) {
+        return parameter.getPosition() == null;
     }
 
     private javax.persistence.Parameter<?>[] getQueryParameters(final Query query) {
@@ -71,6 +86,7 @@ public class Jpa2QueryParameterBinder implements QueryParameterBinder {
 
     private ArgumentProvider[] matchParameters(final Method method, final javax.persistence.Parameter<?>[] parameters) {
         if (!argumentProvidersCache.containsKey(method)) {
+            LOGGER.trace("Cache missed when match parameters for {}.", method);
             final MethodParameters methodParameters = new MethodParameters(method.getDeclaringClass(), method);
             methodParameters.applyAnnotation();
 
@@ -79,6 +95,7 @@ public class Jpa2QueryParameterBinder implements QueryParameterBinder {
         }
 
         final ArgumentProvider[] argumentProviders = argumentProvidersCache.get(method);
+        LOGGER.debug("Matched parameters of {} is {}", method, argumentProviders);
         return argumentProviders;
     }
 }
@@ -102,7 +119,7 @@ class QueryParameters implements Parameters<Parameter> {
             final Parameter parameter = new Parameter();
             parameter.setType(queryParameter.getParameterType());
             parameter.setName(queryParameter.getName());
-            parameter.setIndex(queryParameter.getPosition() == null ? i : (queryParameter.getPosition() - 1));
+            parameter.setIndex(queryParameter.getPosition() == null ? i : queryParameter.getPosition() - 1);
             parameters[i] = parameter;
         }
     }

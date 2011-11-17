@@ -2,6 +2,7 @@ package org.polyforms.delegation.support;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -14,6 +15,8 @@ import org.polyforms.parameter.support.MethodParameter;
 import org.polyforms.parameter.support.MethodParameterMatcher;
 import org.polyforms.parameter.support.MethodParameters;
 import org.polyforms.util.ConversionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -26,6 +29,7 @@ import org.springframework.util.StringUtils;
  */
 @Named
 class DelegationExecutor {
+    private static final Logger LOGGER = LoggerFactory.getLogger(DelegationExecutor.class);
     private final ParameterMatcher<MethodParameter, MethodParameter> parameterMatcher = new MethodParameterMatcher();
     private final BeanContainer beanContainer;
     private final ConversionService conversionService;
@@ -42,20 +46,32 @@ class DelegationExecutor {
         final String delegateeName = delegation.getDelegateeName();
 
         final boolean beanDelegation = isBeanDelegation(delegateeName, delegateeType);
+        if (beanDelegation) {
+            LOGGER.debug("Is bean delegation to {}.", delegateeMethod);
+        }
         final Object target = getTarget(beanDelegation, delegateeName, delegateeType, arguments);
+        LOGGER.trace("Target of delegation to {} is {}.", delegateeMethod, target);
         final Object[] matchedArguments = getArguments(delegation, beanDelegation, arguments);
+        LOGGER.trace("Parameters of delegation to {} is {}.", delegateeMethod, Arrays.toString(matchedArguments));
         Assert.isTrue(arguments.length >= delegateeMethod.getParameterTypes().length,
                 "The arguments passed to are less than parameters required by method.");
 
         final Object convertedTarget = conversionService.convert(target, delegateeType);
+        LOGGER.debug("Converted target of delegation to {} is {}.", delegateeMethod, convertedTarget);
         final Object[] convertedAguments = ConversionUtils.convertArguments(conversionService,
                 convertedTarget.getClass(), delegateeMethod, matchedArguments);
+        LOGGER.debug("Converted parameters of delegation to {} is {}.", delegateeMethod,
+                Arrays.toString(convertedAguments));
 
         try {
             final Object returnValue = delegateeMethod.invoke(convertedTarget, convertedAguments);
-            return ConversionUtils.convertReturnValue(conversionService, delegation.getDelegatorType(),
-                    delegation.getDelegatorMethod(), returnValue);
+            LOGGER.trace("Return value of delegation to {} is {}.", delegateeMethod, returnValue);
+            final Object convertedReturnValue = ConversionUtils.convertReturnValue(conversionService,
+                    delegation.getDelegatorType(), delegation.getDelegatorMethod(), returnValue);
+            LOGGER.debug("Converted return value of delegation to {} is {}.", delegateeMethod, convertedReturnValue);
+            return convertedReturnValue;
         } catch (final InvocationTargetException e) {
+            LOGGER.trace("Exception of delegation to {} is {}.", delegateeMethod, e);
             final Throwable exception = e.getTargetException();
             final Class<? extends Throwable> delegatorExceptionType = getDelegatorExceptionType(delegation,
                     exception.getClass());
@@ -63,7 +79,9 @@ class DelegationExecutor {
             if (delegatorExceptionType == null) {
                 throw exception;
             }
-            throw conversionService.convert(exception, delegatorExceptionType); // NOPMD
+            final Throwable ce = conversionService.convert(exception, delegatorExceptionType);
+            LOGGER.trace("Converted exception of delegation to {} is {}.", delegateeMethod, ce); // NOPMD
+            throw ce;
         }
     }
 
@@ -115,18 +133,7 @@ class DelegationExecutor {
 
     private ArgumentProvider[] match(final Class<?> sourceClass, final Method sourceMethod, final Class<?> targetClass,
             final Method targetMethod, final int offset) {
-        final MethodParameters sourceParameters = new MethodParameters(sourceClass, sourceMethod) {
-            /**
-             * {@inheritDoc}
-             */
-            @Override
-            public MethodParameter[] getParameters() {
-                final MethodParameter[] parameters = super.getParameters();
-                final MethodParameter[] tailoredParameters = new MethodParameter[parameters.length - offset];
-                System.arraycopy(parameters, offset, tailoredParameters, 0, tailoredParameters.length);
-                return tailoredParameters;
-            }
-        };
+        final MethodParameters sourceParameters = new TailorableMethodParameters(sourceClass, sourceMethod, offset);
         sourceParameters.applyAnnotation();
         final MethodParameters targetParameters = new MethodParameters(targetClass, targetMethod);
         for (final MethodParameter parameter : targetParameters.getParameters()) {
@@ -154,5 +161,25 @@ class DelegationExecutor {
         }
 
         return null;
+    }
+
+    private static class TailorableMethodParameters extends MethodParameters {
+        private final int offset;
+
+        private TailorableMethodParameters(final Class<?> clazz, final Method method, final int offset) {
+            super(clazz, method);
+            this.offset = offset;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public MethodParameter[] getParameters() {
+            final MethodParameter[] parameters = super.getParameters();
+            final MethodParameter[] tailoredParameters = new MethodParameter[parameters.length - offset];
+            System.arraycopy(parameters, offset, tailoredParameters, 0, tailoredParameters.length);
+            return tailoredParameters;
+        }
     }
 }

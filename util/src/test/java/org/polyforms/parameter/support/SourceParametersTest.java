@@ -14,7 +14,7 @@ public class SourceParametersTest {
     private Parameters<?> parameters;
     private final Parameter parameter1 = createParameter(String.class, "name", 0);
     private final Parameter parameter2 = createParameter(Integer.class, "index", 1);
-    private final Parameter parameter3 = createParameter(Integer.class, "length", 2);
+    private final Parameter parameter3 = createParameter(Integer.class, null, 2);
 
     @Before
     public void setUp() {
