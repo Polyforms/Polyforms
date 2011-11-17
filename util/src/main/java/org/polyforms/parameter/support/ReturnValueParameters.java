@@ -1,21 +1,18 @@
 package org.polyforms.parameter.support;
 
-import java.lang.reflect.Array;
-import java.lang.reflect.Method;
-
 import org.polyforms.parameter.Parameter;
 import org.polyforms.parameter.Parameters;
+import org.polyforms.util.ArrayUtils;
 import org.springframework.util.Assert;
 
 /**
- * {@link Parameters} to extra parameters information from {@link Method}.
+ * {@link Parameters} to extra return parameter.
  * 
  * @author Kuisong Tong
  * @since 1.0
  */
 public class ReturnValueParameters<P extends Parameter> implements Parameters<P> {
     private final ReturnParameterAware<P> parameters;
-    private P[] parametersWithReturnValue;
 
     /**
      * Create an instance by wrapping a {@link ReturnParameterAware}.
@@ -28,20 +25,16 @@ public class ReturnValueParameters<P extends Parameter> implements Parameters<P>
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings("unchecked")
     public P[] getParameters() {
-        if (parametersWithReturnValue == null) {
-            final P[] originalParameters = parameters.getParameters();
-            final P returnParameter = parameters.getReturnParameter();
-            if (returnParameter == null) {
-                parametersWithReturnValue = originalParameters;
-            } else {
-                parametersWithReturnValue = (P[]) Array.newInstance(originalParameters.getClass().getComponentType(),
-                        originalParameters.length + 1);
-                System.arraycopy(originalParameters, 0, parametersWithReturnValue, 0, originalParameters.length);
-                parametersWithReturnValue[originalParameters.length] = returnParameter;
-            }
+        final P[] originalParameters = parameters.getParameters();
+        final P returnParameter = parameters.getReturnParameter();
+
+        if (returnParameter == null) {
+            return originalParameters;
         }
+
+        final P[] parametersWithReturnValue = ArrayUtils.copyOf(originalParameters, originalParameters.length + 1);
+        parametersWithReturnValue[originalParameters.length] = returnParameter;
         return parametersWithReturnValue;
     }
 
@@ -58,6 +51,14 @@ public class ReturnValueParameters<P extends Parameter> implements Parameters<P>
      */
     @Override
     public boolean equals(final Object obj) {
-        return parameters.equals(obj);
+        if (this == obj) {
+            return true;
+        }
+
+        if (!(obj instanceof ReturnValueParameters)) {
+            return false;
+        }
+
+        return parameters.equals(((ReturnValueParameters<?>) obj).parameters);
     }
 }

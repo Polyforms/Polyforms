@@ -74,8 +74,7 @@ public final class AopUtils {
         @Override
         protected Class<?>[] deproxy(final Class<?> clazz) {
             final Class<?>[] interfaces = clazz.getInterfaces();
-            final Class<?>[] result = new Class<?>[interfaces.length + 1];
-            System.arraycopy(interfaces, 0, result, 0, interfaces.length);
+            final Class<?>[] result = ArrayUtils.copyOf(interfaces, interfaces.length + 1);
             result[interfaces.length] = clazz.getSuperclass();
             return result;
         }

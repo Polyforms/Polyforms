@@ -20,7 +20,6 @@ public class ReturnValueParametersTest {
         returnValueParameters = new ReturnValueParameters<Parameter>(parameters);
         parameters.getParameters();
         EasyMock.expectLastCall().andReturn(new Parameter[] { parameter1, parameter2 });
-        parameters.getReturnParameter();
     }
 
     private Parameter createParameter(final Class<?> type, final String name, final int index) {
@@ -33,6 +32,7 @@ public class ReturnValueParametersTest {
 
     @Test
     public void getParameters() {
+        parameters.getReturnParameter();
         EasyMock.expectLastCall().andReturn(parameter3);
         EasyMock.replay(parameters);
 
@@ -43,6 +43,7 @@ public class ReturnValueParametersTest {
 
     @Test
     public void noReturnValue() {
+        parameters.getReturnParameter();
         EasyMock.expectLastCall().andReturn(null);
         EasyMock.replay(parameters);
 
@@ -61,8 +62,22 @@ public class ReturnValueParametersTest {
     }
 
     @Test
+    public void equalsSame() {
+        Assert.assertTrue(returnValueParameters.equals(returnValueParameters));
+    }
+
+    @Test
+    public void notEqualsNull() {
+        Assert.assertFalse(returnValueParameters.equals(null));
+    }
+
+    @Test
+    public void notEqualsOtherClass() {
+        Assert.assertFalse(returnValueParameters.equals(new Object()));
+    }
+
+    @Test
     public void equals() {
-        final Object object = new Object();
-        Assert.assertEquals(parameters.equals(object), returnValueParameters.equals(object));
+        Assert.assertTrue(returnValueParameters.equals(new ReturnValueParameters<Parameter>(parameters)));
     }
 }

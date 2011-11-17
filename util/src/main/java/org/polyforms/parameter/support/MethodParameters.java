@@ -4,6 +4,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 import org.polyforms.parameter.annotation.Provider;
+import org.polyforms.util.ArrayUtils;
 import org.springframework.core.GenericTypeResolver;
 import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 import org.springframework.core.ParameterNameDiscoverer;
@@ -80,9 +81,7 @@ public class MethodParameters implements ReturnParameterAware<MethodParameter> {
      * {@inheritDoc}
      */
     public MethodParameter[] getParameters() {
-        final MethodParameter[] returnParameters = new MethodParameter[parameters.length];
-        System.arraycopy(parameters, 0, returnParameters, 0, parameters.length);
-        return returnParameters;
+        return ArrayUtils.clone(parameters);
     }
 
     /**

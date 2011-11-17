@@ -6,7 +6,7 @@ import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
 import org.polyforms.parameter.Parameters;
-import org.polyforms.parameter.support.AbstractParameterMatcher.ParametersPair;
+import org.polyforms.parameter.support.MethodParameterMatcher.ParametersPair;
 
 public class ParametersPairTest {
     private ParametersPair parametersPairA;

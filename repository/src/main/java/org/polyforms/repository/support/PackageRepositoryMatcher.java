@@ -1,6 +1,7 @@
 package org.polyforms.repository.support;
 
 import org.polyforms.repository.spi.RepositoryMatcher;
+import org.polyforms.util.ArrayUtils;
 import org.springframework.util.Assert;
 
 /**
@@ -17,8 +18,7 @@ public final class PackageRepositoryMatcher implements RepositoryMatcher {
      */
     public PackageRepositoryMatcher(final String[] basePackages) {
         Assert.notEmpty(basePackages);
-        this.basePackages = new String[basePackages.length];
-        System.arraycopy(basePackages, 0, this.basePackages, 0, basePackages.length);
+        this.basePackages = ArrayUtils.clone(basePackages);
     }
 
     /**

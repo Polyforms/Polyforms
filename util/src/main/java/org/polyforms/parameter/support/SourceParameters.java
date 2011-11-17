@@ -8,7 +8,7 @@ import java.util.Set;
 import org.polyforms.parameter.Parameter;
 import org.polyforms.parameter.Parameters;
 
-class SourceParameters {
+public class SourceParameters {
     private final Parameters<?> parameters;
     private Map<String, Parameter> namedParameters;
     private Map<Class<?>, Set<Parameter>> typedParameters;
@@ -18,7 +18,7 @@ class SourceParameters {
         this.parameters = parameters;
     }
 
-    protected Parameter match(final Parameter parameter) {
+    public Parameter match(final Parameter parameter) {
         Parameter matchedParameter = matchByName(parameter);
 
         if (matchedParameter == null) {

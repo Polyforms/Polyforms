@@ -3,6 +3,7 @@ package org.polyforms.event.bus.support;
 import java.lang.reflect.Method;
 
 import org.polyforms.event.bus.Event;
+import org.polyforms.util.ArrayUtils;
 import org.springframework.util.Assert;
 
 /**
@@ -42,8 +43,6 @@ public class MethodInvocationEvent extends Event {
      * Get copy of arguments.
      */
     public Object[] getArguments() {
-        final Object[] copiedArguments = new Object[arguments.length];
-        System.arraycopy(arguments, 0, copiedArguments, 0, arguments.length);
-        return copiedArguments;
+        return ArrayUtils.clone(arguments);
     }
 }

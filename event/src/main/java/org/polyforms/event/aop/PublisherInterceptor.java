@@ -10,6 +10,7 @@ import org.polyforms.event.Publisher.When;
 import org.polyforms.event.Publishers;
 import org.polyforms.event.bus.EventBus;
 import org.polyforms.event.bus.support.MethodInvocationEvent;
+import org.polyforms.util.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -51,8 +52,7 @@ public class PublisherInterceptor implements MethodInterceptor {
     }
 
     private Object[] joinReturnValue(final Object[] arguments, final Object returnValue) {
-        final Object[] newArguments = new Object[arguments.length + 1];
-        System.arraycopy(arguments, 0, newArguments, 0, arguments.length);
+        final Object[] newArguments = ArrayUtils.copyOf(arguments, arguments.length + 1);
         newArguments[arguments.length] = returnValue;
         return newArguments;
     }
