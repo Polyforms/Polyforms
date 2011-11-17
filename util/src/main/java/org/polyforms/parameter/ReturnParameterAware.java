@@ -1,7 +1,5 @@
-package org.polyforms.parameter.support;
+package org.polyforms.parameter;
 
-import org.polyforms.parameter.Parameter;
-import org.polyforms.parameter.Parameters;
 
 /**
  * Aggregate class of {@link Parameter}s with return value.

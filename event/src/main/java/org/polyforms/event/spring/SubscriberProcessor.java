@@ -11,7 +11,6 @@ import org.polyforms.parameter.ParameterMatcher;
 import org.polyforms.parameter.support.MethodParameter;
 import org.polyforms.parameter.support.MethodParameterMatcher;
 import org.polyforms.parameter.support.MethodParameters;
-import org.polyforms.parameter.support.ReturnValueParameters;
 import org.polyforms.util.ConversionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -3,6 +3,7 @@ package org.polyforms.parameter.support;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
+import org.polyforms.parameter.ReturnParameterAware;
 import org.polyforms.parameter.annotation.Provider;
 import org.polyforms.util.ArrayUtils;
 import org.springframework.core.GenericTypeResolver;

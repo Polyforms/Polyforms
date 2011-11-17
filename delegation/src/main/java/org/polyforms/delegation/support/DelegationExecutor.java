@@ -1,5 +1,6 @@
 package org.polyforms.delegation.support;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -10,7 +11,9 @@ import javax.inject.Named;
 import org.polyforms.delegation.builder.BeanContainer;
 import org.polyforms.delegation.builder.Delegation;
 import org.polyforms.parameter.ArgumentProvider;
+import org.polyforms.parameter.Parameter;
 import org.polyforms.parameter.ParameterMatcher;
+import org.polyforms.parameter.Parameters;
 import org.polyforms.parameter.support.MethodParameter;
 import org.polyforms.parameter.support.MethodParameterMatcher;
 import org.polyforms.parameter.support.MethodParameters;
@@ -80,8 +83,8 @@ class DelegationExecutor {
                 throw exception;
             }
             final Throwable ce = conversionService.convert(exception, delegatorExceptionType);
-            LOGGER.trace("Converted exception of delegation to {} is {}.", delegateeMethod, ce); // NOPMD
-            throw ce;
+            LOGGER.trace("Converted exception of delegation to {} is {}.", delegateeMethod, ce);
+            throw ce; // NOPMD
         }
     }
 
@@ -133,13 +136,14 @@ class DelegationExecutor {
 
     private ArgumentProvider[] match(final Class<?> sourceClass, final Method sourceMethod, final Class<?> targetClass,
             final Method targetMethod, final int offset) {
-        final MethodParameters sourceParameters = new TailorableMethodParameters(sourceClass, sourceMethod, offset);
+        final MethodParameters sourceParameters = new MethodParameters(sourceClass, sourceMethod);
         sourceParameters.applyAnnotation();
         final MethodParameters targetParameters = new MethodParameters(targetClass, targetMethod);
         for (final MethodParameter parameter : targetParameters.getParameters()) {
             parameter.setIndex(parameter.getIndex() + offset);
         }
-        return parameterMatcher.match(sourceParameters, targetParameters);
+        return parameterMatcher.match(new TailorableParameters<MethodParameter>(sourceParameters, offset),
+                targetParameters);
     }
 
     private Class<? extends Throwable> getDelegatorExceptionType(final Delegation delegation,
@@ -163,22 +167,24 @@ class DelegationExecutor {
         return null;
     }
 
-    private static class TailorableMethodParameters extends MethodParameters {
+    private static final class TailorableParameters<P extends Parameter> implements Parameters<P> {
+        private final Parameters<P> parameters;
         private final int offset;
 
-        private TailorableMethodParameters(final Class<?> clazz, final Method method, final int offset) {
-            super(clazz, method);
+        private TailorableParameters(final Parameters<P> parameters, final int offset) {
+            this.parameters = parameters;
             this.offset = offset;
         }
 
         /**
          * {@inheritDoc}
          */
-        @Override
-        public MethodParameter[] getParameters() {
-            final MethodParameter[] parameters = super.getParameters();
-            final MethodParameter[] tailoredParameters = new MethodParameter[parameters.length - offset];
-            System.arraycopy(parameters, offset, tailoredParameters, 0, tailoredParameters.length);
+        @SuppressWarnings("unchecked")
+        public P[] getParameters() {
+            final P[] originalParameters = parameters.getParameters();
+            final P[] tailoredParameters = (P[]) Array.newInstance(originalParameters.getClass().getComponentType(),
+                    originalParameters.length - offset);
+            System.arraycopy(originalParameters, offset, tailoredParameters, 0, tailoredParameters.length);
             return tailoredParameters;
         }
     }

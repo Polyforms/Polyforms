@@ -1,23 +1,15 @@
-package org.polyforms.parameter.support;
+package org.polyforms.event.spring;
 
 import org.polyforms.parameter.Parameter;
 import org.polyforms.parameter.Parameters;
+import org.polyforms.parameter.ReturnParameterAware;
 import org.polyforms.util.ArrayUtils;
 import org.springframework.util.Assert;
 
-/**
- * {@link Parameters} to extra return parameter.
- * 
- * @author Kuisong Tong
- * @since 1.0
- */
-public class ReturnValueParameters<P extends Parameter> implements Parameters<P> {
+class ReturnValueParameters<P extends Parameter> implements Parameters<P> {
     private final ReturnParameterAware<P> parameters;
 
-    /**
-     * Create an instance by wrapping a {@link ReturnParameterAware}.
-     */
-    public ReturnValueParameters(final ReturnParameterAware<P> parameters) {
+    protected ReturnValueParameters(final ReturnParameterAware<P> parameters) {
         Assert.notNull(parameters);
         this.parameters = parameters;
     }

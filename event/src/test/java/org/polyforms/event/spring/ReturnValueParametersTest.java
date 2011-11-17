@@ -1,10 +1,12 @@
-package org.polyforms.parameter.support;
+package org.polyforms.event.spring;
 
 import org.easymock.EasyMock;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.polyforms.event.spring.ReturnValueParameters;
 import org.polyforms.parameter.Parameter;
+import org.polyforms.parameter.ReturnParameterAware;
 
 public class ReturnValueParametersTest {
     private ReturnValueParameters<Parameter> returnValueParameters;
