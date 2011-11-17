@@ -35,7 +35,11 @@ public class Jpa2QueryParameterBinder implements QueryParameterBinder {
          * {@inheritDoc}
          */
         public int compare(final javax.persistence.Parameter<?> arg0, final javax.persistence.Parameter<?> arg1) {
-            return arg0.getName().compareTo(arg1.getName());
+            final String name = arg0.getName();
+            if (name == null) {
+                return arg1.getName() == null ? 0 : -1;
+            }
+            return name.compareTo(arg1.getName());
         }
     };
     private final Map<Method, ArgumentProvider[]> argumentProvidersCache = new HashMap<Method, ArgumentProvider[]>();
