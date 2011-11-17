@@ -23,7 +23,7 @@ public class Jpa2QueryParameterBinderTest {
 
     @Test
     public void bindPositionalParamaters() throws NoSuchMethodException {
-        final Method method = String.class.getMethod("startsWith", new Class<?>[] { String.class });
+        final Method method = String.class.getMethod("indexOf", new Class<?>[] { int.class, int.class });
         final Object[] arguments = new Object[] { "tony" };
         final Query query = EasyMock.createMock(Query.class);
         final Parameter<?> parameter = EasyMock.createMock(Parameter.class);

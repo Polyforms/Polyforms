@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.polyforms.parameter.Parameter;
 import org.polyforms.parameter.Parameters;
+import org.springframework.util.StringUtils;
 
 public class SourceParameters {
     private final Parameters<?> parameters;
@@ -46,7 +47,10 @@ public class SourceParameters {
     private void prepareNamedParameters() {
         namedParameters = new HashMap<String, Parameter>();
         for (final Parameter sourceParameter : parameters.getParameters()) {
-            namedParameters.put(sourceParameter.getName(), sourceParameter);
+            final String name = sourceParameter.getName();
+            if (StringUtils.hasText(name)) {
+                namedParameters.put(name, sourceParameter);
+            }
         }
     }
 

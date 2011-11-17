@@ -115,7 +115,18 @@ class DelegationExecutor {
 
     private ArgumentProvider[] match(final Class<?> sourceClass, final Method sourceMethod, final Class<?> targetClass,
             final Method targetMethod, final int offset) {
-        final MethodParameters sourceParameters = new MethodParameters(sourceClass, sourceMethod);
+        final MethodParameters sourceParameters = new MethodParameters(sourceClass, sourceMethod) {
+            /**
+             * {@inheritDoc}
+             */
+            @Override
+            public MethodParameter[] getParameters() {
+                final MethodParameter[] parameters = super.getParameters();
+                final MethodParameter[] tailoredParameters = new MethodParameter[parameters.length - offset];
+                System.arraycopy(parameters, offset, tailoredParameters, 0, tailoredParameters.length);
+                return tailoredParameters;
+            }
+        };
         sourceParameters.applyAnnotation();
         final MethodParameters targetParameters = new MethodParameters(targetClass, targetMethod);
         for (final MethodParameter parameter : targetParameters.getParameters()) {

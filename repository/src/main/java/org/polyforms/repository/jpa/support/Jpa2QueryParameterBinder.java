@@ -98,7 +98,7 @@ class QueryParameters implements Parameters<Parameter> {
             final Parameter parameter = new Parameter();
             parameter.setType(queryParameter.getParameterType());
             parameter.setName(queryParameter.getName());
-            parameter.setIndex(queryParameter.getPosition() == null ? i : queryParameter.getPosition());
+            parameter.setIndex(queryParameter.getPosition() == null ? i : (queryParameter.getPosition() - 1));
             parameters[i] = parameter;
         }
     }
