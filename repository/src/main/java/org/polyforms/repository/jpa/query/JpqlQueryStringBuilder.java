@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -25,13 +26,12 @@ import org.springframework.util.StringUtils;
  */
 abstract class JpqlQueryStringBuilder {
     private static final Logger LOGGER = LoggerFactory.getLogger(JpqlQueryStringBuilder.class);
-    protected static final String ENTITY_CLASS_PLACE_HOLDER = "{ENTITY_CLASS_PLACE_HOLDER}";
     protected static final Pattern PATTERN;
     private static final int NUMBER_OF_PARTS = 3;
     private static final String EMPTY_STRING = "";
     private static final String ORDER_BY = "OrderBy";
     private static final String BY = "By";
-    private final Map<String, String> queryStringCache = new WeakHashMap<String, String>();
+    private final Map<Class<?>, Map<String, String>> queryStringCache = new HashMap<Class<?>, Map<String, String>>();
     private final ExecutorPrefixHolder executorPrefix;
 
     static {
@@ -51,7 +51,11 @@ abstract class JpqlQueryStringBuilder {
     }
 
     protected String getQuery(final Class<?> entityClass, final String queryString) {
-        if (!queryStringCache.containsKey(queryString)) {
+        if (!queryStringCache.containsKey(entityClass)) {
+            queryStringCache.put(entityClass, new WeakHashMap<String, String>());
+        }
+
+        if (!queryStringCache.get(entityClass).containsKey(queryString)) {
             LOGGER.trace("Cache miss for query {}.", queryString);
             final String[] parts = split(nomalizeQueryString(queryString));
             LOGGER.debug("The parts of {} are {}.", queryString, Arrays.toString(parts));
@@ -64,10 +68,10 @@ abstract class JpqlQueryStringBuilder {
             if (StringUtils.hasText(parts[2])) {
                 appendOrderClause(jpql, parts[2]);
             }
-            queryStringCache.put(queryString, jpql.getJpql());
+            queryStringCache.get(entityClass).put(queryString, jpql.getJpql());
         }
 
-        return queryStringCache.get(queryString).replace(ENTITY_CLASS_PLACE_HOLDER, entityClass.getSimpleName());
+        return queryStringCache.get(entityClass).get(queryString);
     }
 
     private String nomalizeQueryString(final String queryString) {
@@ -138,19 +142,34 @@ abstract class JpqlQueryStringBuilder {
 class JpqlStringBuffer {
     private static final Pattern CAMEL_CASE = Pattern
             .compile("(?<=[A-Z])(?=[A-Z][a-z])|(?<=[^A-Z])(?=[A-Z])|(?<=[A-Za-z])(?=[^A-Za-z])");
+    private static final String DEFAULT_ALIAS = "e";
     private final IndexHolder indexHolder = new IndexHolder();
     private final StringBuffer jpql = new StringBuffer();
     private final Class<?> entityClass;
+    private final String alias;
     private boolean isNewProperty;
     private String lastProperty;
 
     protected JpqlStringBuffer(final Class<?> entityClass) {
+        this(entityClass, DEFAULT_ALIAS);
+    }
+
+    protected JpqlStringBuffer(final Class<?> entityClass, final String alias) {
         this.entityClass = entityClass;
+        this.alias = alias;
     }
 
     protected void appendKeyWord(final KeyWord keyWord, final boolean not) {
         appendToken(keyWord.getToken(not, indexHolder));
         isNewProperty = false;
+    }
+
+    protected void appendEntity() {
+        appendToken(entityClass.getSimpleName());
+    }
+
+    protected void appendAlias() {
+        appendToken(alias);
     }
 
     protected void appendEqualsIfNecessary() {
@@ -166,7 +185,7 @@ class JpqlStringBuffer {
     }
 
     protected void appendProperty() {
-        jpql.append("e");
+        jpql.append(alias);
         for (final String property : splitProperty(lastProperty)) {
             jpql.append(".");
             jpql.append(StringUtils.uncapitalize(property));

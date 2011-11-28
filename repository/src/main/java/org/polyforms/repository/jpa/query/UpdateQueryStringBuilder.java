@@ -16,8 +16,8 @@ class UpdateQueryStringBuilder extends JpqlQueryStringBuilder {
     @Override
     protected void appendSelectClause(final JpqlStringBuffer jpql, final String selectClause) {
         jpql.appendToken("UPDATE");
-        jpql.appendToken(ENTITY_CLASS_PLACE_HOLDER);
-        jpql.appendToken("e");
+        jpql.appendEntity();
+        jpql.appendAlias();
 
         boolean firstProperty = true;
         for (final String token : PATTERN.split(selectClause)) {

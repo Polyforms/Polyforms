@@ -19,8 +19,9 @@ class CountQueryStringBuilder extends JpqlQueryStringBuilder {
         if (selectClause.contains(KeyWord.Distinct.name())) {
             jpql.appendKeyWord(KeyWord.Distinct, false);
         }
-        jpql.appendToken("e ) FROM");
-        jpql.appendToken(ENTITY_CLASS_PLACE_HOLDER);
-        jpql.appendToken("e");
+        jpql.appendAlias();
+        jpql.appendToken(") FROM");
+        jpql.appendEntity();
+        jpql.appendAlias();
     }
 }
