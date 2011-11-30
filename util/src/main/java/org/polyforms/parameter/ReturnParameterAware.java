@@ -1,6 +1,5 @@
 package org.polyforms.parameter;
 
-
 /**
  * Aggregate class of {@link Parameter}s with return value.
  * 

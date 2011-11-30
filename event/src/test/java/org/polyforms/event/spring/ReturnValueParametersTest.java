@@ -4,7 +4,6 @@ import org.easymock.EasyMock;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.polyforms.event.spring.ReturnValueParameters;
 import org.polyforms.parameter.Parameter;
 import org.polyforms.parameter.ReturnParameterAware;
 

@@ -48,8 +48,8 @@ public class DelegationServiceIT {
         numbers.add(2L);
         final List<String> strings = delegator.collection(numbers);
         Assert.assertEquals(2, strings.size());
-        Assert.assertEquals("1", strings.get(0));
-        Assert.assertEquals("2", strings.get(1));
+        Assert.assertTrue(strings.contains("1"));
+        Assert.assertTrue(strings.contains("2"));
     }
 
     @Test
@@ -252,7 +252,7 @@ public class DelegationServiceIT {
             return "hello " + name;
         }
 
-        public List<Integer> collection(List<Integer> numbers) {
+        public List<Integer> collection(final List<Integer> numbers) {
             return numbers;
         }
 
