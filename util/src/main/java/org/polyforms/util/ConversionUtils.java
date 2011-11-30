@@ -3,7 +3,9 @@ package org.polyforms.util;
 import java.lang.reflect.Method;
 
 import org.springframework.core.GenericTypeResolver;
+import org.springframework.core.MethodParameter;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.core.convert.TypeDescriptor;
 
 /**
  * Utility class for converting of method.
@@ -24,14 +26,11 @@ public class ConversionUtils {
         final Class<?>[] parameterTypes = method.getParameterTypes();
         final Object[] convertedArguments = new Object[parameterTypes.length];
         for (int i = 0; i < parameterTypes.length; i++) {
-            final Class<?> genericType = GenericTypeResolver.resolveParameterType(
-                    new org.springframework.core.MethodParameter(method, i), targetClass);
+            final MethodParameter methodParam = new MethodParameter(method, i);
+            final Class<?> genericType = GenericTypeResolver.resolveParameterType(methodParam, targetClass);
             final Object argument = arguments[i];
-            if (genericType.isInstance(argument)) {
-                convertedArguments[i] = argument;
-            } else {
-                convertedArguments[i] = conversionService.convert(argument, genericType);
-            }
+            convertedArguments[i] = conversionService.convert(argument, TypeDescriptor.forObject(argument),
+                    new TypeDescriptor(methodParam, genericType));
         }
         return convertedArguments;
     }
@@ -49,7 +48,7 @@ public class ConversionUtils {
 
         final Class<?> genericReturnType = GenericTypeResolver.resolveReturnType(method, targetClass);
 
-        return genericReturnType.isInstance(returnValue) ? returnValue : conversionService.convert(returnValue,
-                genericReturnType);
+        return conversionService.convert(returnValue, TypeDescriptor.forObject(returnValue), new TypeDescriptor(
+                new MethodParameter(method, -1), genericReturnType));
     }
 }

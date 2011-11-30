@@ -7,6 +7,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.core.convert.TypeDescriptor;
 
 public class ConversionUtilsTest implements ForConversionTest<String> {
     private ConversionService conversionService;
@@ -28,8 +29,12 @@ public class ConversionUtilsTest implements ForConversionTest<String> {
         final Integer[] integers = new Integer[] { 1 };
         final Object[] arguments = new Object[] { integers, 0 };
 
-        conversionService.convert(integers, String[].class);
+        conversionService.convert(EasyMock.eq(integers), EasyMock.isA(TypeDescriptor.class),
+                EasyMock.isA(TypeDescriptor.class));
         EasyMock.expectLastCall().andReturn(new String[] { "1" });
+        conversionService.convert(EasyMock.eq(0), EasyMock.isA(TypeDescriptor.class),
+                EasyMock.isA(TypeDescriptor.class));
+        EasyMock.expectLastCall().andReturn(0);
         EasyMock.replay(conversionService);
 
         final Object[] convertedArguments = ConversionUtils.convertArguments(conversionService, this.getClass(),
@@ -41,17 +46,13 @@ public class ConversionUtilsTest implements ForConversionTest<String> {
 
     @Test
     public void convertReturnValue() {
-        conversionService.convert(1, String.class);
+        conversionService.convert(EasyMock.eq(1), EasyMock.isA(TypeDescriptor.class),
+                EasyMock.isA(TypeDescriptor.class));
         EasyMock.expectLastCall().andReturn("1");
         EasyMock.replay(conversionService);
 
         Assert.assertEquals("1", ConversionUtils.convertReturnValue(conversionService, this.getClass(), method, 1));
         EasyMock.verify(conversionService);
-    }
-
-    @Test
-    public void returnValueDirectly() {
-        Assert.assertEquals("1", ConversionUtils.convertReturnValue(conversionService, this.getClass(), method, "1"));
     }
 
     @Test

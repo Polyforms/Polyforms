@@ -1,6 +1,9 @@
 package org.polyforms.delegation.integration;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -24,18 +27,29 @@ public class DelegationServiceIT {
     @Autowired
     private Delegator delegator;
     @Autowired
-    private AbstractInterface<String> AbstractInterface;
+    private AbstractInterface<String> abstractInterface;
     @Autowired
     private AnnotationDelegator annotationDelegator;
 
     @Test
     public void delegateAbstractClass() {
-        Assert.assertEquals("1", AbstractInterface.echo("1"));
+        Assert.assertEquals("1", abstractInterface.echo("1"));
     }
 
     @Test
     public void beanDelegation() {
         Assert.assertEquals("test", delegator.echo(string));
+    }
+
+    @Test
+    public void collectionParameters() {
+        final Set<Long> numbers = new HashSet<Long>();
+        numbers.add(1L);
+        numbers.add(2L);
+        final List<String> strings = delegator.collection(numbers);
+        Assert.assertEquals(2, strings.size());
+        Assert.assertEquals("1", strings.get(0));
+        Assert.assertEquals("2", strings.get(1));
     }
 
     @Test
@@ -147,6 +161,7 @@ public class DelegationServiceIT {
                     delegate(delegator.length()).voidMethod();
                     delegate(delegator.hello());
                     delegate(delegator.byType(0, null)).join(null, 0);
+                    delegate(delegator.collection(null));
                 }
             });
         }
@@ -154,6 +169,8 @@ public class DelegationServiceIT {
 
     public static interface Delegator {
         String echo(StringWrapper string);
+
+        List<String> collection(Set<Long> numbers);
 
         int length(StringWrapper string);
 
@@ -233,6 +250,10 @@ public class DelegationServiceIT {
     public static class Delegatee extends GenericDelegateeImpl<Integer> {
         public String hello(final String name) {
             return "hello " + name;
+        }
+
+        public List<Integer> collection(List<Integer> numbers) {
+            return numbers;
         }
 
         public void voidMethod() {

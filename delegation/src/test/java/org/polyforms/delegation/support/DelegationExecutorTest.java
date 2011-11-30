@@ -11,6 +11,7 @@ import org.polyforms.delegation.support.DelegationExecutorTest.Delegatee.MockExc
 import org.polyforms.delegation.support.DelegationExecutorTest.Delegator.DelegateException;
 import org.polyforms.parameter.ArgumentProvider;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.core.convert.TypeDescriptor;
 
 public class DelegationExecutorTest {
     private BeanContainer beanContainer;
@@ -45,8 +46,12 @@ public class DelegationExecutorTest {
         EasyMock.expectLastCall().andReturn(new ArgumentProvider[0]);
         conversionService.convert("test", String.class);
         EasyMock.expectLastCall().andReturn("test");
-        conversionService.convert(4, String.class);
+        conversionService.convert(EasyMock.eq(4), EasyMock.isA(TypeDescriptor.class),
+                EasyMock.isA(TypeDescriptor.class));
         EasyMock.expectLastCall().andReturn("4");
+        conversionService.convert(EasyMock.eq("test4"), EasyMock.isA(TypeDescriptor.class),
+                EasyMock.isA(TypeDescriptor.class));
+        EasyMock.expectLastCall().andReturn("test4");
         delegation.getDelegatorType();
         EasyMock.expectLastCall().andReturn(Delegator.class).times(2);
         delegation.getDelegatorMethod();
@@ -148,6 +153,9 @@ public class DelegationExecutorTest {
         EasyMock.expectLastCall().andReturn(delegatee);
         delegation.getArgumentProviders();
         EasyMock.expectLastCall().andReturn(new ArgumentProvider[0]);
+        conversionService.convert(EasyMock.eq("test"), EasyMock.isA(TypeDescriptor.class),
+                EasyMock.isA(TypeDescriptor.class));
+        EasyMock.expectLastCall().andReturn("test");
     }
 
     @Test
@@ -169,6 +177,9 @@ public class DelegationExecutorTest {
         delegation.getArgumentProviders();
         EasyMock.expectLastCall().andReturn(new ArgumentProvider[] { argumentProvider });
         argumentProvider.get(arguments);
+        EasyMock.expectLastCall().andReturn("test");
+        conversionService.convert(EasyMock.eq("test"), EasyMock.isA(TypeDescriptor.class),
+                EasyMock.isA(TypeDescriptor.class));
         EasyMock.expectLastCall().andReturn("test");
         delegatee.echo("test");
         EasyMock.expectLastCall().andReturn(null);

@@ -12,6 +12,7 @@ import org.polyforms.event.bus.support.MethodInvocationEvent;
 import org.polyforms.event.spring.SubscriberProcessor.SpringBeanMethodInvoker;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.core.convert.TypeDescriptor;
 
 public class SubscriberProcessorTest {
     private BeanFactory beanFactory;
@@ -81,7 +82,8 @@ public class SubscriberProcessorTest {
         final ConversionService conversionService = EasyMock.createMock(ConversionService.class);
         beanFactory.getBean(ConversionService.class);
         EasyMock.expectLastCall().andReturn(conversionService);
-        conversionService.convert(1, String.class);
+        conversionService.convert(EasyMock.eq(1), EasyMock.isA(TypeDescriptor.class),
+                EasyMock.isA(TypeDescriptor.class));
         EasyMock.expectLastCall().andReturn("1").times(2);
         EasyMock.replay(beanFactory, conversionService);
 
