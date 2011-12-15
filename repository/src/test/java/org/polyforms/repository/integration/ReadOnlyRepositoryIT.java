@@ -1,5 +1,7 @@
 package org.polyforms.repository.integration;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.polyforms.repository.integration.mock.ReadOnlyRepository;
@@ -17,6 +19,16 @@ public abstract class ReadOnlyRepositoryIT extends RepositoryIT {
     @Test
     public void getInexistentEntity() {
         Assert.assertNull(mockEntityRepository.get(10L));
+    }
+
+    @Test
+    public void loadEntity() {
+        Assert.assertNotNull(mockEntityRepository.load(1L));
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void loadInexistentEntity() {
+        mockEntityRepository.load(10L);
     }
 
     @Test

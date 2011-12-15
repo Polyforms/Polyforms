@@ -50,7 +50,7 @@ public class ConversionUtils {
                 createTypeDescriptor(method, -1, targetClass));
     }
 
-    private static TypeDescriptor createTypeDescriptor(final Method method, final int index, Class<?> targetClass) {
+    private static TypeDescriptor createTypeDescriptor(final Method method, final int index, final Class<?> targetClass) {
         final MethodParameter methodParam = new MethodParameter(method, index);
         GenericTypeResolver.resolveParameterType(methodParam, targetClass);
         return new TypeDescriptor(methodParam);
