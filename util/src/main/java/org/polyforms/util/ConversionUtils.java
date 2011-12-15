@@ -25,13 +25,13 @@ public class ConversionUtils {
             final Method method, final Object[] arguments) {
         final Class<?>[] parameterTypes = method.getParameterTypes();
         final Object[] convertedArguments = new Object[parameterTypes.length];
+
         for (int i = 0; i < parameterTypes.length; i++) {
-            final MethodParameter methodParam = new MethodParameter(method, i);
-            final Class<?> genericType = GenericTypeResolver.resolveParameterType(methodParam, targetClass);
             final Object argument = arguments[i];
             convertedArguments[i] = conversionService.convert(argument, TypeDescriptor.forObject(argument),
-                    new TypeDescriptor(methodParam, genericType));
+                    createTypeDescriptor(method, i, targetClass));
         }
+
         return convertedArguments;
     }
 
@@ -46,9 +46,13 @@ public class ConversionUtils {
             return DefaultValue.get(returnType);
         }
 
-        final Class<?> genericReturnType = GenericTypeResolver.resolveReturnType(method, targetClass);
+        return conversionService.convert(returnValue, TypeDescriptor.forObject(returnValue),
+                createTypeDescriptor(method, -1, targetClass));
+    }
 
-        return conversionService.convert(returnValue, TypeDescriptor.forObject(returnValue), new TypeDescriptor(
-                new MethodParameter(method, -1), genericReturnType));
+    private static TypeDescriptor createTypeDescriptor(final Method method, final int index, Class<?> targetClass) {
+        final MethodParameter methodParam = new MethodParameter(method, index);
+        GenericTypeResolver.resolveParameterType(methodParam, targetClass);
+        return new TypeDescriptor(methodParam);
     }
 }

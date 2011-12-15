@@ -119,9 +119,6 @@
 	<properties>
 		<javaagent>${parent.javaagent}
 			-javaagent:${settings.localRepository}/org/springframework/spring-instrument/${spring.version}/spring-instrument-${spring.version}.jar</javaagent>
-		<jpa.version>2.0.3</jpa.version>
-		<eclipselink.version>2.3.0</eclipselink.version>
-		<openjpa.version>2.1.1</openjpa.version>
 	</properties>
 
 	<profiles>

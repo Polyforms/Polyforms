@@ -16,7 +16,7 @@ import org.modelmapper.spi.ConditionalConverter.MatchResult;
 import org.modelmapper.spi.MappingContext;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.TypeDescriptor;
-import org.springframework.core.convert.support.ConversionServiceFactory;
+import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.core.convert.support.GenericConversionService;
 
 public class SpringConverterTest {
@@ -83,12 +83,12 @@ public class SpringConverterTest {
     public void notSupportsWithException() {
         prepareConversionService();
 
-        Assert.assertSame(MatchResult.NONE, converter.match(String.class, null));
+        Assert.assertSame(MatchResult.NONE, converter.match(String.class, Void.class));
         EasyMock.verify(provider);
     }
 
     private void prepareConversionService() {
-        final GenericConversionService conversionService = ConversionServiceFactory.createDefaultConversionService();
+        final GenericConversionService conversionService = new DefaultConversionService();
         conversionService.addConverter(new ModelMapperConverter(EasyMock.createMock(ModelMapper.class)));
 
         provider.get();

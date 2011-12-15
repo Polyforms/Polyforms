@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.polyforms</groupId>
@@ -55,7 +56,7 @@
 	</scm>
 	<ciManagement>
 		<system>Jenkins</system>
-		<url>http://ci.polyforms.org/view/Polyforms-pipeline/</url>
+		<url>http://ci.polyforms.org/view/Polyforms-build-pipeline/</url>
 		<notifiers>
 			<notifier>
 				<configuration>
@@ -208,6 +209,11 @@
 				<artifactId>aopalliance</artifactId>
 				<version>${aopalliance.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>cglib</groupId>
+				<artifactId>cglib</artifactId>
+				<version>${cglib.version}</version>
+			</dependency>
 
 			<!-- Spring -->
 			<dependency>
@@ -260,17 +266,28 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
 		<basedir.copy>${project.basedir}</basedir.copy>
 		<parent.javaagent />
 		<javaagent>${parent.javaagent}</javaagent>
+
 		<aopalliance.version>1.0</aopalliance.version>
+		<cglib.version>2.2.2</cglib.version>
 		<inject.version>1</inject.version>
-		<junit.version>4.8.2</junit.version>
-		<easymock.version>3.0</easymock.version>
-		<spring.version>3.0.5.RELEASE</spring.version>
-		<slf4j.version>1.6.1</slf4j.version>
+
+		<modelmapper.version>0.3.5</modelmapper.version>
+		<slf4j.version>1.6.4</slf4j.version>
+		<spring.version>3.1.0.RELEASE</spring.version>
+
+		<jpa.version>2.0.3</jpa.version>
+		<hibernate.version>3.6.8.Final</hibernate.version>
+		<eclipselink.version>2.3.2</eclipselink.version>
+		<openjpa.version>2.1.1</openjpa.version>
+		<querydsl.version>2.3.0</querydsl.version>
+
+		<junit.version>4.10</junit.version>
+		<easymock.version>3.1</easymock.version>
 		<hsqldb.version>2.2.4</hsqldb.version>
-		<hibernate.version>3.6.6.Final</hibernate.version>
 	</properties>
 
 	<profiles>
