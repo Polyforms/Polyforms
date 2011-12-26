@@ -65,11 +65,7 @@ public class DelegationRegisterProcessorTest {
         EasyMock.expectLastCall().andReturn(false);
         beanFactory.getType("mockInterface");
         EasyMock.expectLastCall().andReturn(null);
-        beanFactory
-                .containsBeanDefinition("org.polyforms.delegation.spring.DelegationRegisterProcessorTest$MockInterface#0");
-        EasyMock.expectLastCall().andReturn(false);
-        beanFactory.registerBeanDefinition(
-                EasyMock.eq("org.polyforms.delegation.spring.DelegationRegisterProcessorTest$MockInterface#0"),
+        beanFactory.registerBeanDefinition(EasyMock.eq("delegationRegisterProcessorTest.MockInterface"),
                 EasyMock.isA(RootBeanDefinition.class));
         EasyMock.replay(beanFactory, mockClass, mockInterface, delegationRegistry);
 

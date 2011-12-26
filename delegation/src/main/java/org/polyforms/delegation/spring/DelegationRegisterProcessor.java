@@ -20,8 +20,8 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
 import org.springframework.beans.factory.support.BeanNameGenerator;
-import org.springframework.beans.factory.support.DefaultBeanNameGenerator;
 import org.springframework.beans.factory.support.RootBeanDefinition;
+import org.springframework.context.annotation.AnnotationBeanNameGenerator;
 import org.springframework.core.GenericTypeResolver;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -36,7 +36,7 @@ import org.springframework.util.StringUtils;
 @Component
 public final class DelegationRegisterProcessor implements BeanDefinitionRegistryPostProcessor {
     private static final Logger LOGGER = LoggerFactory.getLogger(DelegationRegisterProcessor.class);
-    private final BeanNameGenerator beanNameGenerator = new DefaultBeanNameGenerator();
+    private final BeanNameGenerator beanNameGenerator = new AnnotationBeanNameGenerator();
 
     /**
      * {@inheritDoc}
