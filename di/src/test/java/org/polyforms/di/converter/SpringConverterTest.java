@@ -79,14 +79,6 @@ public class SpringConverterTest {
         EasyMock.verify(provider);
     }
 
-    @Test
-    public void notSupportsWithException() {
-        prepareConversionService();
-
-        Assert.assertSame(MatchResult.NONE, converter.match(String.class, Void.class));
-        EasyMock.verify(provider);
-    }
-
     private void prepareConversionService() {
         final GenericConversionService conversionService = new DefaultConversionService();
         conversionService.addConverter(new ModelMapperConverter(EasyMock.createMock(ModelMapper.class)));

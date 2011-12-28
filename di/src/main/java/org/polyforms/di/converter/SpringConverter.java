@@ -65,7 +65,7 @@ public class SpringConverter implements ConditionalConverter<Object, Object> {
             return (GenericConverter) method.invoke(conversionServiceProvider.get(),
                     new Object[] { TypeDescriptor.valueOf(sourceType), TypeDescriptor.valueOf(destinationType) });
         } catch (final InvocationTargetException e) {
-            return null;
+            throw new IllegalStateException("Should never get here");
         } catch (final IllegalAccessException e) {
             throw new IllegalStateException("Should never get here");
         }

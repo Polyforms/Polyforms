@@ -53,11 +53,6 @@ public abstract class DelegatorRegister<S> extends ParameterAwareRegister<S> {
         delegatorType = (Class<S>) GenericTypeResolver.resolveTypeArgument(this.getClass(), DelegatorRegister.class);
     }
 
-    protected DelegatorRegister(final Class<S> delegatorType) {
-        super();
-        this.delegatorType = delegatorType;
-    }
-
     protected final <T> T delegate() {
         return getBuilder().<T> delegate();
     }
@@ -91,7 +86,7 @@ public abstract class DelegatorRegister<S> extends ParameterAwareRegister<S> {
             this((Class<T>) null);
         }
 
-        public DelegateeRegister(final Class<T> delegateeType) {
+        protected DelegateeRegister(final Class<T> delegateeType) {
             super();
             final Class<T> type = delegateeType == null ? (Class<T>) GenericTypeResolver.resolveTypeArgument(
                     this.getClass(), DelegateeRegister.class) : delegateeType;
