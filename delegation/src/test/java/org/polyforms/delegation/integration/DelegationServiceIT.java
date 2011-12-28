@@ -9,6 +9,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.polyforms.delegation.DelegateTo;
+import org.polyforms.delegation.DelegationRegister;
 import org.polyforms.delegation.DelegationService;
 import org.polyforms.delegation.DelegatorRegister;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -128,16 +129,7 @@ public class DelegationServiceIT {
     }
 
     @Component
-    public static class TestDelegationBuilder extends DelegatorRegister<AbstractDelegator> {
-        @Override
-        public void register(final AbstractDelegator source) {
-            with(new DelegateeRegister<Delegatee>() {
-                @Override
-                public void register(final AbstractDelegator delegator) {
-                    delegate(delegator.echo(null)).echo(at(Integer.class, 0));
-                }
-            });
-        }
+    public static class TestDelegationBuilder extends DelegationRegister<AbstractDelegator, Delegatee> {
     }
 
     @Component
