@@ -30,12 +30,12 @@ public class DelegationRegisterTest {
         EasyMock.expectLastCall().andReturn(mockInterface);
         EasyMock.replay(delegationBuilder);
 
-        new DelegationRegister<MockInterface, String>(){
+        new DelegationRegister<MockInterface, String>() {
         }.register(mockInterface);
 
         EasyMock.verify(delegationBuilder);
     }
-    
+
     public interface MockInterface {
     }
 }
