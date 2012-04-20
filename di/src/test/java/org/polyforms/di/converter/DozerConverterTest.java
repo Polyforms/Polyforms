@@ -1,26 +1,25 @@
 package org.polyforms.di.converter;
 
 import java.lang.annotation.ElementType;
-import java.util.Locale;
 import java.util.Set;
 
+import org.dozer.Mapper;
 import org.easymock.EasyMock;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.modelmapper.ModelMapper;
 import org.springframework.core.convert.TypeDescriptor;
-import org.springframework.core.convert.converter.ConditionalGenericConverter;
+import org.springframework.core.convert.converter.GenericConverter;
 import org.springframework.core.convert.converter.GenericConverter.ConvertiblePair;
 
-public class ModelMapperConverterTest {
-    private ModelMapper modelMapper;
-    private ConditionalGenericConverter converter;
+public class DozerConverterTest {
+    private Mapper beanMapper;
+    private GenericConverter converter;
 
     @Before
     public void setUp() {
-        modelMapper = EasyMock.createMock(ModelMapper.class);
-        converter = new ModelMapperConverter(modelMapper);
+        beanMapper = EasyMock.createMock(Mapper.class);
+        converter = new DozerConverter(beanMapper);
     }
 
     @Test
@@ -34,25 +33,14 @@ public class ModelMapperConverterTest {
     }
 
     @Test
-    public void matches() {
-        Assert.assertTrue(converter.matches(TypeDescriptor.valueOf(String.class), TypeDescriptor.valueOf(Locale.class)));
-    }
-
-    @Test
-    public void notMatches() {
-        Assert.assertFalse(converter.matches(TypeDescriptor.valueOf(Boolean.class),
-                TypeDescriptor.valueOf(boolean.class)));
-    }
-
-    @Test
     public void convert() {
-        modelMapper.map("METHOD", ElementType.class);
+        beanMapper.map("METHOD", ElementType.class);
         EasyMock.expectLastCall().andReturn(ElementType.METHOD);
-        EasyMock.replay(modelMapper);
+        EasyMock.replay(beanMapper);
 
         Assert.assertEquals(ElementType.METHOD,
                 converter.convert("METHOD", null, TypeDescriptor.valueOf(ElementType.class)));
-        EasyMock.verify(modelMapper);
+        EasyMock.verify(beanMapper);
     }
 
     @Test

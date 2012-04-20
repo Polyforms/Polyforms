@@ -45,7 +45,7 @@ public final class ConversionServiceIT {
         final MockEntity mockEntity = conversionService.convert(newMockDto(), MockEntity.class);
         Assert.assertEquals(1, mockEntity.getId().intValue());
         Assert.assertEquals("mock", mockEntity.getName());
-        Assert.assertEquals(ElementType.METHOD, mockEntity.getType());
+        Assert.assertEquals(String.class, mockEntity.getType());
         final List<String> children = mockEntity.getChildren();
         Assert.assertEquals("10", children.get(0));
         Assert.assertEquals("20", children.get(1));
@@ -69,7 +69,7 @@ public final class ConversionServiceIT {
         final MockDto mockDto = new MockDto();
         mockDto.setId("1");
         mockDto.setName("mock");
-        mockDto.setType("METHOD");
+        mockDto.setType("java.lang.String");
         mockDto.setChildren(new Integer[] { 10, 20 });
         return mockDto;
     }
@@ -114,12 +114,28 @@ public final class ConversionServiceIT {
     }
 
     public static final class MockEntity {
-        private int id;
+        private Integer id;
         private String name;
-        private ElementType type;
+        private Class<?> type;
         private List<String> children;
 
-        public Integer getId() {
+        public void setId(Integer id) {
+			this.id = id;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+		public void setType(Class<?> type) {
+			this.type = type;
+		}
+
+		public void setChildren(List<String> children) {
+			this.children = children;
+		}
+
+		public Integer getId() {
             return id;
         }
 
@@ -127,7 +143,7 @@ public final class ConversionServiceIT {
             return name;
         }
 
-        public ElementType getType() {
+        public Class<?> getType() {
             return type;
         }
 
