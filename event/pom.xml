@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>polyforms</artifactId>
 		<groupId>org.polyforms</groupId>
-		<version>0.9-SNAPSHOT</version>
+		<version>0.9</version>
 	</parent>
 
 	<artifactId>polyforms-event</artifactId>
