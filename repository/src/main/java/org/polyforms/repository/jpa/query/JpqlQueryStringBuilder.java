@@ -55,7 +55,8 @@ abstract class JpqlQueryStringBuilder {
             queryStringCache.put(entityClass, new WeakHashMap<String, String>());
         }
 
-        if (!queryStringCache.get(entityClass).containsKey(queryString)) {
+        String query = queryStringCache.get(entityClass).get(queryString);
+		if (query == null) {
             LOGGER.trace("Cache miss for query {}.", queryString);
             final String[] parts = split(nomalizeQueryString(queryString));
             LOGGER.debug("The parts of {} are {}.", queryString, Arrays.toString(parts));
@@ -68,10 +69,11 @@ abstract class JpqlQueryStringBuilder {
             if (StringUtils.hasText(parts[2])) {
                 appendOrderClause(jpql, parts[2]);
             }
-            queryStringCache.get(entityClass).put(queryString, jpql.getJpql());
+            query = jpql.getJpql();
+            queryStringCache.get(entityClass).put(queryString, query);
         }
 
-        return queryStringCache.get(entityClass).get(queryString);
+        return query;
     }
 
     private String nomalizeQueryString(final String queryString) {

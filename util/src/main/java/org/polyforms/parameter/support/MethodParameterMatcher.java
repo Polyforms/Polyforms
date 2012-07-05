@@ -22,10 +22,12 @@ public class MethodParameterMatcher extends AbstractParameterMatcher<MethodParam
     public ArgumentProvider[] match(final Parameters<MethodParameter> sourceParameters,
             final Parameters<MethodParameter> targetParameters) {
         final ParametersPair parametersPair = new ParametersPair(sourceParameters, targetParameters);
-        if (!argumentProvidersCache.containsKey(parametersPair)) {
-            argumentProvidersCache.put(parametersPair, super.match(sourceParameters, targetParameters));
+        ArgumentProvider[] argumentProviders = argumentProvidersCache.get(parametersPair);
+		if (argumentProviders == null) {
+			argumentProviders = super.match(sourceParameters, targetParameters);
+            argumentProvidersCache.put(parametersPair, argumentProviders);
         }
-        return argumentProvidersCache.get(parametersPair);
+        return argumentProviders;
     }
 
     @Override

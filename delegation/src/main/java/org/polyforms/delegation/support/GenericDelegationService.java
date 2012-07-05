@@ -47,7 +47,7 @@ public final class GenericDelegationService implements DelegationService {
     }
 
     private boolean supportsWithCache(final Delegator originalDelegator) {
-        if (delegatorMappingCache.containsKey(originalDelegator)) {
+        if (delegatorMappingCache.get(originalDelegator) != null) {
             return true;
         }
 
